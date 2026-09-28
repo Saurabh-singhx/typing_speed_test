@@ -1,26 +1,214 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Tactical Gunmetal (Default) */
+  --bg-page: #0a0d14;
+  --bg-surface: #101622;
+  --bg-panel: #162030;
+  --bg-input: #0c121d;
+  --border-subtle: #202b3d;
+  --border-strong: #33445e;
+  --border-active: #475569;
+  
+  --text-main: #f1f5f9;
+  --text-dim: #94a3b8;
+  --text-faint: #475569;
+  
+  --accent-tactical: #eab308; /* Matte Ammo Amber */
+  --accent-tactical-rgb: 234, 179, 8;
+  --accent-target: #38bdf8; /* Glacial Telemetry Cyan */
+  --accent-success: #22c55e; /* Military Green */
+  --accent-danger: #ef4444; /* Tactical Signal Red */
+  --accent-streak: #f97316; /* Kinetic Orange */
+  
+  --keycap-bg: #151d2a;
+  --keycap-border: #28374d;
+  --keycap-shadow: rgba(0, 0, 0, 0.4);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="obsidian"] {
+  --bg-page: #050608;
+  --bg-surface: #0e1117;
+  --bg-panel: #161b24;
+  --bg-input: #080a0e;
+  --border-subtle: #1e2633;
+  --border-strong: #2c384a;
+  --border-active: #3b82f6;
+  
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-faint: #475569;
+  
+  --accent-tactical: #3b82f6; /* Tactical Blue */
+  --accent-tactical-rgb: 59, 130, 246;
+  --accent-target: #60a5fa;
+  --accent-success: #10b981;
+  --accent-danger: #f43f5e;
+  --accent-streak: #fbbf24;
+  
+  --keycap-bg: #12161f;
+  --keycap-border: #222b3a;
+  --keycap-shadow: rgba(0, 0, 0, 0.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="cyberdeck"] {
+  /* Industrial Tactical 1984 */
+  --bg-page: #101411;
+  --bg-surface: #171d18;
+  --bg-panel: #1f2720;
+  --bg-input: #0d110e;
+  --border-subtle: #29352a;
+  --border-strong: #3f5241;
+  --border-active: #84cc16;
+  
+  --text-main: #ecfccb;
+  --text-dim: #a3e635;
+  --text-faint: #4d7c0f;
+  
+  --accent-tactical: #a3e635; /* Tactical Phosphor */
+  --accent-tactical-rgb: 163, 230, 53;
+  --accent-target: #facc15;
+  --accent-success: #84cc16;
+  --accent-danger: #ea580c;
+  --accent-streak: #f59e0b;
+  
+  --keycap-bg: #1b231c;
+  --keycap-border: #314032;
+  --keycap-shadow: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="arctic"] {
+  /* Subzero Stealth Navy */
+  --bg-page: #080c14;
+  --bg-surface: #0f1624;
+  --bg-panel: #172236;
+  --bg-input: #0a101b;
+  --border-subtle: #1e2c44;
+  --border-strong: #2e4366;
+  --border-active: #38bdf8;
+  
+  --text-main: #f0f9ff;
+  --text-dim: #7dd3fc;
+  --text-faint: #385170;
+  
+  --accent-tactical: #38bdf8; /* Subzero Cyan */
+  --accent-tactical-rgb: 56, 189, 248;
+  --accent-target: #818cf8;
+  --accent-success: #34d399;
+  --accent-danger: #f87171;
+  --accent-streak: #67e8f9;
+  
+  --keycap-bg: #141d2d;
+  --keycap-border: #253752;
+  --keycap-shadow: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="mecha"] {
+  /* Heavy Mecha Cockpit Charcoal */
+  --bg-page: #0e0d14;
+  --bg-surface: #161521;
+  --bg-panel: #201e2e;
+  --bg-input: #0b0a10;
+  --border-subtle: #2d2a40;
+  --border-strong: #443f60;
+  --border-active: #f59e0b;
+  
+  --text-main: #f5f3ff;
+  --text-dim: #a5b4fc;
+  --text-faint: #4f46e5;
+  
+  --accent-tactical: #f59e0b; /* Hazard Amber */
+  --accent-tactical-rgb: 245, 158, 11;
+  --accent-target: #c084fc;
+  --accent-success: #10b981;
+  --accent-danger: #f43f5e;
+  --accent-streak: #fb923c;
+  
+  --keycap-bg: #1b1928;
+  --keycap-border: #322e49;
+  --keycap-shadow: rgba(0, 0, 0, 0.5);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-page);
+  color: var(--text-main);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Tactical Keycap Button Effect */
+.tactical-keycap {
+  background-color: var(--keycap-bg);
+  border: 1px solid var(--keycap-border);
+  box-shadow: 0 2px 0 var(--keycap-shadow);
+  transition: all 0.08s ease;
+}
+
+.tactical-keycap:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 transparent;
+}
+
+/* Caret blinking and smooth animations */
+@keyframes caretBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.caret-line {
+  position: absolute;
+  width: 2.5px;
+  height: 1.4em;
+  background-color: var(--accent-tactical);
+  border-radius: 1px;
+  animation: caretBlink 1s infinite;
+  pointer-events: none;
+  transition: left 0.07s ease-out, top 0.07s ease-out;
+}
+
+.caret-block {
+  position: absolute;
+  height: 1.35em;
+  background-color: rgba(var(--accent-tactical-rgb), 0.35);
+  border-bottom: 2px solid var(--accent-tactical);
+  pointer-events: none;
+  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
+}
+
+.caret-underline {
+  position: absolute;
+  height: 3px;
+  background-color: var(--accent-tactical);
+  bottom: 0;
+  pointer-events: none;
+  animation: caretBlink 1s infinite;
+  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
+}
+
+.caret-box {
+  position: absolute;
+  height: 1.35em;
+  border: 1.5px solid var(--accent-tactical);
+  pointer-events: none;
+  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
+}
+
+/* Custom Tactical Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-tactical);
 }

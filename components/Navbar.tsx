@@ -1,0 +1,301 @@
+'use client';
+
+import React, { useState } from 'react';
+import { 
+  Keyboard, 
+  Volume2, 
+  VolumeX, 
+  Palette, 
+  Trophy, 
+  BarChart3, 
+  Gauge, 
+  Crosshair,
+  Sliders,
+  ChevronDown
+} from 'lucide-react';
+import { GameTheme, SoundType } from '@/lib/types';
+import { UserStats, calculateLevel, getRankTitle } from '@/lib/storage';
+
+interface NavbarProps {
+  theme: GameTheme;
+  onThemeChange: (theme: GameTheme) => void;
+  soundType: SoundType;
+  onSoundChange: (sound: SoundType) => void;
+  volume: number;
+  onVolumeChange: (vol: number) => void;
+  targetWpm: number;
+  onTargetWpmChange: (wpm: number) => void;
+  userStats: UserStats;
+  onOpenAchievements: () => void;
+  onOpenStats: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({
+  theme,
+  onThemeChange,
+  soundType,
+  onSoundChange,
+  volume,
+  onVolumeChange,
+  targetWpm,
+  onTargetWpmChange,
+  userStats,
+  onOpenAchievements,
+  onOpenStats,
+}) => {
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
+  const [showSoundMenu, setShowSoundMenu] = useState(false);
+  const [showPacerMenu, setShowPacerMenu] = useState(false);
+
+  const levelInfo = calculateLevel(userStats.xp);
+  const rank = getRankTitle(userStats.bestWpm);
+
+  const themes: { id: GameTheme; name: string; tag: string }[] = [
+    { id: 'tactical', name: 'Tactical Gunmetal', tag: 'Charcoal & Amber' },
+    { id: 'obsidian', name: 'Obsidian Stealth', tag: 'OLED Black & Graphite' },
+    { id: 'cyberdeck', name: 'Cyberdeck 1984', tag: 'Retro Terminal Olive' },
+    { id: 'arctic', name: 'Subzero Arctic', tag: 'Deep Navy & Cyan' },
+    { id: 'mecha', name: 'Titan Mecha', tag: 'Cockpit Slate & Hazard' },
+  ];
+
+  const soundOptions: { id: SoundType; name: string; desc: string }[] = [
+    { id: 'thock', name: 'Linear Thock', desc: 'Deep acoustic clack' },
+    { id: 'clicky', name: 'Clicky Blue', desc: 'Tactile mechanical snap' },
+    { id: 'topre', name: 'Topre Dome', desc: 'Cushioned capacitive pop' },
+    { id: 'arcade', name: 'Arcade 8-Bit', desc: 'Retro electronic chirp' },
+    { id: 'off', name: 'Mute / Silent', desc: 'No switch audio' },
+  ];
+
+  const targetWpmOptions = [0, 50, 60, 80, 100, 120, 140];
+
+  return (
+    <header className="w-full border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/90 backdrop-blur sticky top-0 z-40 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+        
+        {/* Brand Logo & Telemetry Status */}
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)] shadow-inner">
+              <Keyboard className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono font-black tracking-wider text-base sm:text-lg text-[var(--text-main)]">
+                  KEY<span className="text-[var(--accent-tactical)]">OPS</span>
+                </span>
+                <span className="text-[10px] font-mono tracking-widest px-1.5 py-0.5 rounded bg-[var(--border-subtle)] text-[var(--text-dim)] border border-[var(--border-strong)]">
+                  MK-IV
+                </span>
+              </div>
+              <div className="text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] flex items-center gap-1.5">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] animate-pulse" />
+                <span>SYS_READY // APM TELEMETRY</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Center: Operator Rank & XP Bar (Interactive) */}
+        <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)]">
+          <div className="text-right">
+            <div className="text-[11px] font-mono font-bold text-[var(--text-main)] flex items-center justify-end gap-1.5">
+              <span className="text-[var(--accent-tactical)]">LVL {levelInfo.level}</span>
+              <span className="text-[var(--text-faint)]">•</span>
+              <span className={rank.color}>{rank.title}</span>
+            </div>
+            <div className="text-[9px] font-mono text-[var(--text-dim)]">
+              {levelInfo.currentLevelXp} / {levelInfo.nextLevelXp} XP ({levelInfo.progressPercent}%)
+            </div>
+          </div>
+          <div className="w-20 h-2 bg-[var(--bg-input)] rounded-full overflow-hidden border border-[var(--border-subtle)]">
+            <div 
+              className="h-full bg-[var(--accent-tactical)] transition-all duration-300 rounded-full"
+              style={{ width: `${levelInfo.progressPercent}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Tactical Controls & Modals */}
+        <div className="flex items-center gap-2">
+          
+          {/* Ghost Pacer Target Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowPacerMenu(!showPacerMenu);
+                setShowThemeMenu(false);
+                setShowSoundMenu(false);
+              }}
+              title="Target Pacing Ghost"
+              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+            >
+              <Gauge className="w-3.5 h-3.5 text-[var(--accent-target)]" />
+              <span className="hidden sm:inline">Pacer:</span>
+              <span className="font-bold text-[var(--text-main)]">
+                {targetWpm === 0 ? 'OFF' : `${targetWpm} WPM`}
+              </span>
+              <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
+            </button>
+
+            {showPacerMenu && (
+              <div className="absolute right-0 mt-2 w-48 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
+                  Target Pacing Ghost
+                </div>
+                {targetWpmOptions.map((wpm) => (
+                  <button
+                    key={wpm}
+                    onClick={() => {
+                      onTargetWpmChange(wpm);
+                      setShowPacerMenu(false);
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors ${
+                      targetWpm === wpm
+                        ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
+                        : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
+                    }`}
+                  >
+                    <span>{wpm === 0 ? 'Disable Ghost' : `${wpm} WPM Pace`}</span>
+                    {targetWpm === wpm && <span className="text-[10px]">ACTIVE</span>}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Switch Sound Synthesizer Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowSoundMenu(!showSoundMenu);
+                setShowThemeMenu(false);
+                setShowPacerMenu(false);
+              }}
+              title="Mechanical Switch Audio"
+              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+            >
+              {soundType === 'off' ? (
+                <VolumeX className="w-3.5 h-3.5 text-[var(--text-faint)]" />
+              ) : (
+                <Volume2 className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
+              )}
+              <span className="hidden sm:inline capitalize">{soundType}</span>
+              <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
+            </button>
+
+            {showSoundMenu && (
+              <div className="absolute right-0 mt-2 w-56 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+                  <span>Switch Acoustics</span>
+                  <span>WebAudio</span>
+                </div>
+                {soundOptions.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      onSoundChange(s.id);
+                      setShowSoundMenu(false);
+                    }}
+                    className={`w-full text-left px-2 py-1.5 rounded text-xs font-mono transition-colors ${
+                      soundType === s.id
+                        ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
+                        : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span>{s.name}</span>
+                      {soundType === s.id && <span className="text-[9px]">ON</span>}
+                    </div>
+                    <div className="text-[9px] text-[var(--text-faint)]">{s.desc}</div>
+                  </button>
+                ))}
+
+                {soundType !== 'off' && (
+                  <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] px-2">
+                    <div className="flex items-center justify-between text-[10px] font-mono text-[var(--text-dim)] mb-1">
+                      <span>Volume</span>
+                      <span>{Math.round(volume * 100)}%</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={volume}
+                      onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
+                      className="w-full h-1 bg-[var(--bg-input)] rounded accent-[var(--accent-tactical)] cursor-pointer"
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Theme Switcher Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowThemeMenu(!showThemeMenu);
+                setShowSoundMenu(false);
+                setShowPacerMenu(false);
+              }}
+              title="Change Theme"
+              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+            >
+              <Palette className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
+              <span className="hidden sm:inline capitalize">{theme}</span>
+              <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
+            </button>
+
+            {showThemeMenu && (
+              <div className="absolute right-0 mt-2 w-52 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
+                  Matte Gaming Palettes
+                </div>
+                {themes.map((t) => (
+                  <button
+                    key={t.id}
+                    onClick={() => {
+                      onThemeChange(t.id);
+                      setShowThemeMenu(false);
+                    }}
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
+                      theme === t.id
+                        ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
+                        : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
+                    }`}
+                  >
+                    <div>{t.name}</div>
+                    <div className="text-[9px] text-[var(--text-faint)]">{t.tag}</div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Badges / Achievements Trigger */}
+          <button
+            onClick={onOpenAchievements}
+            title="Tactical Badges & Achievements"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative"
+          >
+            <Trophy className="w-4 h-4" />
+            {userStats.unlockedAchievements.length > 0 && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[var(--accent-tactical)]" />
+            )}
+          </button>
+
+          {/* Lifetime Telemetry Stats Trigger */}
+          <button
+            onClick={onOpenStats}
+            title="Lifetime Typing Telemetry"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)]"
+          >
+            <BarChart3 className="w-4 h-4" />
+          </button>
+
+        </div>
+      </div>
+    </header>
+  );
+};

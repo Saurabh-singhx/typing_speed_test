@@ -1,69 +1,173 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Navbar } from '@/components/Navbar';
+import { TestSettingsBar } from '@/components/TypingTest/TestSettingsBar';
+import { TypingEngine } from '@/components/TypingTest/TypingEngine';
+import { TestResults } from '@/components/TypingTest/TestResults';
+import { AchievementsModal } from '@/components/Dashboard/AchievementsModal';
+import { StatsModal } from '@/components/Dashboard/StatsModal';
+import { WpmRanksSection } from '@/components/SEO/WpmRanksSection';
+import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
+import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
+import { FaqSection } from '@/components/SEO/FaqSection';
+import { Footer } from '@/components/SEO/Footer';
+import { 
+  TestSettings, 
+  TestResult, 
+  GameTheme, 
+  SoundType, 
+  Achievement 
+} from '@/lib/types';
+import { 
+  DEFAULT_SETTINGS, 
+  INITIAL_STATS, 
+  loadSettings, 
+  saveSettings, 
+  loadUserStats, 
+  recordTestResult 
+} from '@/lib/storage';
+import { soundFx } from '@/lib/audio';
 
 export default function Home() {
+  const [settings, setSettings] = useState<TestSettings>(DEFAULT_SETTINGS);
+  const [userStats, setUserStats] = useState(INITIAL_STATS);
+  const [testResult, setTestResult] = useState<TestResult | null>(null);
+  const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const [showAchievementsModal, setShowAchievementsModal] = useState(false);
+  const [showStatsModal, setShowStatsModal] = useState(false);
+  const [isClientLoaded, setIsClientLoaded] = useState(false);
+
+  // Load persistent settings & stats on mount
+  useEffect(() => {
+    const savedSettings = loadSettings();
+    const savedStats = loadUserStats();
+
+    setSettings(savedSettings);
+    setUserStats(savedStats);
+
+    // Apply theme to document element
+    document.documentElement.setAttribute('data-theme', savedSettings.theme);
+
+    // Configure sound synthesizer
+    soundFx.setSoundType(savedSettings.soundType);
+    soundFx.setVolume(savedSettings.soundVolume);
+
+    setIsClientLoaded(true);
+  }, []);
+
+  // Update Settings Handler
+  const handleUpdateSettings = (newPartial: Partial<TestSettings>) => {
+    setSettings((prev) => {
+      const updated = { ...prev, ...newPartial };
+      saveSettings(updated);
+
+      if (newPartial.theme) {
+        document.documentElement.setAttribute('data-theme', newPartial.theme);
+      }
+      if (newPartial.soundType !== undefined) {
+        soundFx.setSoundType(updated.soundType);
+      }
+      if (newPartial.soundVolume !== undefined) {
+        soundFx.setVolume(updated.soundVolume);
+      }
+
+      return updated;
+    });
+
+    // Reset current active test if settings change
+    setTestResult(null);
+  };
+
+  // Test Completed Handler
+  const handleFinishTest = (result: TestResult) => {
+    const { updatedStats, newAchievements: newlyUnlocked } = recordTestResult(result);
+    setUserStats(updatedStats);
+    setNewAchievements(newlyUnlocked);
+    setTestResult(result);
+  };
+
+  // Restart / Next Test Handler
+  const handleRestart = () => {
+    setTestResult(null);
+    setNewAchievements([]);
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
+      
+      {/* Tactical Top Navbar */}
+      <Navbar
+        theme={settings.theme}
+        onThemeChange={(theme: GameTheme) => handleUpdateSettings({ theme })}
+        soundType={settings.soundType}
+        onSoundChange={(soundType: SoundType) => handleUpdateSettings({ soundType })}
+        volume={settings.soundVolume}
+        onVolumeChange={(soundVolume: number) => handleUpdateSettings({ soundVolume })}
+        targetWpm={settings.targetWpm}
+        onTargetWpmChange={(targetWpm: number) => handleUpdateSettings({ targetWpm })}
+        userStats={userStats}
+        onOpenAchievements={() => setShowAchievementsModal(true)}
+        onOpenStats={() => setShowStatsModal(true)}
+      />
+
+      {/* Main Testing Arena */}
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col items-center justify-start space-y-6">
+        
+        {/* Settings Bar */}
+        <TestSettingsBar
+          settings={settings}
+          onUpdateSettings={handleUpdateSettings}
+          disabled={testResult !== null}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+
+        {/* Dynamic Display: Active Engine vs Test Telemetry Results */}
+        <div className="w-full my-auto py-4">
+          {testResult ? (
+            <TestResults
+              result={testResult}
+              userStats={userStats}
+              newAchievements={newAchievements}
+              onRestart={handleRestart}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ) : (
+            <TypingEngine
+              key={`${settings.mode}-${settings.timeLimit}-${settings.wordCount}-${settings.punctuation}-${settings.numbers}-${settings.hardcore}`}
+              settings={settings}
+              bestWpm={userStats.bestWpm}
+              onFinishTest={handleFinishTest}
+              onAbortHardcore={handleRestart}
+            />
+          )}
         </div>
+
+        {/* Comprehensive SEO & Informational Sections */}
+        <div className="w-full pt-12 border-t border-[var(--border-subtle)] space-y-16">
+          <WpmRanksSection />
+          <WpmSavingsCalculator />
+          <TypingGuideSection />
+          <FaqSection />
+        </div>
+
       </main>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Modals */}
+      <AchievementsModal
+        isOpen={showAchievementsModal}
+        onClose={() => setShowAchievementsModal(false)}
+        userStats={userStats}
+      />
+
+      <StatsModal
+        isOpen={showStatsModal}
+        onClose={() => setShowStatsModal(false)}
+        userStats={userStats}
+        onStatsReset={() => setUserStats(loadUserStats())}
+      />
+
     </div>
   );
 }
