@@ -1,0 +1,21 @@
+{
+  "name": "TypeTrack // Tactical Typing Speed Test",
+  "short_name": "TypeTrack",
+  "description": "Tactical typing speed test and keyboard benchmark with mechanical switch audio and live telemetry.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0d14",
+  "theme_color": "#0a0d14",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

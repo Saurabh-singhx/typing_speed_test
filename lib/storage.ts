@@ -1,9 +1,14 @@
 import { TestSettings, UserStats, TestResult, Achievement } from './types';
 export type { UserStats };
 
-const SETTINGS_KEY = 'keyops_tactical_settings_v1';
-const STATS_KEY = 'keyops_tactical_stats_v1';
-const HISTORY_KEY = 'keyops_tactical_history_v1';
+const SETTINGS_KEY = 'typetrack_settings_v1';
+const STATS_KEY = 'typetrack_stats_v1';
+const HISTORY_KEY = 'typetrack_history_v1';
+
+// Fallback keys to seamlessly migrate existing user progress
+const LEGACY_SETTINGS_KEY = 'keyops_tactical_settings_v1';
+const LEGACY_STATS_KEY = 'keyops_tactical_stats_v1';
+const LEGACY_HISTORY_KEY = 'keyops_tactical_history_v1';
 
 export const DEFAULT_SETTINGS: TestSettings = {
   mode: 'time',
@@ -136,7 +141,7 @@ export function getRankTitle(wpm: number): { title: string; badge: string; color
 export function loadSettings(): TestSettings {
   if (typeof window === 'undefined') return DEFAULT_SETTINGS;
   try {
-    const data = localStorage.getItem(SETTINGS_KEY);
+    const data = localStorage.getItem(SETTINGS_KEY) || localStorage.getItem(LEGACY_SETTINGS_KEY);
     if (!data) return DEFAULT_SETTINGS;
     return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
   } catch {
@@ -156,7 +161,7 @@ export function saveSettings(settings: TestSettings): void {
 export function loadUserStats(): UserStats {
   if (typeof window === 'undefined') return INITIAL_STATS;
   try {
-    const data = localStorage.getItem(STATS_KEY);
+    const data = localStorage.getItem(STATS_KEY) || localStorage.getItem(LEGACY_STATS_KEY);
     if (!data) return INITIAL_STATS;
     return { ...INITIAL_STATS, ...JSON.parse(data) };
   } catch {
@@ -176,7 +181,7 @@ export function saveUserStats(stats: UserStats): void {
 export function loadHistory(): TestResult[] {
   if (typeof window === 'undefined') return [];
   try {
-    const data = localStorage.getItem(HISTORY_KEY);
+    const data = localStorage.getItem(HISTORY_KEY) || localStorage.getItem(LEGACY_HISTORY_KEY);
     return data ? JSON.parse(data) : [];
   } catch {
     return [];

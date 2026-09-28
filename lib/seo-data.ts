@@ -1,11 +1,12 @@
 export const SITE_CONFIG = {
-  name: 'KEYOPS // Tactical Typing Speed Test',
-  shortName: 'KEYOPS Typing',
+  name: 'TypeTrack // Tactical Typing Speed Test',
+  shortName: 'TypeTrack',
   description: 'Pro-grade tactical typing speed test with authentic mechanical switch acoustics, zero-latency caret telemetry, pacing ghost racer, and combat boss raid mode. No neon glare—pure precision.',
-  url: 'https://keyops-typing.vercel.app',
-  ogImage: '/og-card.png',
+  url: 'https://typetrack.vercel.app',
+  ogImage: '/og-image.png',
   creator: '@saurabh_singh',
   keywords: [
+    'typetrack',
     'typing speed test',
     'tactical typing test',
     'wpm test',
@@ -32,8 +33,8 @@ export const FAQ_ITEMS = [
     answer: "Standardized WPM is calculated using the standard definition of a 'word' as exactly 5 keystrokes (including letters, spaces, and punctuation). The formula is: WPM = (Total Correct Keystrokes / 5) / (Time in Minutes). 'Raw WPM' measures all keystrokes typed regardless of mistakes, while 'Net WPM' penalizes uncorrected errors."
   },
   {
-    question: "How does KEYOPS compare to Monkeytype, 10FastFingers, and TypeRacer?",
-    answer: "KEYOPS merges the distraction-free, zero-latency engine of Monkeytype with the competitive thrill of racing platforms like TypeRacer and Nitro Type. Unlike generic sites with eye-fatiguing neon RGB, KEYOPS features an authentic military/mech tactical HUD, procedurally synthesized mechanical switch audio (Linear Thock, Clicky Blue, Topre), a live Pacing Ghost racer, and an innovative Boss Raid combat typing mode."
+    question: "How does TypeTrack compare to Monkeytype, 10FastFingers, and TypeRacer?",
+    answer: "TypeTrack merges the distraction-free, zero-latency engine of Monkeytype with the competitive thrill of racing platforms like TypeRacer and Nitro Type. Unlike generic sites with eye-fatiguing neon RGB, TypeTrack features an authentic military/mech tactical HUD, procedurally synthesized mechanical switch audio (Linear Thock, Clicky Blue, Topre), a live Pacing Ghost racer, and an innovative Boss Raid combat typing mode."
   },
   {
     question: "Do mechanical keyboards actually improve your typing speed?",
@@ -105,9 +106,9 @@ export const JSON_LD_DATA = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://keyops-typing.vercel.app/#webapp",
-      "name": "KEYOPS Tactical Typing Speed Test",
-      "url": "https://keyops-typing.vercel.app",
+      "@id": "https://typetrack.vercel.app/#webapp",
+      "name": "TypeTrack Tactical Typing Speed Test",
+      "url": "https://typetrack.vercel.app",
       "applicationCategory": "GameApplication, EducationalApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript. Requires HTML5 Audio API for switch sounds.",
@@ -127,7 +128,7 @@ export const JSON_LD_DATA = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://keyops-typing.vercel.app/#faq",
+      "@id": "https://typetrack.vercel.app/#faq",
       "mainEntity": FAQ_ITEMS.map((item) => ({
         "@type": "Question",
         "name": item.question,
@@ -139,7 +140,7 @@ export const JSON_LD_DATA = {
     },
     {
       "@type": "HowTo",
-      "@id": "https://keyops-typing.vercel.app/#howto",
+      "@id": "https://typetrack.vercel.app/#howto",
       "name": "How to Improve Your Typing Speed to 100+ Words Per Minute",
       "description": "A tactical step-by-step training protocol for breaking past plateaus and reaching elite typing speed.",
       "step": [
@@ -159,7 +160,7 @@ export const JSON_LD_DATA = {
           "@type": "HowToStep",
           "position": 3,
           "name": "Use Target Ghost Pacing",
-          "text": "Activate KEYOPS Ghost Pacer set to 10 WPM higher than your current average. Focus your vision slightly ahead of the cursor to build predictive muscle memory."
+          "text": "Activate TypeTrack Ghost Pacer set to 10 WPM higher than your current average. Focus your vision slightly ahead of the cursor to build predictive muscle memory."
         },
         {
           "@type": "HowToStep",

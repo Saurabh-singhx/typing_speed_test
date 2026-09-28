@@ -16,30 +16,54 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'KEYOPS // Tactical Typing Speed Test & APM Benchmark',
-    template: '%s | KEYOPS Typing',
+    default: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
+    template: '%s | TypeTrack',
   },
   description: SITE_CONFIG.description,
   keywords: SITE_CONFIG.keywords,
-  authors: [{ name: 'KEYOPS Labs' }],
-  creator: 'KEYOPS',
+  authors: [{ name: 'TypeTrack' }],
+  creator: 'TypeTrack',
   metadataBase: new URL(SITE_CONFIG.url),
   alternates: {
     canonical: '/',
+  },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/manifest.json',
+  verification: {
+    google: 'googleb5195719520931eb',
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: SITE_CONFIG.url,
-    title: 'KEYOPS // Tactical Typing Speed Test & APM Benchmark',
+    title: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
     description: SITE_CONFIG.description,
-    siteName: 'KEYOPS Tactical Typing',
+    siteName: 'TypeTrack Tactical Typing',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'TypeTrack Tactical Typing Speed Test',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'KEYOPS // Tactical Typing Speed Test',
+    title: 'TypeTrack // Tactical Typing Speed Test',
     description: SITE_CONFIG.description,
     creator: SITE_CONFIG.creator,
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,

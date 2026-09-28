@@ -75,16 +75,20 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo & Telemetry Status */}
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)] shadow-inner">
-              <Keyboard className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center shadow-inner overflow-hidden p-0.5">
+              <img
+                src="/logo.png"
+                alt="TypeTrack Logo"
+                className="w-full h-full object-contain rounded"
+              />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-mono font-black tracking-wider text-base sm:text-lg text-[var(--text-main)]">
-                  KEY<span className="text-[var(--accent-tactical)]">OPS</span>
+                  TYPE<span className="text-[var(--accent-tactical)]">TRACK</span>
                 </span>
                 <span className="text-[10px] font-mono tracking-widest px-1.5 py-0.5 rounded bg-[var(--border-subtle)] text-[var(--text-dim)] border border-[var(--border-strong)]">
-                  MK-IV
+                  v2.0
                 </span>
               </div>
               <div className="text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] flex items-center gap-1.5">

@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://keyops-typing.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.vercel.app';
   const currentDate = new Date();
 
   return [

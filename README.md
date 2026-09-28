@@ -1,8 +1,8 @@
-# KEYOPS // Tactical Typing Speed Test & APM Benchmark
+# TypeTrack // Tactical Typing Speed Test & APM Benchmark
 
 > **Pro-Grade Tactical Typing Lab** — Zero Distracting Neon Glow, 100% Mechanical Precision.
 
-KEYOPS is a high-performance typing speed test and keyboard benchmark engineered for competitive esports gamers, software developers, and mechanical keyboard enthusiasts. It combines the distraction-free responsiveness of Monkeytype with gamified features inspired by TypeRacer and Nitro Type, wrapped in a tactical military/mech HUD aesthetic.
+TypeTrack is a high-performance typing speed test and keyboard benchmark engineered for competitive esports gamers, software developers, and mechanical keyboard enthusiasts. It combines the distraction-free responsiveness of Monkeytype with gamified features inspired by TypeRacer and Nitro Type, wrapped in a tactical military/mech HUD aesthetic.
 
 ---
 
@@ -50,7 +50,7 @@ KEYOPS is a high-performance typing speed test and keyboard benchmark engineered
 
 ## 🎨 5 Matte Gaming Palettes (Zero Neon Lights)
 
-Unlike generic typing sites with harsh RGB laser glare, KEYOPS features 5 matte tactical themes:
+Unlike generic typing sites with harsh RGB laser glare, TypeTrack features 5 matte tactical themes:
 1. **Tactical Gunmetal** (Default): Charcoal slate, military ammo amber, high-contrast white.
 2. **Obsidian Stealth**: Deep OLED blackout, graphite keycaps, brushed titanium accents.
 3. **Cyberdeck 1984**: Industrial terminal olive, retro phosphor greens, matte khaki keycaps.

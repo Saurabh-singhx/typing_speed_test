@@ -11,12 +11,16 @@ export const Footer: React.FC = () => {
           
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)]">
-                <Keyboard className="w-4 h-4" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center shadow-inner overflow-hidden p-0.5">
+                <img
+                  src="/logo.png"
+                  alt="TypeTrack Logo"
+                  className="w-full h-full object-contain rounded"
+                />
               </div>
               <span className="font-bold text-base text-[var(--text-main)]">
-                KEYOPS // TACTICAL APM LAB
+                TYPE<span className="text-[var(--accent-tactical)]">TRACK</span> // TACTICAL APM LAB
               </span>
             </div>
             <p className="text-xs text-[var(--text-dim)] leading-relaxed max-w-md">
@@ -92,7 +96,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[var(--text-faint)]">
           <div>
-            © {new Date().getFullYear()} KEYOPS Tactical Lab. Precision mechanical typing benchmark.
+            © {new Date().getFullYear()} TypeTrack. Precision mechanical typing benchmark.
           </div>
           <div className="flex items-center gap-4">
             <span>Built with Next.js & Web Audio API</span>

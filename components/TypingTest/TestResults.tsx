@@ -55,13 +55,13 @@ export const TestResults: React.FC<TestResultsProps> = ({
 
   // Handle Copy Scorecard Text
   const handleCopyScorecard = () => {
-    const text = `🎯 KEYOPS TACTICAL TYPING REPORT 🎯
+    const text = `🎯 TYPETRACK TACTICAL TYPING REPORT 🎯
 ⚡ WPM: ${result.wpm} (Raw: ${result.rawWpm})
 🎯 Accuracy: ${result.accuracy}%
 🔥 Streak: ${result.highestStreak}x Keystroke Flow
 🎖️ Rank: ${rank.title} [${rank.badge}]
 ⏱️ Mode: ${result.settingsSnapshot}
-Benchmark your tactical typing at: https://keyops-typing.vercel.app`;
+Benchmark your typing speed at: https://typetrack.vercel.app`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -104,7 +104,7 @@ Benchmark your tactical typing at: https://keyops-typing.vercel.app`;
     // Header Tag
     ctx.fillStyle = '#eab308';
     ctx.font = 'bold 20px monospace';
-    ctx.fillText('KEYOPS // TACTICAL APM BENCHMARK REPORT', 50, 70);
+    ctx.fillText('TYPETRACK // TACTICAL APM BENCHMARK REPORT', 50, 70);
 
     // WPM Huge
     ctx.fillStyle = '#eab308';
@@ -154,10 +154,10 @@ Benchmark your tactical typing at: https://keyops-typing.vercel.app`;
     // Footer
     ctx.fillStyle = '#475569';
     ctx.font = '16px monospace';
-    ctx.fillText('Tested on KEYOPS Tactical Typing Lab • Pure Precision, No Glare', 50, 560);
+    ctx.fillText('Tested on TypeTrack Lab • Pure Precision, No Glare', 50, 560);
 
     const link = document.createElement('a');
-    link.download = `KEYOPS_WPM_${result.wpm}.png`;
+    link.download = `TYPETRACK_WPM_${result.wpm}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
