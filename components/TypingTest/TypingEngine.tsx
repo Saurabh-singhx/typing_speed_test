@@ -69,6 +69,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
   // Refs for tracking
   const containerRef = useRef<HTMLDivElement | null>(null);
   const wordsContainerRef = useRef<HTMLDivElement | null>(null);
+  const wordsWrapperRef = useRef<HTMLDivElement | null>(null);
   const hiddenInputRef = useRef<HTMLInputElement | null>(null);
   const caretRef = useRef<HTMLDivElement | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -132,7 +133,12 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     totalExtraCharsRef.current = 0;
     secondErrorsRef.current = 0;
 
-    // Focus input
+    // Reset container scroll
+    if (wordsContainerRef.current) {
+      wordsContainerRef.current.scrollTop = 0;
+    }
+
+    // Focus input and update caret
     setTimeout(() => {
       hiddenInputRef.current?.focus();
       updateCaret();
@@ -150,42 +156,73 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
   // Position caret element smoothly at active letter
   const updateCaret = useCallback(() => {
-    if (!wordsContainerRef.current || !caretRef.current) return;
+    if (!wordsContainerRef.current || !wordsWrapperRef.current || !caretRef.current) return;
     const activeWordElem = wordsContainerRef.current.querySelector(
       `[data-word-index="${currentWordIndex}"]`
     ) as HTMLElement | null;
 
     if (!activeWordElem) return;
 
+    const wrapperRect = wordsWrapperRef.current.getBoundingClientRect();
     const chars = activeWordElem.querySelectorAll('.char-item');
     const inputLen = currentInput.length;
 
     let targetLeft = 0;
     let targetTop = 0;
     let targetWidth = 10;
+    let targetHeight = 28;
 
-    if (inputLen === 0 && chars.length > 0) {
-      const firstChar = chars[0] as HTMLElement;
-      targetLeft = firstChar.offsetLeft;
-      targetTop = firstChar.offsetTop;
-      targetWidth = firstChar.offsetWidth || 10;
-    } else if (inputLen > 0 && inputLen <= chars.length) {
-      const charElem = chars[inputLen - 1] as HTMLElement;
-      targetLeft = charElem.offsetLeft + charElem.offsetWidth;
-      targetTop = charElem.offsetTop;
-      targetWidth = charElem.offsetWidth || 10;
-    } else if (inputLen > chars.length) {
-      // Extra characters
+    if (chars.length === 0) {
+      const wordRect = activeWordElem.getBoundingClientRect();
+      targetLeft = wordRect.left - wrapperRect.left;
+      targetTop = wordRect.top - wrapperRect.top;
+      targetWidth = 10;
+      targetHeight = wordRect.height || 28;
+    } else if (inputLen < chars.length) {
+      const charElem = chars[inputLen] as HTMLElement;
+      const charRect = charElem.getBoundingClientRect();
+      targetLeft = charRect.left - wrapperRect.left;
+      targetTop = charRect.top - wrapperRect.top;
+      targetWidth = charRect.width;
+      targetHeight = charRect.height;
+
+      if (settings.caretStyle === 'line') {
+        targetLeft -= 1;
+      } else if (settings.caretStyle === 'underline') {
+        targetTop = charRect.bottom - wrapperRect.top - 2;
+      }
+    } else {
+      // Completed all characters in current word (waiting for space) or extra characters
       const lastChar = chars[chars.length - 1] as HTMLElement;
-      targetLeft = lastChar ? lastChar.offsetLeft + lastChar.offsetWidth : activeWordElem.offsetLeft + activeWordElem.offsetWidth;
-      targetTop = lastChar ? lastChar.offsetTop : activeWordElem.offsetTop;
+      const lastCharRect = lastChar.getBoundingClientRect();
+      targetLeft = lastCharRect.right - wrapperRect.left;
+      targetTop = lastCharRect.top - wrapperRect.top;
+      targetHeight = lastCharRect.height;
+      targetWidth = Math.max(8, lastCharRect.width * 0.7);
+
+      if (settings.caretStyle === 'line') {
+        targetLeft -= 1;
+      } else if (settings.caretStyle === 'underline') {
+        targetTop = lastCharRect.bottom - wrapperRect.top - 2;
+      }
     }
 
     caretRef.current.style.left = `${targetLeft}px`;
     caretRef.current.style.top = `${targetTop}px`;
-    if (settings.caretStyle === 'block' || settings.caretStyle === 'box' || settings.caretStyle === 'underline') {
-      caretRef.current.style.width = `${Math.max(10, targetWidth)}px`;
+
+    if (settings.caretStyle === 'line') {
+      caretRef.current.style.width = '2.5px';
+      caretRef.current.style.height = `${targetHeight}px`;
+    } else if (settings.caretStyle === 'underline') {
+      caretRef.current.style.width = `${Math.max(8, targetWidth)}px`;
+      caretRef.current.style.height = '3px';
+    } else {
+      // block or box
+      caretRef.current.style.width = `${Math.max(8, targetWidth)}px`;
+      caretRef.current.style.height = `${targetHeight}px`;
     }
+
+    caretRef.current.style.opacity = '1';
 
     // Scroll active word into view smoothly if wrapped
     if (activeWordElem.offsetTop > 120 && wordsContainerRef.current) {
@@ -195,7 +232,27 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
   useEffect(() => {
     updateCaret();
-  }, [updateCaret, currentWordIndex, currentInput]);
+    const rafId = requestAnimationFrame(updateCaret);
+    return () => cancelAnimationFrame(rafId);
+  }, [updateCaret, currentWordIndex, currentInput, words]);
+
+  // Handle window resizing and font loading to keep caret aligned
+  useEffect(() => {
+    const handleResize = () => {
+      updateCaret();
+    };
+    window.addEventListener('resize', handleResize);
+
+    if (typeof document !== 'undefined' && 'fonts' in document) {
+      document.fonts.ready.then(() => {
+        updateCaret();
+      });
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [updateCaret]);
 
   // Complete and Finalize Test
   const finishTest = useCallback(() => {
@@ -628,17 +685,18 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           ref={wordsContainerRef}
           className="relative w-full min-h-[170px] max-h-[220px] p-6 rounded-xl bg-[var(--bg-input)] border border-[var(--border-strong)] overflow-hidden shadow-inner leading-relaxed text-xl sm:text-2xl"
         >
-          {/* Smooth Tactical Caret */}
-          <div
-            ref={caretRef}
-            className={`caret-${settings.caretStyle}`}
-            style={{
-              display: isFinished ? 'none' : 'block',
-            }}
-          />
-
           {/* Render Words */}
-          <div className="flex flex-wrap gap-x-3 gap-y-2 relative">
+          <div ref={wordsWrapperRef} className="flex flex-wrap gap-x-3 gap-y-2 relative">
+            {/* Smooth Tactical Caret */}
+            <div
+              ref={caretRef}
+              className={`caret-${settings.caretStyle}`}
+              style={{
+                display: isFinished ? 'none' : 'block',
+                opacity: 0,
+              }}
+            />
+
             {words.map((w, wordIdx) => {
               const isCurrent = wordIdx === currentWordIndex;
               return (

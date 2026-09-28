@@ -159,39 +159,45 @@ body {
 .caret-line {
   position: absolute;
   width: 2.5px;
-  height: 1.4em;
   background-color: var(--accent-tactical);
-  border-radius: 1px;
+  border-radius: 1.5px;
   animation: caretBlink 1s infinite;
   pointer-events: none;
-  transition: left 0.07s ease-out, top 0.07s ease-out;
+  z-index: 10;
+  transition: left 0.07s ease-out, top 0.07s ease-out, height 0.07s ease-out;
 }
 
 .caret-block {
   position: absolute;
-  height: 1.35em;
   background-color: rgba(var(--accent-tactical-rgb), 0.35);
   border-bottom: 2px solid var(--accent-tactical);
+  border-radius: 2px;
   pointer-events: none;
-  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
+  z-index: 10;
+  animation: caretBlink 1s infinite;
+  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out, height 0.07s ease-out;
 }
 
 .caret-underline {
   position: absolute;
   height: 3px;
   background-color: var(--accent-tactical);
-  bottom: 0;
+  border-radius: 1.5px;
   pointer-events: none;
+  z-index: 10;
   animation: caretBlink 1s infinite;
   transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
 }
 
 .caret-box {
   position: absolute;
-  height: 1.35em;
   border: 1.5px solid var(--accent-tactical);
+  border-radius: 3px;
+  background-color: rgba(var(--accent-tactical-rgb), 0.08);
   pointer-events: none;
-  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out;
+  z-index: 10;
+  animation: caretBlink 1s infinite;
+  transition: left 0.07s ease-out, top 0.07s ease-out, width 0.07s ease-out, height 0.07s ease-out;
 }
 
 /* Custom Tactical Scrollbar */
