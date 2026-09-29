@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const info = getLanguageInfo(lang);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site';
   const pageUrl = `${baseUrl}/${lang}`;
 
   return {

@@ -56,7 +56,7 @@ export const TestResults: React.FC<TestResultsProps> = ({
 🔥 Streak: ${result.highestStreak}x Keystroke Flow
 🎖️ Rank: ${rank.title} [${rank.badge}]
 ⏱️ Mode: ${result.settingsSnapshot}
-Benchmark your typing speed at: https://typetrack.vercel.app`;
+Benchmark your typing speed at: https://typetrack.saurabhx.site`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);

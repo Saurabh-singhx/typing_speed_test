@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { SUPPORTED_LANGUAGES } from '@/lib/languages';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.vercel.app';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site';
   const currentDate = new Date();
 
   const hreflangMap: Record<string, string> = {

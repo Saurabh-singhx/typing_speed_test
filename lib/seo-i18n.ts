@@ -795,7 +795,7 @@ export function getLocalizedContent(lang: LanguageCode): LocalizedContent {
   return LOCALIZED_CONTENT[lang] || LOCALIZED_CONTENT.en;
 }
 
-export function generateLocalizedJsonLd(lang: LanguageCode, baseUrl: string = 'https://typetrack.vercel.app') {
+export function generateLocalizedJsonLd(lang: LanguageCode, baseUrl: string = 'https://typetrack.saurabhx.site') {
   const info = getLanguageInfo(lang);
   const content = getLocalizedContent(lang);
   const pageUrl = lang === 'en' ? baseUrl : `${baseUrl}/${lang}`;

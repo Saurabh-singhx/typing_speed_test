@@ -2,7 +2,7 @@ export const SITE_CONFIG = {
   name: 'TypeTrack // Tactical Typing Speed Test',
   shortName: 'TypeTrack',
   description: 'Pro-grade tactical typing speed test with authentic mechanical switch acoustics, zero-latency caret telemetry, pacing ghost racer, and combat boss raid mode. No neon glare—pure precision.',
-  url: 'https://typetrack.vercel.app',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site',
   ogImage: '/og-image.png',
   creator: '@saurabh_singh',
   keywords: [
@@ -106,9 +106,9 @@ export const JSON_LD_DATA = {
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://typetrack.vercel.app/#webapp",
+      "@id": "https://typetrack.saurabhx.site/#webapp",
       "name": "TypeTrack Tactical Typing Speed Test",
-      "url": "https://typetrack.vercel.app",
+      "url": "https://typetrack.saurabhx.site",
       "applicationCategory": "GameApplication, EducationalApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript. Requires HTML5 Audio API for switch sounds.",
@@ -128,7 +128,7 @@ export const JSON_LD_DATA = {
     },
     {
       "@type": "FAQPage",
-      "@id": "https://typetrack.vercel.app/#faq",
+      "@id": "https://typetrack.saurabhx.site/#faq",
       "mainEntity": FAQ_ITEMS.map((item) => ({
         "@type": "Question",
         "name": item.question,
@@ -140,7 +140,7 @@ export const JSON_LD_DATA = {
     },
     {
       "@type": "HowTo",
-      "@id": "https://typetrack.vercel.app/#howto",
+      "@id": "https://typetrack.saurabhx.site/#howto",
       "name": "How to Improve Your Typing Speed to 100+ Words Per Minute",
       "description": "A tactical step-by-step training protocol for breaking past plateaus and reaching elite typing speed.",
       "step": [

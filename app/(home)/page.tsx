@@ -3,7 +3,7 @@ import { TypingApp } from '@/components/TypingApp';
 import { JsonLd } from '@/components/SEO/JsonLd';
 import { SITE_CONFIG } from '@/lib/seo-data';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site';
 
 export const metadata: Metadata = {
   title: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
