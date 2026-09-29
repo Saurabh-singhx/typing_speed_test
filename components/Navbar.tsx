@@ -2,19 +2,18 @@
 
 import React, { useState } from 'react';
 import { 
-  Keyboard, 
   Volume2, 
   VolumeX, 
   Palette, 
   Trophy, 
   BarChart3, 
   Gauge, 
-  Crosshair,
-  Sliders,
-  ChevronDown
+  ChevronDown,
+  Globe
 } from 'lucide-react';
-import { GameTheme, SoundType } from '@/lib/types';
+import { GameTheme, SoundType, LanguageCode } from '@/lib/types';
 import { UserStats, calculateLevel, getRankTitle } from '@/lib/storage';
+import { SUPPORTED_LANGUAGES, getLanguageInfo } from '@/lib/languages';
 
 interface NavbarProps {
   theme: GameTheme;
@@ -25,6 +24,8 @@ interface NavbarProps {
   onVolumeChange: (vol: number) => void;
   targetWpm: number;
   onTargetWpmChange: (wpm: number) => void;
+  language?: LanguageCode;
+  onLanguageChange?: (lang: LanguageCode) => void;
   userStats: UserStats;
   onOpenAchievements: () => void;
   onOpenStats: () => void;
@@ -39,6 +40,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onVolumeChange,
   targetWpm,
   onTargetWpmChange,
+  language = 'en',
+  onLanguageChange,
   userStats,
   onOpenAchievements,
   onOpenStats,
@@ -46,6 +49,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showSoundMenu, setShowSoundMenu] = useState(false);
   const [showPacerMenu, setShowPacerMenu] = useState(false);
+  const [showLangMenu, setShowLangMenu] = useState(false);
+
+  const currentLangInfo = getLanguageInfo(language);
 
   const levelInfo = calculateLevel(userStats.xp);
   const rank = getRankTitle(userStats.bestWpm);
@@ -91,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   v2.0
                 </span>
               </div>
-              <div className="text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] flex items-center gap-1.5">
+              <div className="hidden sm:flex text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] items-center gap-1.5">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] animate-pulse" />
                 <span>SYS_READY // APM TELEMETRY</span>
               </div>
@@ -120,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Tactical Controls & Modals */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           
           {/* Ghost Pacer Target Dropdown */}
           <div className="relative">
@@ -129,20 +135,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowPacerMenu(!showPacerMenu);
                 setShowThemeMenu(false);
                 setShowSoundMenu(false);
+                setShowLangMenu(false);
               }}
               title="Target Pacing Ghost"
-              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
             >
               <Gauge className="w-3.5 h-3.5 text-[var(--accent-target)]" />
-              <span className="hidden sm:inline">Pacer:</span>
-              <span className="font-bold text-[var(--text-main)]">
-                {targetWpm === 0 ? 'OFF' : `${targetWpm} WPM`}
+              <span className="hidden md:inline">Pacer:</span>
+              <span className="font-bold text-[11px] sm:text-xs text-[var(--text-main)]">
+                {targetWpm === 0 ? 'OFF' : `${targetWpm}`}
               </span>
               <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
             </button>
 
             {showPacerMenu && (
-              <div className="absolute right-0 mt-2 w-48 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
+              <div className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Target Pacing Ghost
                 </div>
@@ -174,21 +181,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowSoundMenu(!showSoundMenu);
                 setShowThemeMenu(false);
                 setShowPacerMenu(false);
+                setShowLangMenu(false);
               }}
               title="Mechanical Switch Audio"
-              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
             >
               {soundType === 'off' ? (
                 <VolumeX className="w-3.5 h-3.5 text-[var(--text-faint)]" />
               ) : (
                 <Volume2 className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               )}
-              <span className="hidden sm:inline capitalize">{soundType}</span>
+              <span className="hidden md:inline capitalize">{soundType}</span>
               <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
             </button>
 
             {showSoundMenu && (
-              <div className="absolute right-0 mt-2 w-56 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50">
+              <div className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Switch Acoustics</span>
                   <span>WebAudio</span>
@@ -200,7 +208,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onSoundChange(s.id);
                       setShowSoundMenu(false);
                     }}
-                    className={`w-full text-left px-2 py-1.5 rounded text-xs font-mono transition-colors ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
                       soundType === s.id
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -242,17 +250,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowThemeMenu(!showThemeMenu);
                 setShowSoundMenu(false);
                 setShowPacerMenu(false);
+                setShowLangMenu(false);
               }}
               title="Change Theme"
-              className="tactical-keycap px-2.5 py-1.5 rounded text-xs font-mono flex items-center gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
             >
               <Palette className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
-              <span className="hidden sm:inline capitalize">{theme}</span>
+              <span className="hidden md:inline capitalize">{theme}</span>
               <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
             </button>
 
             {showThemeMenu && (
-              <div className="absolute right-0 mt-2 w-52 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
+              <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Matte Gaming Palettes
                 </div>
@@ -273,6 +282,56 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="text-[9px] text-[var(--text-faint)]">{t.tag}</div>
                   </button>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* Language Selector Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => {
+                setShowLangMenu(!showLangMenu);
+                setShowThemeMenu(false);
+                setShowSoundMenu(false);
+                setShowPacerMenu(false);
+              }}
+              title="Select Language & Word Bank"
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+            >
+              <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
+              <span className="text-xs">{currentLangInfo.flag}</span>
+              <span className="font-bold text-[11px] sm:text-xs text-[var(--text-main)] uppercase">{language}</span>
+              <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
+            </button>
+
+            {showLangMenu && (
+              <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+                  <span>Language</span>
+                  <span>8 Languages</span>
+                </div>
+                <div className="max-h-60 overflow-y-auto space-y-0.5 pr-0.5">
+                  {SUPPORTED_LANGUAGES.map((l) => (
+                    <button
+                      key={l.code}
+                      onClick={() => {
+                        onLanguageChange?.(l.code);
+                        setShowLangMenu(false);
+                      }}
+                      className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors ${
+                        language === l.code
+                          ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
+                          : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{l.flag}</span>
+                        <span>{l.nativeName}</span>
+                      </div>
+                      <span className="text-[10px] text-[var(--text-faint)] uppercase">{l.code}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>

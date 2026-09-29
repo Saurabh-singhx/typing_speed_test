@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
+import '../globals.css';
 import { SITE_CONFIG } from '@/lib/seo-data';
-import { JsonLd } from '@/components/SEO/JsonLd';
+import { isValidLanguage, SUPPORTED_LANGUAGES } from '@/lib/languages';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -14,19 +14,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+export const viewport: Viewport = {
+  themeColor: '#0a0d14',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
-  title: {
-    default: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
-    template: '%s | TypeTrack',
-  },
-  description: SITE_CONFIG.description,
-  keywords: SITE_CONFIG.keywords,
-  authors: [{ name: 'TypeTrack' }],
-  creator: 'TypeTrack',
   metadataBase: new URL(SITE_CONFIG.url),
-  alternates: {
-    canonical: '/',
-  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -42,29 +38,6 @@ export const metadata: Metadata = {
   verification: {
     google: 'googleb5195719520931eb',
   },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: SITE_CONFIG.url,
-    title: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
-    description: SITE_CONFIG.description,
-    siteName: 'TypeTrack Tactical Typing',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'TypeTrack Tactical Typing Speed Test',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'TypeTrack // Tactical Typing Speed Test',
-    description: SITE_CONFIG.description,
-    creator: SITE_CONFIG.creator,
-    images: ['/og-image.png'],
-  },
   robots: {
     index: true,
     follow: true,
@@ -78,20 +51,27 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
+type Props = {
   children: React.ReactNode;
-}) {
+  params: Promise<{ lang: string }>;
+};
+
+export function generateStaticParams() {
+  return SUPPORTED_LANGUAGES.filter((l) => l.code !== 'en').map((l) => ({
+    lang: l.code,
+  }));
+}
+
+export default async function LocalizedLayout({ children, params }: Props) {
+  const { lang } = await params;
+  const validLang = isValidLanguage(lang) ? lang : 'en';
+
   return (
     <html
-      lang="en"
+      lang={validLang}
       data-theme="tactical"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <head>
-        <JsonLd />
-      </head>
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
         {children}
       </body>

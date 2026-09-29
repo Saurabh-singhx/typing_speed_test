@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Gauge, Zap, Trophy, ShieldAlert } from 'lucide-react';
+import { Gauge } from 'lucide-react';
 
 interface PacingGhostBarProps {
   progressPercent: number; // 0 to 100
@@ -33,15 +33,15 @@ export const PacingGhostBar: React.FC<PacingGhostBarProps> = ({
   return (
     <div className="w-full bg-[var(--bg-panel)]/80 border border-[var(--border-subtle)] rounded-lg p-2.5 font-mono text-xs my-2">
       {/* Header Telemetry */}
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 text-[var(--accent-target)] font-bold text-[11px] uppercase tracking-wider">
+      <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 items-start sm:items-center justify-between mb-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1.5 text-[var(--accent-target)] font-bold text-[10px] sm:text-[11px] uppercase tracking-wider">
             <Gauge className="w-3.5 h-3.5" />
             <span>TAC_PACER // VELOCITY GHOST</span>
           </div>
           {isActive && benchmarkWpm > 0 && (
             <span
-              className={`px-1.5 py-0.2 rounded text-[10px] font-bold ${
+              className={`px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold ${
                 isAhead
                   ? 'bg-[var(--accent-success)]/20 text-[var(--accent-success)] border border-[var(--accent-success)]/30'
                   : 'bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/30'
@@ -52,7 +52,7 @@ export const PacingGhostBar: React.FC<PacingGhostBarProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-3 text-[11px] text-[var(--text-dim)]">
+        <div className="flex items-center gap-2 sm:gap-3 text-[10px] sm:text-[11px] text-[var(--text-dim)]">
           {targetWpm > 0 && (
             <div className="flex items-center gap-1">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-target)]" />

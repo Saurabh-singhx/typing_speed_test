@@ -1,8 +1,15 @@
 import React from 'react';
-import { WPM_RANK_TIERS } from '@/lib/seo-data';
-import { Award, Zap, ShieldCheck } from 'lucide-react';
+import { Award, ShieldCheck } from 'lucide-react';
+import { LanguageCode } from '@/lib/types';
+import { getLocalizedContent } from '@/lib/seo-i18n';
 
-export const WpmRanksSection: React.FC = () => {
+interface WpmRanksSectionProps {
+  lang?: LanguageCode;
+}
+
+export const WpmRanksSection: React.FC<WpmRanksSectionProps> = ({ lang = 'en' }) => {
+  const content = getLocalizedContent(lang);
+
   return (
     <section className="w-full max-w-5xl mx-auto my-12 font-mono" id="wpm-tiers">
       
@@ -14,17 +21,17 @@ export const WpmRanksSection: React.FC = () => {
             <span>GLOBAL APM BENCHMARKS</span>
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-[var(--text-main)] mt-1">
-            Typing Speed Tiers & Percentile Distribution
+            {content.wpmTiersTitle}
           </h2>
         </div>
         <div className="text-xs text-[var(--text-dim)]">
-          Validated against 100,000+ benchmark sessions
+          {content.wpmTiersSubtitle}
         </div>
       </div>
 
       {/* Grid of Tiers */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {WPM_RANK_TIERS.map((tier, idx) => (
+        {content.ranks.map((tier, idx) => (
           <div
             key={idx}
             className={`p-4 rounded-xl border ${tier.color} transition-all hover:border-[var(--accent-tactical)]/50`}
@@ -55,7 +62,7 @@ export const WpmRanksSection: React.FC = () => {
       <div className="mt-4 p-3.5 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] flex items-start gap-3 text-xs text-[var(--text-dim)]">
         <ShieldCheck className="w-4 h-4 text-[var(--accent-success)] shrink-0 mt-0.5" />
         <div>
-          <strong className="text-[var(--text-main)]">Pro Tip for Velocity:</strong> Reaching 100+ WPM doesn't require moving your fingers twice as fast; it requires eliminating backspace hesitation and mastering multi-letter chunking (n-grams).
+          <strong className="text-[var(--text-main)]">Pro Tip for Velocity:</strong> Reaching 100+ WPM doesn&apos;t require moving your fingers twice as fast; it requires eliminating backspace hesitation and mastering multi-letter chunking (n-grams).
         </div>
       </div>
 

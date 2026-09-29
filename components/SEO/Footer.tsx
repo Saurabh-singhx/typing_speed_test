@@ -1,10 +1,10 @@
 import React from 'react';
-import { Keyboard, Shield, Terminal, Zap } from 'lucide-react';
+import Link from 'next/link';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] py-12 px-4 sm:px-6 font-mono text-xs text-[var(--text-dim)]">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <footer className="w-full border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] py-8 sm:py-12 px-4 sm:px-6 font-mono text-xs text-[var(--text-dim)]">
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Main Footer Row */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
                 />
               </div>
               <span className="font-bold text-base text-[var(--text-main)]">
-                TYPE<span className="text-[var(--accent-tactical)]">TRACK</span> // TACTICAL APM LAB
+                TYPE<span className="text-[var(--accent-tactical)]">TRACK</span> {'// TACTICAL APM LAB'}
               </span>
             </div>
             <p className="text-xs text-[var(--text-dim)] leading-relaxed max-w-md">
@@ -93,8 +93,49 @@ export const Footer: React.FC = () => {
 
         </div>
 
+        {/* International Language Editions (SEO Crawlability & Hreflang) */}
+        <div className="pt-6 border-t border-[var(--border-subtle)] space-y-2.5">
+          <div className="text-[10px] uppercase font-bold text-[var(--accent-tactical)] tracking-wider">
+            International Language Editions
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
+            <Link href="/" hrefLang="en" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇺🇸</span>
+              <span>English (Tactical Typing Test)</span>
+            </Link>
+            <Link href="/es" hrefLang="es" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇪🇸</span>
+              <span>Español (Test de Mecanografía)</span>
+            </Link>
+            <Link href="/de" hrefLang="de" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇩🇪</span>
+              <span>Deutsch (Tipptest Online)</span>
+            </Link>
+            <Link href="/fr" hrefLang="fr" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇫🇷</span>
+              <span>Français (Test de Frappe)</span>
+            </Link>
+            <Link href="/pt" hrefLang="pt" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇧🇷</span>
+              <span>Português (Teste de Digitação)</span>
+            </Link>
+            <Link href="/ru" hrefLang="ru" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇷🇺</span>
+              <span>Русский (Тест Скорости Печати)</span>
+            </Link>
+            <Link href="/hi" hrefLang="hi" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇮🇳</span>
+              <span>हिन्दी (हिंदी टाइपिंग टेस्ट)</span>
+            </Link>
+            <Link href="/it" hrefLang="it" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+              <span>🇮🇹</span>
+              <span>Italiano (Test di Battitura)</span>
+            </Link>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
-        <div className="pt-6 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[var(--text-faint)]">
+        <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[var(--text-faint)]">
           <div>
             © {new Date().getFullYear()} TypeTrack. Precision mechanical typing benchmark.
           </div>

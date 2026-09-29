@@ -1,9 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calculator, Clock, Sparkles, TrendingUp } from 'lucide-react';
+import { Calculator, Clock } from 'lucide-react';
+import { LanguageCode } from '@/lib/types';
+import { getLocalizedContent } from '@/lib/seo-i18n';
 
-export const WpmSavingsCalculator: React.FC = () => {
+interface WpmSavingsCalculatorProps {
+  lang?: LanguageCode;
+}
+
+export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang = 'en' }) => {
+  const content = getLocalizedContent(lang);
   const [currentWpm, setCurrentWpm] = useState(42);
   const [targetWpm, setTargetWpm] = useState(85);
   const [dailyTypingHours, setDailyTypingHours] = useState(2.5);
@@ -22,8 +29,8 @@ export const WpmSavingsCalculator: React.FC = () => {
   const speedBoostPercent = Math.round(((targetWpm - currentWpm) / Math.max(1, currentWpm)) * 100);
 
   return (
-    <section className="w-full max-w-5xl mx-auto my-12 font-mono" id="wpm-calculator">
-      <div className="p-6 rounded-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] shadow-xl">
+    <section className="w-full max-w-5xl mx-auto my-8 sm:my-12 font-mono" id="wpm-calculator">
+      <div className="p-4 sm:p-6 rounded-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] shadow-xl">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--border-subtle)] mb-6">
@@ -36,11 +43,11 @@ export const WpmSavingsCalculator: React.FC = () => {
                 TACTICAL PRODUCTIVITY ROI CALCULATOR
               </div>
               <h3 className="text-xl font-black text-[var(--text-main)]">
-                Calculate Time Reclaimed by Increasing WPM
+                {content.calculatorTitle}
               </h3>
             </div>
           </div>
-          <span className="text-xs text-[var(--text-dim)]">Based on 250 operational workdays/yr</span>
+          <span className="text-xs text-[var(--text-dim)]">{content.calculatorSubtitle}</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">

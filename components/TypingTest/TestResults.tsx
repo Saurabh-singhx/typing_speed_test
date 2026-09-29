@@ -1,25 +1,22 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
 import { 
   Trophy, 
   RotateCcw, 
-  Share2, 
-  CheckCircle2, 
   AlertCircle, 
   Flame, 
   Zap, 
   Target, 
   Activity, 
-  Clock,
   Sparkles,
   Download,
   Copy,
   Check
 } from 'lucide-react';
 import { TestResult, Achievement } from '@/lib/types';
-import { UserStats, getRankTitle, calculateLevel } from '@/lib/storage';
+import { UserStats, getRankTitle } from '@/lib/storage';
 
 interface TestResultsProps {
   result: TestResult;
@@ -35,11 +32,9 @@ export const TestResults: React.FC<TestResultsProps> = ({
   onRestart,
 }) => {
   const [copied, setCopied] = useState(false);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const isPersonalBest = result.wpm >= userStats.bestWpm && userStats.bestWpm > 0;
   const rank = getRankTitle(result.wpm);
-  const levelInfo = calculateLevel(userStats.xp);
 
   // Trigger celebration confetti for achievements or high WPM
   useEffect(() => {
@@ -227,21 +222,21 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
         
         {/* Subtle HUD Grid Overlay */}
         <div className="absolute top-0 right-0 p-4 text-[10px] text-[var(--text-faint)] uppercase tracking-widest pointer-events-none">
-          SEC_CODE: {result.id.slice(0, 8)} // APM VALIDATED
+          SEC_CODE: {result.id.slice(0, 8)} {'// APM VALIDATED'}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-end pb-6 border-b border-[var(--border-subtle)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 items-end pb-6 border-b border-[var(--border-subtle)]">
           
           {/* Hero WPM */}
-          <div className="md:col-span-1">
+          <div className="col-span-1">
             <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               <span>Net Speed</span>
             </div>
-            <div className="text-6xl sm:text-7xl font-black text-[var(--accent-tactical)] leading-none">
+            <div className="text-4xl sm:text-6xl md:text-7xl font-black text-[var(--accent-tactical)] leading-none">
               {result.wpm}
             </div>
-            <div className="text-xs text-[var(--text-faint)] mt-2 font-bold tracking-widest">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 font-bold tracking-widest">
               WORDS PER MINUTE
             </div>
           </div>
@@ -252,10 +247,10 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
               <Target className="w-3.5 h-3.5 text-[var(--accent-success)]" />
               <span>Accuracy</span>
             </div>
-            <div className="text-4xl sm:text-5xl font-black text-[var(--text-main)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--text-main)] leading-none">
               {result.accuracy}%
             </div>
-            <div className="text-xs text-[var(--text-faint)] mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
               {result.correctChars} hits / {result.incorrectChars} misses
             </div>
           </div>
@@ -266,10 +261,10 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
               <Activity className="w-3.5 h-3.5 text-[var(--accent-target)]" />
               <span>Raw Speed</span>
             </div>
-            <div className="text-4xl sm:text-5xl font-black text-[var(--accent-target)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-target)] leading-none">
               {result.rawWpm}
             </div>
-            <div className="text-xs text-[var(--text-faint)] mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
               Unadjusted cadence
             </div>
           </div>
@@ -280,10 +275,10 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
               <Flame className="w-3.5 h-3.5 text-[var(--accent-streak)]" />
               <span>Flow Streak</span>
             </div>
-            <div className="text-4xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none">
               {result.highestStreak}x
             </div>
-            <div className="text-xs text-[var(--text-faint)] mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
               Consistency: {result.consistency}%
             </div>
           </div>
@@ -383,8 +378,8 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
         )}
 
         {/* Mission Details & XP Reward Bar */}
-        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-4 text-xs text-[var(--text-dim)]">
-          <div className="flex items-center gap-4">
+        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--text-dim)]">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
             <div>
               <span className="text-[var(--text-faint)]">MISSION:</span>{' '}
               <span className="text-[var(--text-main)] uppercase">{result.settingsSnapshot}</span>
@@ -411,34 +406,34 @@ Benchmark your typing speed at: https://typetrack.vercel.app`;
       </div>
 
       {/* Action Controls Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         
         {/* Next Mission / Restart CTA */}
         <button
           onClick={onRestart}
-          className="tactical-keycap px-6 py-3 rounded-lg text-sm font-bold font-mono text-[var(--bg-page)] bg-[var(--accent-tactical)] hover:brightness-110 flex items-center gap-2 shadow-md transition-all"
+          className="tactical-keycap w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-bold font-mono text-[var(--bg-page)] bg-[var(--accent-tactical)] hover:brightness-110 flex items-center justify-center gap-2 shadow-md transition-all"
         >
           <RotateCcw className="w-4 h-4" />
           <span>RETRY MISSION</span>
-          <span className="text-[10px] opacity-75 font-normal px-1.5 py-0.5 rounded bg-black/20">
+          <span className="hidden sm:inline text-[10px] opacity-75 font-normal px-1.5 py-0.5 rounded bg-black/20">
             Tab + Enter
           </span>
         </button>
 
         {/* Share & Download Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           
           <button
             onClick={handleCopyScorecard}
-            className="tactical-keycap px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-input)] flex items-center gap-1.5"
+            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-input)] flex items-center justify-center gap-1.5"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'COPIED TO CLIPBOARD!' : 'COPY SCORECARD'}</span>
+            <span>{copied ? 'COPIED!' : 'COPY CARD'}</span>
           </button>
 
           <button
             onClick={handleDownloadScorecard}
-            className="tactical-keycap px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-input)] flex items-center gap-1.5"
+            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-input)] flex items-center justify-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5" />
             <span>EXPORT PNG</span>

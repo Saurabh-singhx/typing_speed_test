@@ -9,7 +9,6 @@ import {
   Clock, 
   FileText, 
   Award, 
-  Sparkles,
   TrendingUp,
   RefreshCw
 } from 'lucide-react';

@@ -1,3 +1,18 @@
+export type LanguageCode = 'en' | 'es' | 'de' | 'fr' | 'pt' | 'ru' | 'hi' | 'it';
+
+export interface LanguageInfo {
+  code: LanguageCode;
+  name: string;
+  nativeName: string;
+  flag: string;
+  slug: string;
+  defaultLayout: string;
+  metaTitle: string;
+  metaDescription: string;
+  keywords: string[];
+  ogLocale: string;
+}
+
 export type TestMode = 'time' | 'words' | 'quote' | 'boss';
 export type TimeOption = 15 | 30 | 60 | 120;
 export type WordOption = 10 | 25 | 50 | 100;
@@ -7,6 +22,7 @@ export type SoundType = 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';
 export type GameTheme = 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha';
 
 export interface TestSettings {
+  language: LanguageCode;
   mode: TestMode;
   timeLimit: TimeOption;
   wordCount: WordOption;

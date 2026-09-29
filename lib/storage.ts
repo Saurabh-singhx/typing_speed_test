@@ -11,6 +11,7 @@ const LEGACY_STATS_KEY = 'keyops_tactical_stats_v1';
 const LEGACY_HISTORY_KEY = 'keyops_tactical_history_v1';
 
 export const DEFAULT_SETTINGS: TestSettings = {
+  language: 'en',
   mode: 'time',
   timeLimit: 30,
   wordCount: 25,

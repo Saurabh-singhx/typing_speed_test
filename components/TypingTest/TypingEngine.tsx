@@ -4,15 +4,13 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   TestSettings, 
   TestResult, 
-  WpmPoint, 
-  CaretStyle, 
-  TestMode 
+  WpmPoint 
 } from '@/lib/types';
-import { getRandomWords, getRandomQuote } from '@/lib/words';
+import { getRandomWords, getRandomQuote, splitGraphemes } from '@/lib/words';
 import { soundFx } from '@/lib/audio';
 import { PacingGhostBar } from './PacingGhostBar';
 import { BossRaidArena } from './BossRaidArena';
-import { Flame, RotateCcw, AlertTriangle, ShieldAlert, Sparkles } from 'lucide-react';
+import { Flame, RotateCcw, ShieldAlert } from 'lucide-react';
 
 interface TypingEngineProps {
   settings: TestSettings;
@@ -58,6 +56,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
   
   // Hardcore Fail Modal
   const [hardcoreFailed, setHardcoreFailed] = useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   // Boss Raid Mechanics
   const [bossHp, setBossHp] = useState(1000);
@@ -87,30 +86,30 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     let wordList: string[] = [];
 
     if (settings.mode === 'quote') {
-      const q = getRandomQuote();
+      const q = getRandomQuote(settings.language);
       wordList = q.text.split(' ');
     } else if (settings.mode === 'boss') {
-      wordList = getRandomWords(80, { punctuation: false, numbers: false });
+      wordList = getRandomWords(80, { punctuation: false, numbers: false }, settings.language);
       setBossHp(1000);
       setTimeRemaining(50);
     } else if (settings.mode === 'words') {
       wordList = getRandomWords(settings.wordCount, {
         punctuation: settings.punctuation,
         numbers: settings.numbers,
-      });
+      }, settings.language);
     } else {
       // Time mode - generate enough words for the duration
       const count = Math.max(80, Math.round(settings.timeLimit * 2.5));
       wordList = getRandomWords(count, {
         punctuation: settings.punctuation,
         numbers: settings.numbers,
-      });
+      }, settings.language);
       setTimeRemaining(settings.timeLimit);
     }
 
     const stateList: WordState[] = wordList.map((word) => ({
       original: word,
-      chars: word.split('').map((c) => ({ char: c, status: 'untyped' })),
+      chars: splitGraphemes(word).map((c) => ({ char: c, status: 'untyped' })),
       isCompleted: false,
     }));
 
@@ -138,10 +137,13 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       wordsContainerRef.current.scrollTop = 0;
     }
 
-    // Focus input and update caret
+    if (hiddenInputRef.current) {
+      hiddenInputRef.current.value = '';
+    }
+
+    // Focus input
     setTimeout(() => {
       hiddenInputRef.current?.focus();
-      updateCaret();
     }, 50);
   }, [settings]);
 
@@ -165,7 +167,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
     const wrapperRect = wordsWrapperRef.current.getBoundingClientRect();
     const chars = activeWordElem.querySelectorAll('.char-item');
-    const inputLen = currentInput.length;
+    const inputLen = splitGraphemes(currentInput).length;
 
     let targetLeft = 0;
     let targetTop = 0;
@@ -379,15 +381,12 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
     if (isFinished || hardcoreFailed) return;
 
-    // Start timer on first genuine keystroke
-    if (!hasStarted && e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-      setHasStarted(true);
-      startTimeRef.current = Date.now();
-      lastWordTimeRef.current = Date.now();
-    }
+    // Ignore Dead keys (accents in European keyboards) so they don't count as typos
+    if (e.key === 'Dead') return;
 
-    // Play switch acoustic feedback
-    soundFx.playKey(e.key);
+    // Support Windows AltGr combinations (AltGr sets ctrlKey & altKey simultaneously)
+    const isAltGr = e.ctrlKey && e.altKey;
+    const isModifier = e.metaKey || (e.ctrlKey && !isAltGr) || (e.altKey && !isAltGr);
 
     // Ctrl + Backspace or Alt + Backspace: Delete full word
     if (e.key === 'Backspace' && (e.ctrlKey || e.altKey)) {
@@ -401,16 +400,23 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     if (e.key === ' ') {
       e.preventDefault();
       if (currentInput.trim().length === 0) return; // Don't advance on empty space
-
       advanceWord();
       return;
     }
 
-    // Single Backspace
+    // Ignore Android / IME virtual keyboard composition keys so handleInputChange processes them seamlessly
+    if (e.key === 'Unidentified' || e.keyCode === 229) {
+      return;
+    }
+
+    // Single Backspace (grapheme-aware for unicode / Indic / accent letters)
     if (e.key === 'Backspace') {
       if (currentInput.length > 0) {
-        const nextInput = currentInput.slice(0, -1);
+        const graphemes = splitGraphemes(currentInput);
+        graphemes.pop();
+        const nextInput = graphemes.join('');
         setCurrentInput(nextInput);
+        if (hiddenInputRef.current) hiddenInputRef.current.value = nextInput;
         updateWordChars(currentWordIndex, nextInput);
       } else if (currentWordIndex > 0) {
         // Allow hopping back to previous word if it was wrong
@@ -418,16 +424,33 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         if (prevWord && prevWord.chars.some((c) => c.status === 'incorrect' || c.status === 'extra')) {
           setCurrentWordIndex(currentWordIndex - 1);
           setCurrentInput(prevWord.original);
+          if (hiddenInputRef.current) hiddenInputRef.current.value = prevWord.original;
           updateWordChars(currentWordIndex - 1, prevWord.original);
         }
       }
       return;
     }
 
-    // Single Printable Character
-    if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-      const nextInput = currentInput + e.key;
-      const targetChar = words[currentWordIndex]?.original[currentInput.length];
+    // Single Printable Character (standard or AltGr)
+    if (e.key.length === 1 && !isModifier) {
+      e.preventDefault();
+
+      // Start timer on first genuine keystroke
+      if (!hasStarted) {
+        setHasStarted(true);
+        startTimeRef.current = Date.now();
+        lastWordTimeRef.current = Date.now();
+      }
+
+      // Play switch acoustic feedback
+      soundFx.playKey(e.key);
+
+      const activeWord = words[currentWordIndex];
+      if (!activeWord) return;
+
+      const origGraphemes = splitGraphemes(activeWord.original);
+      const inputGraphemes = splitGraphemes(currentInput);
+      const targetChar = origGraphemes[inputGraphemes.length];
       const isMatch = e.key === targetChar;
 
       if (isMatch) {
@@ -458,44 +481,125 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         if (settings.hardcore) {
           setHardcoreFailed(true);
           soundFx.playError();
+          onAbortHardcore();
           if (timerRef.current) clearInterval(timerRef.current);
           return;
         }
       }
 
+      const nextInput = currentInput + e.key;
       setCurrentInput(nextInput);
+      if (hiddenInputRef.current) hiddenInputRef.current.value = nextInput;
       updateWordChars(currentWordIndex, nextInput);
     }
   };
 
-  // Update char statuses in active word
+  // Mobile / IME Virtual Keyboard input handler
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isFinished || hardcoreFailed) return;
+    const val = e.target.value;
+
+    // Start timer on first genuine keystroke
+    if (!hasStarted && val.length > 0) {
+      setHasStarted(true);
+      startTimeRef.current = Date.now();
+      lastWordTimeRef.current = Date.now();
+    }
+
+    // Space advances word on mobile software keyboard
+    if (val.endsWith(' ')) {
+      if (currentInput.trim().length > 0) {
+        advanceWord();
+      }
+      return;
+    }
+
+    const oldGraphemes = splitGraphemes(currentInput);
+    const newGraphemes = splitGraphemes(val);
+
+    if (newGraphemes.length > oldGraphemes.length) {
+      // New characters were added via virtual keyboard
+      const addedChars = newGraphemes.slice(oldGraphemes.length);
+      const activeWord = words[currentWordIndex];
+
+      addedChars.forEach((char, idx) => {
+        soundFx.playKey(char);
+
+        if (activeWord) {
+          const origGraphemes = splitGraphemes(activeWord.original);
+          const targetChar = origGraphemes[oldGraphemes.length + idx];
+          const isMatch = char === targetChar;
+
+          if (isMatch) {
+            totalCorrectCharsRef.current += 1;
+            setComboStreak((prev) => {
+              const next = prev + 1;
+              if (next === 10 || next === 25 || next === 50) {
+                soundFx.playStreakMilestone(next >= 50 ? 3 : next >= 25 ? 2 : 1.5);
+              }
+              setHighestStreak((h) => Math.max(h, next));
+              return next;
+            });
+          } else {
+            totalIncorrectCharsRef.current += 1;
+            secondErrorsRef.current += 1;
+            soundFx.playError();
+            setComboStreak(0);
+
+            if (targetChar) {
+              setMissedKeysMap((prev) => ({
+                ...prev,
+                [targetChar]: (prev[targetChar] || 0) + 1,
+              }));
+            }
+
+            if (settings.hardcore) {
+              setHardcoreFailed(true);
+              soundFx.playError();
+              onAbortHardcore();
+              if (timerRef.current) clearInterval(timerRef.current);
+            }
+          }
+        }
+      });
+    } else if (newGraphemes.length < oldGraphemes.length) {
+      // Backspace on virtual keyboard
+      soundFx.playKey('Backspace');
+    }
+
+    setCurrentInput(val);
+    updateWordChars(currentWordIndex, val);
+  };
+
+  // Update char statuses in active word with grapheme precision
   const updateWordChars = (wordIdx: number, inputVal: string) => {
     setWords((prevWords) => {
       const newWords = [...prevWords];
       const targetWord = newWords[wordIdx];
       if (!targetWord) return prevWords;
 
-      const orig = targetWord.original;
+      const origGraphemes = splitGraphemes(targetWord.original);
+      const inputGraphemes = splitGraphemes(inputVal);
       const chars: CharState[] = [];
 
-      for (let i = 0; i < Math.max(orig.length, inputVal.length); i++) {
-        if (i < inputVal.length) {
-          if (i < orig.length) {
+      for (let i = 0; i < Math.max(origGraphemes.length, inputGraphemes.length); i++) {
+        if (i < inputGraphemes.length) {
+          if (i < origGraphemes.length) {
             chars.push({
-              char: orig[i],
-              status: inputVal[i] === orig[i] ? 'correct' : 'incorrect',
+              char: origGraphemes[i],
+              status: inputGraphemes[i] === origGraphemes[i] ? 'correct' : 'incorrect',
             });
           } else {
             // Extra characters typed beyond original word length
             chars.push({
-              char: inputVal[i],
+              char: inputGraphemes[i],
               status: 'extra',
             });
             totalExtraCharsRef.current += 1;
           }
         } else {
           chars.push({
-            char: orig[i],
+            char: origGraphemes[i],
             status: 'untyped',
           });
         }
@@ -541,6 +645,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
     setCurrentWordIndex((prev) => prev + 1);
     setCurrentInput('');
+    if (hiddenInputRef.current) hiddenInputRef.current.value = '';
   };
 
   // Calculate Progress Percent for Pacing Ghost Bar
@@ -557,34 +662,18 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     <div
       ref={containerRef}
       onClick={() => hiddenInputRef.current?.focus()}
-      className="w-full max-w-5xl mx-auto space-y-3 font-mono cursor-text select-none focus:outline-none"
+      className="w-full max-w-5xl mx-auto space-y-2.5 sm:space-y-3 font-mono cursor-text select-none focus:outline-none"
     >
-      
-      {/* Hidden zero-latency input listener */}
-      <input
-        ref={hiddenInputRef}
-        type="text"
-        value={currentInput}
-        onChange={() => {}} // Controlled by onKeyDown
-        onKeyDown={handleKeyDown}
-        className="opacity-0 absolute -top-9999 left-0 pointer-events-none"
-        autoFocus
-        autoCapitalize="off"
-        autoComplete="off"
-        autoCorrect="off"
-        spellCheck={false}
-      />
-
       {/* Live Tactical Telemetry HUD */}
-      <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs">
+      <div className="flex items-center justify-between px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs">
         
         {/* Left Telemetry: Time / Words Remaining */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase text-[var(--text-faint)]">
-              {settings.mode === 'time' ? 'TIME REMAINING' : settings.mode === 'words' ? 'WORDS LEFT' : 'CADENCE'}
+        <div className="flex items-center gap-2.5 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">
+              {settings.mode === 'time' ? 'TIME' : settings.mode === 'words' ? 'WORDS' : 'CADENCE'}
             </span>
-            <span className="text-base font-black text-[var(--accent-tactical)]">
+            <span className="text-sm sm:text-base font-black text-[var(--accent-tactical)]">
               {settings.mode === 'time'
                 ? `${timeRemaining}s`
                 : settings.mode === 'words'
@@ -596,31 +685,34 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           <div className="h-3.5 w-px bg-[var(--border-subtle)]" />
 
           {/* Live Speed */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase text-[var(--text-faint)]">WPM</span>
-            <span className="text-base font-black text-[var(--text-main)]">
+          <div className="flex items-center gap-1 sm:gap-1.5" title={`Raw Speed: ${liveRawWpm} WPM`}>
+            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">WPM</span>
+            <span className="text-sm sm:text-base font-black text-[var(--text-main)]">
               {liveWpm}
+            </span>
+            <span className="hidden sm:inline text-[9px] text-[var(--text-faint)] font-mono">
+              ({liveRawWpm} raw)
             </span>
           </div>
 
-          <div className="h-3.5 w-px bg-[var(--border-subtle)] hidden sm:block" />
+          <div className="h-3.5 w-px bg-[var(--border-subtle)]" />
 
           {/* Live Accuracy */}
-          <div className="hidden sm:flex items-center gap-1.5">
-            <span className="text-[10px] uppercase text-[var(--text-faint)]">ACC</span>
-            <span className={`text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
+          <div className="flex items-center gap-1 sm:gap-1.5">
+            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">ACC</span>
+            <span className={`text-sm sm:text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
               {liveAccuracy}%
             </span>
           </div>
         </div>
 
         {/* Right Telemetry: Flow Streak & Multiplier */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           {comboStreak > 3 && (
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-streak)]/40 text-[var(--accent-streak)] font-bold text-xs animate-pulse">
-              <Flame className="w-3.5 h-3.5" />
-              <span>{comboStreak}x STREAK</span>
-              <span className="text-[10px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
+            <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-streak)]/40 text-[var(--accent-streak)] font-bold text-[10px] sm:text-xs animate-pulse">
+              <Flame className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <span>{comboStreak}x</span>
+              <span className="hidden sm:inline text-[10px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
             </div>
           )}
 
@@ -663,30 +755,62 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       {/* Sudden Death Abort Modal */}
       {hardcoreFailed && (
         <div className="p-4 rounded-lg bg-[var(--accent-danger)]/15 border-2 border-[var(--accent-danger)] text-center space-y-2 animate-bounce">
-          <div className="flex items-center justify-center gap-2 text-[var(--accent-danger)] font-black text-sm uppercase tracking-widest">
-            <ShieldAlert className="w-5 h-5" />
+          <div className="flex items-center justify-center gap-2 text-[var(--accent-danger)] font-black text-xs sm:text-sm uppercase tracking-widest">
+            <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5" />
             <span>MISSION COMPROMISED // ACCURACY INTEGRITY LOST</span>
           </div>
           <p className="text-xs text-[var(--text-dim)]">
             Sudden Death mode aborts on a single mistake. Focus on clean, deliberate keystrokes.
           </p>
           <button
-            onClick={initWordBank}
+            onClick={() => {
+              onAbortHardcore();
+              initWordBank();
+            }}
             className="tactical-keycap px-4 py-2 rounded text-xs font-bold text-white bg-[var(--accent-danger)] hover:brightness-110"
           >
-            RE-ENGAGE SYSTEM (Tab + Enter)
+            RE-ENGAGE SYSTEM
           </button>
         </div>
       )}
+
+      {/* Mobile Focus & Touch Engagement Bar */}
+      <div className="flex sm:hidden items-center justify-between px-2.5 py-1 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[10px]">
+        <div className="flex items-center gap-1.5 text-[var(--text-dim)]">
+          <span className={`w-2 h-2 rounded-full ${isInputFocused ? 'bg-[var(--accent-success)] animate-pulse' : 'bg-[var(--accent-tactical)]'}`} />
+          <span>{isInputFocused ? 'KEYBOARD ACTIVE // TYPE AWAY' : 'TAP ARENA TO OPEN KEYBOARD'}</span>
+        </div>
+        <span className="text-[9px] text-[var(--text-faint)] uppercase">TOUCH ENABLED</span>
+      </div>
 
       {/* Primary Words Display Arena */}
       {!hardcoreFailed && (
         <div
           ref={wordsContainerRef}
-          className="relative w-full min-h-[170px] max-h-[220px] p-6 rounded-xl bg-[var(--bg-input)] border border-[var(--border-strong)] overflow-hidden shadow-inner leading-relaxed text-xl sm:text-2xl"
+          onClick={() => hiddenInputRef.current?.focus()}
+          className="relative w-full min-h-[140px] sm:min-h-[170px] max-h-[190px] sm:max-h-[220px] p-3.5 sm:p-6 rounded-xl bg-[var(--bg-input)] border border-[var(--border-strong)] overflow-hidden shadow-inner leading-relaxed text-lg sm:text-2xl cursor-text"
         >
+          {/* Zero-latency mobile-first input overlay */}
+          <input
+            ref={hiddenInputRef}
+            type="text"
+            value={currentInput}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            className="absolute inset-0 w-full h-full opacity-0 cursor-text z-20"
+            style={{ fontSize: '16px' }}
+            autoFocus
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            aria-label="Tactical typing speed test input"
+          />
+
           {/* Render Words */}
-          <div ref={wordsWrapperRef} className="flex flex-wrap gap-x-3 gap-y-2 relative">
+          <div ref={wordsWrapperRef} className="flex flex-wrap gap-x-2 sm:gap-x-3 gap-y-1 sm:gap-y-2 relative">
             {/* Smooth Tactical Caret */}
             <div
               ref={caretRef}
@@ -740,11 +864,12 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           </div>
 
           {/* Click to Focus Hint Overlay when unfocused */}
-          {!hasStarted && (
+          {!hasStarted && !isInputFocused && (
             <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-input)]/40 pointer-events-none">
-              <div className="px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] text-[11px] text-[var(--accent-tactical)] font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg">
+              <div className="px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] text-[10px] sm:text-[11px] text-[var(--accent-tactical)] font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg">
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)] animate-ping" />
-                <span>START TYPING TO ENGAGE SYSTEM</span>
+                <span className="hidden sm:inline">START TYPING TO ENGAGE SYSTEM</span>
+                <span className="sm:hidden">TAP TO ENGAGE KEYBOARD</span>
               </div>
             </div>
           )}
@@ -752,8 +877,19 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         </div>
       )}
 
-      {/* Tactical Shortcut Footer Hints */}
-      <div className="flex items-center justify-between text-[11px] text-[var(--text-faint)] px-1">
+      {/* Mobile Prominent Restart Action Button */}
+      <div className="sm:hidden pt-1">
+        <button
+          onClick={initWordBank}
+          className="tactical-keycap w-full py-2.5 rounded-lg text-xs font-mono font-bold text-[var(--accent-tactical)] bg-[var(--bg-panel)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-2 border border-[var(--border-strong)] shadow-sm"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          <span>RESTART MISSION</span>
+        </button>
+      </div>
+
+      {/* Tactical Shortcut Footer Hints (Desktop) */}
+      <div className="hidden sm:flex items-center justify-between text-[11px] text-[var(--text-faint)] px-1">
         <div className="flex items-center gap-3">
           <span><strong className="text-[var(--text-dim)]">Tab + Enter</strong> or <strong className="text-[var(--text-dim)]">Esc</strong> to restart</span>
           <span>•</span>

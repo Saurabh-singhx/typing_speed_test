@@ -17,7 +17,8 @@ import {
   TestResult, 
   GameTheme, 
   SoundType, 
-  Achievement 
+  Achievement,
+  LanguageCode 
 } from '@/lib/types';
 import { 
   DEFAULT_SETTINGS, 
@@ -29,32 +30,46 @@ import {
 } from '@/lib/storage';
 import { soundFx } from '@/lib/audio';
 
-export default function Home() {
-  const [settings, setSettings] = useState<TestSettings>(DEFAULT_SETTINGS);
+interface TypingAppProps {
+  initialLanguage?: LanguageCode;
+}
+
+export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
+  const [settings, setSettings] = useState<TestSettings>(() => ({
+    ...DEFAULT_SETTINGS,
+    ...(initialLanguage ? { language: initialLanguage } : {}),
+  }));
   const [userStats, setUserStats] = useState(INITIAL_STATS);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
-  const [isClientLoaded, setIsClientLoaded] = useState(false);
 
   // Load persistent settings & stats on mount
   useEffect(() => {
     const savedSettings = loadSettings();
     const savedStats = loadUserStats();
 
-    setSettings(savedSettings);
+    // If an initial language was specified via URL, prioritize it over generic saved settings
+    const activeLanguage = initialLanguage || savedSettings.language || 'en';
+    const mergedSettings: TestSettings = {
+      ...savedSettings,
+      language: activeLanguage,
+    };
+
+    setSettings(mergedSettings);
     setUserStats(savedStats);
 
+    // Set HTML lang attribute for accessibility and screen readers
+    document.documentElement.setAttribute('lang', activeLanguage);
+
     // Apply theme to document element
-    document.documentElement.setAttribute('data-theme', savedSettings.theme);
+    document.documentElement.setAttribute('data-theme', mergedSettings.theme);
 
     // Configure sound synthesizer
-    soundFx.setSoundType(savedSettings.soundType);
-    soundFx.setVolume(savedSettings.soundVolume);
-
-    setIsClientLoaded(true);
-  }, []);
+    soundFx.setSoundType(mergedSettings.soundType);
+    soundFx.setVolume(mergedSettings.soundVolume);
+  }, [initialLanguage]);
 
   // Update Settings Handler
   const handleUpdateSettings = (newPartial: Partial<TestSettings>) => {
@@ -70,6 +85,14 @@ export default function Home() {
       }
       if (newPartial.soundVolume !== undefined) {
         soundFx.setVolume(updated.soundVolume);
+      }
+      if (newPartial.language) {
+        document.documentElement.setAttribute('lang', newPartial.language);
+        // Smoothly update browser URL without full reload
+        const newPath = newPartial.language === 'en' ? '/' : `/${newPartial.language}`;
+        if (typeof window !== 'undefined' && window.location.pathname !== newPath) {
+          window.history.pushState(null, '', newPath);
+        }
       }
 
       return updated;
@@ -93,6 +116,8 @@ export default function Home() {
     setNewAchievements([]);
   };
 
+  const currentLang = settings.language || 'en';
+
   return (
     <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
       
@@ -106,6 +131,8 @@ export default function Home() {
         onVolumeChange={(soundVolume: number) => handleUpdateSettings({ soundVolume })}
         targetWpm={settings.targetWpm}
         onTargetWpmChange={(targetWpm: number) => handleUpdateSettings({ targetWpm })}
+        language={currentLang}
+        onLanguageChange={(lang: LanguageCode) => handleUpdateSettings({ language: lang })}
         userStats={userStats}
         onOpenAchievements={() => setShowAchievementsModal(true)}
         onOpenStats={() => setShowStatsModal(true)}
@@ -132,7 +159,7 @@ export default function Home() {
             />
           ) : (
             <TypingEngine
-              key={`${settings.mode}-${settings.timeLimit}-${settings.wordCount}-${settings.punctuation}-${settings.numbers}-${settings.hardcore}`}
+              key={`${settings.language}-${settings.mode}-${settings.timeLimit}-${settings.wordCount}-${settings.punctuation}-${settings.numbers}-${settings.hardcore}`}
               settings={settings}
               bestWpm={userStats.bestWpm}
               onFinishTest={handleFinishTest}
@@ -141,12 +168,12 @@ export default function Home() {
           )}
         </div>
 
-        {/* Comprehensive SEO & Informational Sections */}
+        {/* Comprehensive Localized SEO & Informational Sections */}
         <div className="w-full pt-12 border-t border-[var(--border-subtle)] space-y-16">
-          <WpmRanksSection />
-          <WpmSavingsCalculator />
-          <TypingGuideSection />
-          <FaqSection />
+          <WpmRanksSection lang={currentLang} />
+          <WpmSavingsCalculator lang={currentLang} />
+          <TypingGuideSection lang={currentLang} />
+          <FaqSection lang={currentLang} />
         </div>
 
       </main>
@@ -170,4 +197,4 @@ export default function Home() {
 
     </div>
   );
-}
+};

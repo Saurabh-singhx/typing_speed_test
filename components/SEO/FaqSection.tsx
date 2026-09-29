@@ -2,9 +2,15 @@
 
 import React, { useState } from 'react';
 import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { FAQ_ITEMS } from '@/lib/seo-data';
+import { LanguageCode } from '@/lib/types';
+import { getLocalizedContent } from '@/lib/seo-i18n';
 
-export const FaqSection: React.FC = () => {
+interface FaqSectionProps {
+  lang?: LanguageCode;
+}
+
+export const FaqSection: React.FC<FaqSectionProps> = ({ lang = 'en' }) => {
+  const content = getLocalizedContent(lang);
   const [openIndices, setOpenIndices] = useState<number[]>([0, 1]);
 
   const toggleIndex = (index: number) => {
@@ -23,16 +29,16 @@ export const FaqSection: React.FC = () => {
           <span>DEBRIEF & FAQ</span>
         </div>
         <h2 className="text-xl sm:text-2xl font-black text-[var(--text-main)] mt-1">
-          Frequently Asked Questions
+          {content.faqTitle}
         </h2>
         <p className="text-xs text-[var(--text-dim)] mt-1">
-          Everything you need to know about typing speed measurement, APM formulas, and keyboard ergonomics.
+          {content.faqSubtitle}
         </p>
       </div>
 
       {/* Accordion */}
       <div className="space-y-3">
-        {FAQ_ITEMS.map((item, idx) => {
+        {content.faqItems.map((item, idx) => {
           const isOpen = openIndices.includes(idx);
 
           return (

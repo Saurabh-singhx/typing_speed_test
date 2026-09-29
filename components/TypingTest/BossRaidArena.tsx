@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Shield, Swords, AlertTriangle, Cpu, Flame, Crosshair } from 'lucide-react';
+import { Shield, Cpu, Flame, Crosshair } from 'lucide-react';
 
 interface BossRaidArenaProps {
   bossHp: number;
