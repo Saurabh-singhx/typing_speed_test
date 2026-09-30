@@ -127,6 +127,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Tactical Controls & Modals */}
         <div className="flex items-center gap-1 sm:gap-2">
+          {(showPacerMenu || showSoundMenu || showThemeMenu || showLangMenu) && (
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => {
+                setShowPacerMenu(false);
+                setShowSoundMenu(false);
+                setShowThemeMenu(false);
+                setShowLangMenu(false);
+              }}
+            />
+          )}
           
           {/* Ghost Pacer Target Dropdown */}
           <div className="relative">
@@ -310,7 +321,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <span>Language</span>
                   <span>8 Languages</span>
                 </div>
-                <div className="max-h-60 overflow-y-auto space-y-0.5 pr-0.5">
+                <div className="space-y-0.5">
                   {SUPPORTED_LANGUAGES.map((l) => (
                     <button
                       key={l.code}

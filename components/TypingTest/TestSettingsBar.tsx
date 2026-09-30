@@ -47,10 +47,18 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
   ];
 
   return (
-    <div className={`w-full flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-mono shadow-sm transition-opacity overflow-x-auto no-scrollbar shrink-0 ${
+    <div className={`w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-mono shadow-sm transition-opacity ${
       disabled ? 'opacity-40 pointer-events-none' : 'opacity-100'
     }`}>
       
+      {/* Backdrop to close language menu */}
+      {showLangMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowLangMenu(false)}
+        />
+      )}
+
       {/* Language Selector Pill */}
       <div className="relative shrink-0">
         <button
@@ -70,7 +78,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               <span>Language Bank</span>
               <span>8 Localized</span>
             </div>
-            <div className="max-h-56 overflow-y-auto space-y-0.5 pr-0.5">
+            <div className="space-y-0.5">
               {SUPPORTED_LANGUAGES.map((l) => (
                 <button
                   key={l.code}
@@ -96,7 +104,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         )}
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden sm:block" />
+      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
       
       {/* Primary Mode Selector */}
       <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
@@ -124,7 +132,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         })}
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden sm:block" />
+      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
 
       {/* Sub-Options based on Mode */}
       {settings.mode === 'time' && (
@@ -163,7 +171,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </div>
       )}
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden sm:block" />
+      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
 
       {/* Modifiers: Punctuation, Numbers, Hardcore */}
       <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
@@ -211,7 +219,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </button>
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] hidden md:block" />
+      <div className="h-4 w-px bg-[var(--border-subtle)] hidden lg:block" />
 
       {/* Caret Style */}
       <div className="hidden md:flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">

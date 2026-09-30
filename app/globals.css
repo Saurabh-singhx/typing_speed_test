@@ -218,3 +218,12 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent-tactical);
 }
+
+/* Utility to completely hide scrollbars where needed */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
