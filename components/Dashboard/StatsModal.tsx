@@ -42,20 +42,20 @@ export const StatsModal: React.FC<StatsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
       <div className="w-full max-w-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono">
         
         {/* Header */}
-        <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-surface)]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded bg-[var(--keycap-bg)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-target)]">
+        <div className="p-3 sm:p-4 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded bg-[var(--keycap-bg)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-target)] shrink-0">
               <BarChart3 className="w-4 h-4" />
             </div>
-            <div>
-              <div className="text-sm font-bold text-[var(--text-main)]">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
                 LIFETIME OPERATOR TELEMETRY
               </div>
-              <div className="text-[10px] text-[var(--text-dim)] uppercase">
+              <div className="text-[10px] text-[var(--text-dim)] uppercase truncate">
                 STATUS: ACTIVE PROFILE // LVL {levelInfo.level}
               </div>
             </div>
@@ -63,31 +63,32 @@ export const StatsModal: React.FC<StatsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]"
+            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] shrink-0"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           
           {/* Level & Rank Hero */}
-          <div className="p-4 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-strong)] flex items-center justify-between">
-            <div>
-              <div className="text-xs text-[var(--text-dim)] uppercase">Rank Qualification</div>
-              <div className={`text-xl font-black ${rank.color} mt-0.5`}>
+          <div className="p-3 sm:p-4 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-strong)] flex items-center justify-between gap-2">
+            <div className="min-w-0">
+              <div className="text-[10px] sm:text-xs text-[var(--text-dim)] uppercase">Rank Qualification</div>
+              <div className={`text-base sm:text-xl font-black ${rank.color} mt-0.5 truncate`}>
                 {rank.title} [{rank.badge}]
               </div>
-              <div className="text-[11px] text-[var(--text-faint)] mt-1">
+              <div className="text-[10px] sm:text-[11px] text-[var(--text-faint)] mt-1 truncate">
                 Level {levelInfo.level} Operative ({levelInfo.currentLevelXp} / {levelInfo.nextLevelXp} XP)
               </div>
             </div>
 
-            <div className="w-14 h-14 rounded-full bg-[var(--bg-input)] border-2 border-[var(--accent-tactical)] flex items-center justify-center text-center">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--bg-input)] border-2 border-[var(--accent-tactical)] flex items-center justify-center text-center shrink-0">
               <div>
-                <div className="text-[9px] text-[var(--text-faint)]">LVL</div>
-                <div className="text-lg font-black text-[var(--accent-tactical)] leading-none">
+                <div className="text-[8px] sm:text-[9px] text-[var(--text-faint)]">LVL</div>
+                <div className="text-base sm:text-lg font-black text-[var(--accent-tactical)] leading-none">
                   {levelInfo.level}
                 </div>
               </div>

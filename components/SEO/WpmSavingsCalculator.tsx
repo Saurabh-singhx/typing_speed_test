@@ -34,15 +34,15 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--border-subtle)] mb-6">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded bg-[var(--bg-input)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)]">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded bg-[var(--bg-input)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)] shrink-0">
               <Calculator className="w-5 h-5" />
             </div>
-            <div>
-              <div className="text-xs uppercase text-[var(--accent-tactical)] font-bold tracking-wider">
+            <div className="min-w-0">
+              <div className="text-[10px] sm:text-xs uppercase text-[var(--accent-tactical)] font-bold tracking-wider truncate">
                 TACTICAL PRODUCTIVITY ROI CALCULATOR
               </div>
-              <h3 className="text-xl font-black text-[var(--text-main)]">
+              <h3 className="text-lg sm:text-xl font-black text-[var(--text-main)] truncate">
                 {content.calculatorTitle}
               </h3>
             </div>

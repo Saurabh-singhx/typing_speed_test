@@ -754,10 +754,10 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
       {/* Sudden Death Abort Modal */}
       {hardcoreFailed && (
-        <div className="p-4 rounded-lg bg-[var(--accent-danger)]/15 border-2 border-[var(--accent-danger)] text-center space-y-2 animate-bounce">
-          <div className="flex items-center justify-center gap-2 text-[var(--accent-danger)] font-black text-xs sm:text-sm uppercase tracking-widest">
-            <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5" />
-            <span>MISSION COMPROMISED // ACCURACY INTEGRITY LOST</span>
+        <div className="p-3.5 sm:p-4 rounded-lg bg-[var(--accent-danger)]/15 border-2 border-[var(--accent-danger)] text-center space-y-2 animate-bounce">
+          <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-[var(--accent-danger)] font-black text-xs sm:text-sm uppercase tracking-wider sm:tracking-widest">
+            <ShieldAlert className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
+            <span>MISSION COMPROMISED // ACCURACY LOST</span>
           </div>
           <p className="text-xs text-[var(--text-dim)]">
             Sudden Death mode aborts on a single mistake. Focus on clean, deliberate keystrokes.
@@ -775,12 +775,12 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       )}
 
       {/* Mobile Focus & Touch Engagement Bar */}
-      <div className="flex sm:hidden items-center justify-between px-2.5 py-1 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[10px]">
-        <div className="flex items-center gap-1.5 text-[var(--text-dim)]">
-          <span className={`w-2 h-2 rounded-full ${isInputFocused ? 'bg-[var(--accent-success)] animate-pulse' : 'bg-[var(--accent-tactical)]'}`} />
-          <span>{isInputFocused ? 'KEYBOARD ACTIVE // TYPE AWAY' : 'TAP ARENA TO OPEN KEYBOARD'}</span>
+      <div className="flex sm:hidden items-center justify-between gap-2 px-2.5 py-1 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[10px]">
+        <div className="flex items-center gap-1.5 text-[var(--text-dim)] min-w-0">
+          <span className={`w-2 h-2 rounded-full shrink-0 ${isInputFocused ? 'bg-[var(--accent-success)] animate-pulse' : 'bg-[var(--accent-tactical)]'}`} />
+          <span className="truncate">{isInputFocused ? 'KEYBOARD ACTIVE // TYPE AWAY' : 'TAP ARENA TO OPEN KEYBOARD'}</span>
         </div>
-        <span className="text-[9px] text-[var(--text-faint)] uppercase">TOUCH ENABLED</span>
+        <span className="text-[9px] text-[var(--text-faint)] uppercase shrink-0">TOUCH ENABLED</span>
       </div>
 
       {/* Primary Words Display Arena */}

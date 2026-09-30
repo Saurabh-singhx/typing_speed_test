@@ -29,20 +29,20 @@ export const BossRaidArena: React.FC<BossRaidArenaProps> = ({
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
         {/* Boss ID & Status */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded bg-[var(--bg-input)] border border-[var(--accent-danger)]/50 flex items-center justify-center text-[var(--accent-danger)]">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-10 h-10 rounded bg-[var(--bg-input)] border border-[var(--accent-danger)]/50 flex items-center justify-center text-[var(--accent-danger)] shrink-0">
             <Cpu className="w-6 h-6 animate-pulse" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-[var(--text-main)] tracking-wider">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="font-bold text-xs sm:text-sm text-[var(--text-main)] tracking-wider">
                 SENTINEL-MK9 // ROGUE MAINFRAME
               </span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/40 uppercase">
+              <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/40 uppercase font-bold shrink-0">
                 BOSS RAID
               </span>
             </div>
-            <div className="text-[10px] text-[var(--text-dim)] flex items-center gap-2">
+            <div className="text-[10px] text-[var(--text-dim)] flex flex-wrap items-center gap-1.5 sm:gap-2 mt-0.5">
               <span>SECURITY THREAT: TIER 5</span>
               <span>•</span>
               <span>WEAKNESS: HIGH APM PRECISION</span>
@@ -51,7 +51,7 @@ export const BossRaidArena: React.FC<BossRaidArenaProps> = ({
         </div>
 
         {/* Tactical Timers & Combos */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 shrink-0">
           {isCrit && lastDamage > 0 && (
             <div className="flex items-center gap-1 text-[var(--accent-tactical)] animate-bounce font-bold text-xs bg-[var(--accent-tactical)]/10 px-2 py-1 rounded border border-[var(--accent-tactical)]/30">
               <Flame className="w-3.5 h-3.5" />
@@ -89,12 +89,12 @@ export const BossRaidArena: React.FC<BossRaidArenaProps> = ({
       </div>
 
       {/* Tactical Raid Hint */}
-      <div className="mt-2.5 pt-2 border-t border-[var(--border-subtle)] flex items-center justify-between text-[10px] text-[var(--text-faint)]">
+      <div className="mt-2.5 pt-2 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 text-[10px] text-[var(--text-faint)]">
         <span className="flex items-center gap-1">
-          <Crosshair className="w-3 h-3 text-[var(--accent-tactical)]" />
+          <Crosshair className="w-3 h-3 text-[var(--accent-tactical)] shrink-0" />
           <span>Every clean keystroke drains boss core. Mistypes reduce fire rate.</span>
         </span>
-        <span className="font-bold text-[var(--accent-tactical)]">
+        <span className="font-bold text-[var(--accent-tactical)] shrink-0">
           COMBO DMG MULTIPLIER: {comboMultiplier}x
         </span>
       </div>

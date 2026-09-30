@@ -73,7 +73,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </button>
 
         {showLangMenu && (
-          <div className="absolute left-0 mt-1 w-48 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
+          <div className="absolute left-0 mt-1 w-48 max-w-[calc(100vw-2.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
             <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
               <span>Language Bank</span>
               <span>8 Localized</span>
@@ -107,14 +107,14 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
       <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
       
       {/* Primary Mode Selector */}
-      <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">
         {modes.map((m) => {
           const isActive = settings.mode === m.id;
           return (
             <button
               key={m.id}
               onClick={() => onUpdateSettings({ mode: m.id })}
-              className={`px-2 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs ${
+              className={`px-1.5 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs ${
                 isActive
                   ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold shadow-sm'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]'

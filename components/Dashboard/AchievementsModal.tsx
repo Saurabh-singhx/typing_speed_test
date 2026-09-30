@@ -55,20 +55,20 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
       <div className="w-full max-w-2xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono">
         
         {/* Header */}
-        <div className="p-4 border-b border-[var(--border-subtle)] flex items-center justify-between bg-[var(--bg-surface)]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded bg-[var(--keycap-bg)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)]">
+        <div className="p-3 sm:p-4 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
+          <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
+            <div className="w-8 h-8 rounded bg-[var(--keycap-bg)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-tactical)] shrink-0">
               <Trophy className="w-4 h-4" />
             </div>
-            <div>
-              <div className="text-sm font-bold text-[var(--text-main)]">
+            <div className="min-w-0">
+              <div className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
                 OPERATIONAL BADGES & RECOGNITION
               </div>
-              <div className="text-[10px] text-[var(--text-dim)]">
+              <div className="text-[10px] text-[var(--text-dim)] truncate">
                 {unlockedSet.size} of {ACHIEVEMENTS_LIST.length} OBJECTIVES UNLOCKED
               </div>
             </div>
@@ -76,15 +76,16 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]"
+            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] shrink-0"
+            aria-label="Close modal"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Badges Grid */}
-        <div className="p-4 max-h-[70vh] overflow-y-auto space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="p-3 sm:p-4 max-h-[75vh] overflow-y-auto space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3">
             {ACHIEVEMENTS_LIST.map((ach) => {
               const isUnlocked = unlockedSet.has(ach.id);
               const tierBadge = getTierColor(ach.tier);
@@ -112,7 +113,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
                         <span className="font-bold text-xs text-[var(--text-main)] truncate">
                           {ach.title}
                         </span>
-                        <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded border text-[var(--text-dim)]">
+                        <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded border text-[var(--text-dim)] shrink-0">
                           {ach.codename}
                         </span>
                       </div>

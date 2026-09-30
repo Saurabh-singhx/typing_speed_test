@@ -218,22 +218,22 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
       )}
 
       {/* Main Tactical Stats Panel */}
-      <div className="bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl p-6 shadow-xl relative overflow-hidden">
+      <div className="bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
         
         {/* Subtle HUD Grid Overlay */}
-        <div className="absolute top-0 right-0 p-4 text-[10px] text-[var(--text-faint)] uppercase tracking-widest pointer-events-none">
+        <div className="hidden sm:block absolute top-0 right-0 p-4 text-[10px] text-[var(--text-faint)] uppercase tracking-widest pointer-events-none">
           SEC_CODE: {result.id.slice(0, 8)} {'// APM VALIDATED'}
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 items-end pb-6 border-b border-[var(--border-subtle)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 items-end pb-5 sm:pb-6 border-b border-[var(--border-subtle)]">
           
           {/* Hero WPM */}
-          <div className="col-span-1">
+          <div className="col-span-1 min-w-0">
             <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
+              <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)] shrink-0" />
               <span>Net Speed</span>
             </div>
-            <div className="text-4xl sm:text-6xl md:text-7xl font-black text-[var(--accent-tactical)] leading-none">
+            <div className="text-4xl sm:text-6xl md:text-7xl font-black text-[var(--accent-tactical)] leading-none truncate">
               {result.wpm}
             </div>
             <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 font-bold tracking-widest">
@@ -242,43 +242,43 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
           </div>
 
           {/* Accuracy */}
-          <div>
+          <div className="col-span-1 min-w-0">
             <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-[var(--accent-success)]" />
+              <Target className="w-3.5 h-3.5 text-[var(--accent-success)] shrink-0" />
               <span>Accuracy</span>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--text-main)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--text-main)] leading-none truncate">
               {result.accuracy}%
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
               {result.correctChars} hits / {result.incorrectChars} misses
             </div>
           </div>
 
           {/* Raw WPM */}
-          <div>
+          <div className="col-span-1 min-w-0">
             <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-[var(--accent-target)]" />
+              <Activity className="w-3.5 h-3.5 text-[var(--accent-target)] shrink-0" />
               <span>Raw Speed</span>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-target)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-target)] leading-none truncate">
               {result.rawWpm}
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
               Unadjusted cadence
             </div>
           </div>
 
           {/* Consistency & Streak */}
-          <div>
+          <div className="col-span-1 min-w-0">
             <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-[var(--accent-streak)]" />
+              <Flame className="w-3.5 h-3.5 text-[var(--accent-streak)] shrink-0" />
               <span>Flow Streak</span>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none">
+            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none truncate">
               {result.highestStreak}x
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2">
+            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
               Consistency: {result.consistency}%
             </div>
           </div>
@@ -287,8 +287,8 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
 
         {/* Secondary Telemetry: SVG Performance Timeline Chart */}
         <div className="py-4">
-          <div className="flex items-center justify-between text-xs text-[var(--text-dim)] mb-2">
-            <span className="font-bold flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs text-[var(--text-dim)] mb-2">
+            <span className="font-bold flex flex-wrap items-center gap-2">
               <span>CADENCE TIMELINE</span>
               <span className="flex items-center gap-1 text-[10px] text-[var(--accent-tactical)]">
                 <span className="w-2 h-0.5 bg-[var(--accent-tactical)] inline-block" /> Net WPM
