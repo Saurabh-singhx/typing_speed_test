@@ -28,6 +28,16 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   onClose,
   userStats,
 }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   const unlockedSet = new Set(userStats.unlockedAchievements);
@@ -55,8 +65,16 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-2xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="achievements-modal-title"
+    >
+      <div className="w-full max-w-2xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono animate-modal">
         
         {/* Header */}
         <div className="p-3 sm:p-4 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
@@ -65,10 +83,10 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
               <Trophy className="w-4 h-4" />
             </div>
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
+              <h2 id="achievements-modal-title" className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
                 OPERATIONAL BADGES & RECOGNITION
-              </div>
-              <div className="text-[10px] text-[var(--text-dim)] truncate">
+              </h2>
+              <div className="text-[11px] text-[var(--text-dim)] truncate">
                 {unlockedSet.size} of {ACHIEVEMENTS_LIST.length} OBJECTIVES UNLOCKED
               </div>
             </div>
@@ -76,7 +94,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] shrink-0"
+            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] shrink-0"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />

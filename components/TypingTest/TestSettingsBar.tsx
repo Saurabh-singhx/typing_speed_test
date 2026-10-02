@@ -64,7 +64,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => setShowLangMenu(!showLangMenu)}
           title="Select Language & Word Bank"
-          className="px-2 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[var(--text-main)] hover:border-[var(--accent-tactical)]/50 transition-colors shadow-sm whitespace-nowrap"
+          aria-label={`Select language. Currently ${currentLang}`}
+          aria-haspopup="true"
+          aria-expanded={showLangMenu}
+          className="px-2 sm:px-2.5 py-1.5 rounded flex items-center gap-1 sm:gap-1.5 bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[var(--text-main)] hover:border-[var(--accent-tactical)]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] transition-colors shadow-sm whitespace-nowrap"
         >
           <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
           <span className="text-xs">{currentLangInfo.flag}</span>
@@ -73,8 +76,12 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </button>
 
         {showLangMenu && (
-          <div className="absolute left-0 mt-1 w-48 max-w-[calc(100vw-2.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+          <div
+            role="menu"
+            aria-label="Language selection"
+            className="absolute left-0 mt-1 w-48 max-w-[calc(100vw-2.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-modal"
+          >
+            <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
               <span>Language Bank</span>
               <span>8 Localized</span>
             </div>
@@ -82,11 +89,12 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               {SUPPORTED_LANGUAGES.map((l) => (
                 <button
                   key={l.code}
+                  role="menuitem"
                   onClick={() => {
                     onUpdateSettings({ language: l.code });
                     setShowLangMenu(false);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 rounded text-xs flex items-center justify-between transition-colors ${
+                  className={`w-full text-left px-2.5 py-1.5 rounded text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     currentLang === l.code
                       ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                       : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -96,7 +104,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                     <span className="text-sm">{l.flag}</span>
                     <span>{l.nativeName}</span>
                   </span>
-                  <span className="text-[10px] uppercase font-mono text-[var(--text-faint)]">{l.code}</span>
+                  <span className="text-[11px] uppercase font-mono text-[var(--text-faint)]">{l.code}</span>
                 </button>
               ))}
             </div>
@@ -114,7 +122,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
             <button
               key={m.id}
               onClick={() => onUpdateSettings({ mode: m.id })}
-              className={`px-1.5 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs ${
+              aria-pressed={isActive}
+              className={`px-1.5 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 isActive
                   ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold shadow-sm'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]'
@@ -123,7 +132,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               {m.icon}
               <span>{m.label}</span>
               {m.id === 'boss' && (
-                <span className="hidden sm:inline-block text-[9px] px-1 py-0.2 rounded bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/30">
+                <span className="hidden sm:inline-block text-[10px] px-1 py-0.2 rounded bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/30 font-semibold">
                   COMBAT
                 </span>
               )}
@@ -141,7 +150,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
             <button
               key={t}
               onClick={() => onUpdateSettings({ timeLimit: t })}
-              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs ${
+              aria-pressed={settings.timeLimit === t}
+              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.timeLimit === t
                   ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
@@ -159,7 +169,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
             <button
               key={w}
               onClick={() => onUpdateSettings({ wordCount: w })}
-              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs ${
+              aria-pressed={settings.wordCount === w}
+              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.wordCount === w
                   ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
@@ -180,7 +191,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ punctuation: !settings.punctuation })}
           title="Toggle Punctuation"
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap ${
+          aria-pressed={settings.punctuation}
+          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.punctuation
               ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
               : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
@@ -194,7 +206,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ numbers: !settings.numbers })}
           title="Toggle Numbers"
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap ${
+          aria-pressed={settings.numbers}
+          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.numbers
               ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
               : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
@@ -208,7 +221,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ hardcore: !settings.hardcore })}
           title="Sudden Death: 1 typo = Instant Mission Abort!"
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap ${
+          aria-pressed={settings.hardcore}
+          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.hardcore
               ? 'bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/50 font-bold'
               : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
@@ -223,13 +237,14 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
 
       {/* Caret Style */}
       <div className="hidden md:flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">
-        <span className="text-[10px] text-[var(--text-faint)] px-1 uppercase tracking-wider">Caret</span>
+        <span className="text-[11px] text-[var(--text-faint)] px-1 uppercase tracking-wider">Caret</span>
         {caretOptions.map((c) => (
           <button
             key={c.id}
             onClick={() => onUpdateSettings({ caretStyle: c.id })}
             title={`Caret style: ${c.id}`}
-            className={`px-1.5 py-0.5 rounded text-[11px] font-mono transition-colors ${
+            aria-pressed={settings.caretStyle === c.id}
+            className={`px-1.5 py-0.5 rounded text-[11px] font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               settings.caretStyle === c.id
                 ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
                 : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'

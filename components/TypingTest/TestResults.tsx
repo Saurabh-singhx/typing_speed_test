@@ -48,6 +48,18 @@ export const TestResults: React.FC<TestResultsProps> = ({
     }
   }, [isPersonalBest, result.wpm, newAchievements]);
 
+  // Instant keyboard restart shortcut (Enter or Escape)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter') {
+        e.preventDefault();
+        onRestart();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onRestart]);
+
   // Handle Copy Scorecard Text
   const handleCopyScorecard = () => {
     const text = `🎯 TYPETRACK TACTICAL TYPING REPORT 🎯
@@ -411,12 +423,12 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
         {/* Next Mission / Restart CTA */}
         <button
           onClick={onRestart}
-          className="tactical-keycap w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-bold font-mono text-[var(--bg-page)] bg-[var(--accent-tactical)] hover:brightness-110 flex items-center justify-center gap-2 shadow-md transition-all"
+          className="tactical-keycap w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-bold font-mono text-[var(--bg-page)] bg-[var(--accent-tactical)] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] focus-visible:ring-offset-2 flex items-center justify-center gap-2 shadow-md transition-all"
         >
           <RotateCcw className="w-4 h-4" />
           <span>RETRY MISSION</span>
-          <span className="hidden sm:inline text-[10px] opacity-75 font-normal px-1.5 py-0.5 rounded bg-black/20">
-            Tab + Enter
+          <span className="hidden sm:inline text-xs opacity-90 font-normal px-2 py-0.5 rounded bg-black/25 flex items-center gap-1">
+            <kbd className="bg-transparent border-0 text-[var(--bg-page)] font-bold shadow-none p-0">Enter</kbd> or <kbd className="bg-transparent border-0 text-[var(--bg-page)] font-bold shadow-none p-0">Esc</kbd>
           </span>
         </button>
 
@@ -425,7 +437,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
           
           <button
             onClick={handleCopyScorecard}
-            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-input)] flex items-center justify-center gap-1.5"
+            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center justify-center gap-1.5"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'COPIED!' : 'COPY CARD'}</span>
@@ -433,7 +445,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
 
           <button
             onClick={handleDownloadScorecard}
-            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-input)] flex items-center justify-center gap-1.5"
+            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-target)] flex items-center justify-center gap-1.5"
           >
             <Download className="w-3.5 h-3.5" />
             <span>EXPORT PNG</span>

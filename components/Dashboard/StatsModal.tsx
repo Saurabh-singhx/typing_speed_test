@@ -27,6 +27,16 @@ export const StatsModal: React.FC<StatsModalProps> = ({
   userStats,
   onStatsReset,
 }) => {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   const levelInfo = calculateLevel(userStats.xp);
@@ -42,8 +52,16 @@ export const StatsModal: React.FC<StatsModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn">
-      <div className="w-full max-w-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-fadeIn"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="stats-modal-title"
+    >
+      <div className="w-full max-w-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono animate-modal">
         
         {/* Header */}
         <div className="p-3 sm:p-4 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
@@ -52,10 +70,10 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               <BarChart3 className="w-4 h-4" />
             </div>
             <div className="min-w-0">
-              <div className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
+              <h2 id="stats-modal-title" className="text-xs sm:text-sm font-bold text-[var(--text-main)] truncate">
                 LIFETIME OPERATOR TELEMETRY
-              </div>
-              <div className="text-[10px] text-[var(--text-dim)] uppercase truncate">
+              </h2>
+              <div className="text-[11px] text-[var(--text-dim)] uppercase truncate">
                 STATUS: ACTIVE PROFILE // LVL {levelInfo.level}
               </div>
             </div>
@@ -63,7 +81,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] shrink-0"
+            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] shrink-0"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />

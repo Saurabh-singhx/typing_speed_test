@@ -686,11 +686,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
           {/* Live Speed */}
           <div className="flex items-center gap-1 sm:gap-1.5" title={`Raw Speed: ${liveRawWpm} WPM`}>
-            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">WPM</span>
+            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-faint)]">WPM</span>
             <span className="text-sm sm:text-base font-black text-[var(--text-main)]">
               {liveWpm}
             </span>
-            <span className="hidden sm:inline text-[9px] text-[var(--text-faint)] font-mono">
+            <span className="hidden sm:inline text-[11px] text-[var(--text-faint)] font-mono">
               ({liveRawWpm} raw)
             </span>
           </div>
@@ -699,7 +699,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
           {/* Live Accuracy */}
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">ACC</span>
+            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-faint)]">ACC</span>
             <span className={`text-sm sm:text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
               {liveAccuracy}%
             </span>
@@ -709,10 +709,10 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         {/* Right Telemetry: Flow Streak & Multiplier */}
         <div className="flex items-center gap-2 sm:gap-3">
           {comboStreak > 3 && (
-            <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-streak)]/40 text-[var(--accent-streak)] font-bold text-[10px] sm:text-xs animate-pulse">
-              <Flame className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-streak)]/40 text-[var(--accent-streak)] font-bold text-xs animate-pulse">
+              <Flame className="w-3.5 h-3.5" />
               <span>{comboStreak}x</span>
-              <span className="hidden sm:inline text-[10px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
+              <span className="hidden sm:inline text-[11px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
             </div>
           )}
 
@@ -723,9 +723,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
               initWordBank();
             }}
             title="Restart Test (Esc or Tab+Enter)"
-            className="tactical-keycap p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)]"
+            aria-label="Restart typing test (Esc or Tab+Enter)"
+            className="tactical-keycap p-1.5 sm:px-2.5 sm:py-1 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden md:inline text-xs font-mono font-medium">Restart</span>
           </button>
         </div>
 
@@ -788,7 +790,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         <div
           ref={wordsContainerRef}
           onClick={() => hiddenInputRef.current?.focus()}
-          className="relative w-full min-h-[140px] sm:min-h-[170px] max-h-[190px] sm:max-h-[220px] p-3.5 sm:p-6 rounded-xl bg-[var(--bg-input)] border border-[var(--border-strong)] overflow-hidden shadow-inner leading-relaxed text-lg sm:text-2xl cursor-text"
+          className={`relative w-full min-h-[140px] sm:min-h-[170px] max-h-[190px] sm:max-h-[220px] p-3.5 sm:p-6 rounded-xl bg-[var(--bg-input)] border transition-all duration-200 overflow-hidden shadow-inner leading-relaxed text-lg sm:text-2xl cursor-text ${
+            isInputFocused
+              ? 'border-[var(--accent-tactical)]/70 ring-2 ring-[var(--accent-tactical)]/20 shadow-lg'
+              : 'border-[var(--border-strong)] hover:border-[var(--border-active)]'
+          }`}
         >
           {/* Zero-latency mobile-first input overlay */}
           <input
@@ -866,7 +872,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           {/* Click to Focus Hint Overlay when unfocused */}
           {!hasStarted && !isInputFocused && (
             <div className="absolute inset-0 flex items-center justify-center bg-[var(--bg-input)]/40 pointer-events-none">
-              <div className="px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] text-[10px] sm:text-[11px] text-[var(--accent-tactical)] font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg">
+              <div className="px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] text-xs text-[var(--accent-tactical)] font-bold tracking-widest uppercase flex items-center gap-2 shadow-lg">
                 <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)] animate-ping" />
                 <span className="hidden sm:inline">START TYPING TO ENGAGE SYSTEM</span>
                 <span className="sm:hidden">TAP TO ENGAGE KEYBOARD</span>
@@ -881,7 +887,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       <div className="sm:hidden pt-1">
         <button
           onClick={initWordBank}
-          className="tactical-keycap w-full py-2.5 rounded-lg text-xs font-mono font-bold text-[var(--accent-tactical)] bg-[var(--bg-panel)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-2 border border-[var(--border-strong)] shadow-sm"
+          className="tactical-keycap w-full py-2.5 rounded-lg text-xs font-mono font-bold text-[var(--accent-tactical)] bg-[var(--bg-panel)] hover:bg-[var(--bg-surface)] flex items-center justify-center gap-2 border border-[var(--border-strong)] shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>RESTART MISSION</span>
@@ -889,15 +895,28 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       </div>
 
       {/* Tactical Shortcut Footer Hints (Desktop) */}
-      <div className="hidden sm:flex items-center justify-between text-[11px] text-[var(--text-faint)] px-1">
+      <div className="hidden sm:flex items-center justify-between text-xs text-[var(--text-faint)] px-1 pt-1">
         <div className="flex items-center gap-3">
-          <span><strong className="text-[var(--text-dim)]">Tab + Enter</strong> or <strong className="text-[var(--text-dim)]">Esc</strong> to restart</span>
+          <span className="flex items-center gap-1.5">
+            <kbd>Tab</kbd> + <kbd>Enter</kbd> or <kbd>Esc</kbd> to restart
+          </span>
           <span>•</span>
-          <span><strong className="text-[var(--text-dim)]">Ctrl + Backspace</strong> to wipe word</span>
+          <span className="flex items-center gap-1.5">
+            <kbd>Ctrl</kbd> + <kbd>Backspace</kbd> to wipe word
+          </span>
         </div>
         <div>
-          <span>TACTICAL KEYBOARD LAB // 0-LATENCY SYNC</span>
+          <span className="font-mono text-[11px] text-[var(--text-dim)] tracking-wide">TACTICAL KEYBOARD LAB // 0-LATENCY SYNC</span>
         </div>
+      </div>
+
+      {/* Screen Reader Live Announcements */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {isFinished
+          ? `Typing test finished. Final score: ${liveWpm} words per minute with ${liveAccuracy} percent accuracy.`
+          : hasStarted && comboStreak > 0 && comboStreak % 25 === 0
+          ? `${comboStreak} keystrokes combo streak active!`
+          : ''}
       </div>
 
     </div>

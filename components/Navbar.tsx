@@ -168,7 +168,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowLangMenu(false);
               }}
               title="Target Pacing Ghost"
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              aria-haspopup="true"
+              aria-expanded={showPacerMenu}
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             >
               <Gauge className="w-3.5 h-3.5 text-[var(--accent-target)]" />
               <span className="hidden md:inline">Pacer:</span>
@@ -179,25 +181,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showPacerMenu && (
-              <div className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
+              <div
+                role="menu"
+                aria-label="Target pacing ghost options"
+                className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50 animate-modal"
+              >
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Target Pacing Ghost
                 </div>
                 {targetWpmOptions.map((wpm) => (
                   <button
                     key={wpm}
+                    role="menuitem"
                     onClick={() => {
                       onTargetWpmChange(wpm);
                       setShowPacerMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       targetWpm === wpm
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
                     }`}
                   >
                     <span>{wpm === 0 ? 'Disable Ghost' : `${wpm} WPM Pace`}</span>
-                    {targetWpm === wpm && <span className="text-[10px]">ACTIVE</span>}
+                    {targetWpm === wpm && <span className="text-[11px] font-bold text-[var(--accent-tactical)]">ACTIVE</span>}
                   </button>
                 ))}
               </div>
@@ -214,7 +221,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowLangMenu(false);
               }}
               title="Mechanical Switch Audio"
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              aria-haspopup="true"
+              aria-expanded={showSoundMenu}
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             >
               {soundType === 'off' ? (
                 <VolumeX className="w-3.5 h-3.5 text-[var(--text-faint)]" />
@@ -226,19 +235,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showSoundMenu && (
-              <div className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+              <div
+                role="menu"
+                aria-label="Mechanical switch sound options"
+                className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50 animate-modal"
+              >
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Switch Acoustics</span>
                   <span>WebAudio</span>
                 </div>
                 {soundOptions.map((s) => (
                   <button
                     key={s.id}
+                    role="menuitem"
                     onClick={() => {
                       onSoundChange(s.id);
                       setShowSoundMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       soundType === s.id
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -246,15 +260,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                   >
                     <div className="flex items-center justify-between">
                       <span>{s.name}</span>
-                      {soundType === s.id && <span className="text-[9px]">ON</span>}
+                      {soundType === s.id && <span className="text-[11px] font-bold text-[var(--accent-tactical)]">ON</span>}
                     </div>
-                    <div className="text-[9px] text-[var(--text-faint)]">{s.desc}</div>
+                    <div className="text-[11px] text-[var(--text-faint)]">{s.desc}</div>
                   </button>
                 ))}
 
                 {soundType !== 'off' && (
                   <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] px-2">
-                    <div className="flex items-center justify-between text-[10px] font-mono text-[var(--text-dim)] mb-1">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-[var(--text-dim)] mb-1">
                       <span>Volume</span>
                       <span>{Math.round(volume * 100)}%</span>
                     </div>
@@ -264,8 +278,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       max="1"
                       step="0.05"
                       value={volume}
+                      aria-label="Sound switch volume"
                       onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-                      className="w-full h-1 bg-[var(--bg-input)] rounded accent-[var(--accent-tactical)] cursor-pointer"
+                      className="w-full h-1.5 bg-[var(--bg-input)] rounded accent-[var(--accent-tactical)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
                     />
                   </div>
                 )}
@@ -283,7 +298,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowLangMenu(false);
               }}
               title="Change Theme"
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              aria-haspopup="true"
+              aria-expanded={showThemeMenu}
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             >
               <Palette className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               <span className="hidden md:inline capitalize">{theme}</span>
@@ -291,25 +308,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showThemeMenu && (
-              <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
+              <div
+                role="menu"
+                aria-label="Color theme options"
+                className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50 animate-modal"
+              >
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Matte Gaming Palettes
                 </div>
                 {themes.map((t) => (
                   <button
                     key={t.id}
+                    role="menuitem"
                     onClick={() => {
                       onThemeChange(t.id);
                       setShowThemeMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       theme === t.id
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
                     }`}
                   >
                     <div>{t.name}</div>
-                    <div className="text-[9px] text-[var(--text-faint)]">{t.tag}</div>
+                    <div className="text-[11px] text-[var(--text-faint)]">{t.tag}</div>
                   </button>
                 ))}
               </div>
@@ -326,7 +348,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setShowPacerMenu(false);
               }}
               title="Select Language & Word Bank"
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)]"
+              aria-haspopup="true"
+              aria-expanded={showLangMenu}
+              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             >
               <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               <span className="text-xs">{currentLangInfo.flag}</span>
@@ -335,8 +359,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             {showLangMenu && (
-              <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-100">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+              <div
+                role="menu"
+                aria-label="Language selection options"
+                className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-modal"
+              >
+                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Language</span>
                   <span>8 Languages</span>
                 </div>
@@ -344,11 +372,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {SUPPORTED_LANGUAGES.map((l) => (
                     <button
                       key={l.code}
+                      role="menuitem"
                       onClick={() => {
                         onLanguageChange?.(l.code);
                         setShowLangMenu(false);
                       }}
-                      className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors ${
+                      className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                         language === l.code
                           ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                           : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -358,7 +387,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span className="text-sm">{l.flag}</span>
                         <span>{l.nativeName}</span>
                       </div>
-                      <span className="text-[10px] text-[var(--text-faint)] uppercase">{l.code}</span>
+                      <span className="text-[11px] text-[var(--text-faint)] uppercase">{l.code}</span>
                     </button>
                   ))}
                 </div>
@@ -370,7 +399,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenAchievements}
             title="Tactical Badges & Achievements"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative"
+            aria-label="Tactical Badges & Achievements"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] relative"
           >
             <Trophy className="w-4 h-4" />
             {userStats.unlockedAchievements.length > 0 && (
@@ -382,7 +412,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenStats}
             title="Lifetime Typing Telemetry"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)]"
+            aria-label="Lifetime Typing Telemetry"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
           >
             <BarChart3 className="w-4 h-4" />
           </button>
@@ -401,7 +432,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }
             }}
             title={soundType === 'off' ? 'Unmute Switch Audio' : 'Mute Switch Audio'}
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] active:scale-95"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label={soundType === 'off' ? 'Unmute Switch Audio' : 'Mute Switch Audio'}
           >
             {soundType === 'off' ? (
@@ -415,7 +446,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenAchievements}
             title="Tactical Badges & Achievements"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative active:scale-95"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label="Tactical Badges & Achievements"
           >
             <Trophy className="w-4 h-4" />
@@ -428,7 +459,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenStats}
             title="Lifetime Typing Telemetry"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] active:scale-95"
+            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label="Lifetime Typing Telemetry"
           >
             <BarChart3 className="w-4 h-4" />
@@ -438,7 +469,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             title="Tactical Config & Pacer Menu"
-            className={`tactical-keycap p-2 rounded flex items-center justify-center transition-colors active:scale-95 ${
+            className={`tactical-keycap p-2 rounded flex items-center justify-center transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               mobileMenuOpen
                 ? 'bg-[var(--accent-tactical)] text-[var(--bg-page)] border-[var(--accent-tactical)] font-bold'
                 : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
