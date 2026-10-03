@@ -248,7 +248,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
             <div className="text-4xl sm:text-6xl md:text-7xl font-black text-[var(--accent-tactical)] leading-none truncate">
               {result.wpm}
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 font-bold tracking-widest">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 font-bold tracking-widest">
               WORDS PER MINUTE
             </div>
           </div>
@@ -262,7 +262,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
             <div className="text-3xl sm:text-5xl font-black text-[var(--text-main)] leading-none truncate">
               {result.accuracy}%
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
               {result.correctChars} hits / {result.incorrectChars} misses
             </div>
           </div>
@@ -276,7 +276,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
             <div className="text-3xl sm:text-5xl font-black text-[var(--accent-target)] leading-none truncate">
               {result.rawWpm}
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
               Unadjusted cadence
             </div>
           </div>
@@ -290,7 +290,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
             <div className="text-3xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none truncate">
               {result.highestStreak}x
             </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-faint)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
               Consistency: {result.consistency}%
             </div>
           </div>
@@ -393,22 +393,22 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
         <div className="mt-4 pt-4 border-t border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--text-dim)]">
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-4">
             <div>
-              <span className="text-[var(--text-faint)]">MISSION:</span>{' '}
+              <span className="text-[var(--text-dim)] font-semibold">MISSION:</span>{' '}
               <span className="text-[var(--text-main)] uppercase">{result.settingsSnapshot}</span>
             </div>
             <div>
-              <span className="text-[var(--text-faint)]">TIME:</span>{' '}
+              <span className="text-[var(--text-dim)] font-semibold">TIME:</span>{' '}
               <span className="text-[var(--text-main)]">{result.duration}s</span>
             </div>
             <div>
-              <span className="text-[var(--text-faint)]">CHARS:</span>{' '}
+              <span className="text-[var(--text-dim)] font-semibold">CHARS:</span>{' '}
               <span className="text-[var(--accent-success)]">{result.correctChars}</span> /{' '}
               <span className="text-[var(--accent-danger)]">{result.incorrectChars}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[var(--text-faint)]">XP REWARD:</span>
+            <span className="text-[var(--text-dim)] font-semibold">XP REWARD:</span>
             <span className="px-2 py-0.5 rounded bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold border border-[var(--accent-tactical)]/30">
               +{result.xpEarned} XP
             </span>

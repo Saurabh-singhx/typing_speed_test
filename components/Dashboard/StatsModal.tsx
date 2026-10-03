@@ -98,14 +98,14 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               <div className={`text-base sm:text-xl font-black ${rank.color} mt-0.5 truncate`}>
                 {rank.title} [{rank.badge}]
               </div>
-              <div className="text-[10px] sm:text-[11px] text-[var(--text-faint)] mt-1 truncate">
+              <div className="text-[10px] sm:text-[11px] text-[var(--text-dim)] mt-1 truncate">
                 Level {levelInfo.level} Operative ({levelInfo.currentLevelXp} / {levelInfo.nextLevelXp} XP)
               </div>
             </div>
 
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--bg-input)] border-2 border-[var(--accent-tactical)] flex items-center justify-center text-center shrink-0">
               <div>
-                <div className="text-[8px] sm:text-[9px] text-[var(--text-faint)]">LVL</div>
+                <div className="text-[8px] sm:text-[9px] text-[var(--text-dim)] font-semibold">LVL</div>
                 <div className="text-base sm:text-lg font-black text-[var(--accent-tactical)] leading-none">
                   {levelInfo.level}
                 </div>
@@ -122,7 +122,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
                 <span>Peak Record</span>
               </div>
               <div className="text-2xl font-black text-[var(--accent-tactical)]">
-                {userStats.bestWpm} <span className="text-xs font-normal text-[var(--text-faint)]">WPM</span>
+                {userStats.bestWpm} <span className="text-xs font-normal text-[var(--text-dim)]">WPM</span>
               </div>
             </div>
 
@@ -132,7 +132,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
                 <span>Average WPM</span>
               </div>
               <div className="text-2xl font-black text-[var(--accent-target)]">
-                {userStats.averageWpm} <span className="text-xs font-normal text-[var(--text-faint)]">WPM</span>
+                {userStats.averageWpm} <span className="text-xs font-normal text-[var(--text-dim)]">WPM</span>
               </div>
             </div>
 
@@ -148,17 +148,17 @@ export const StatsModal: React.FC<StatsModalProps> = ({
 
             <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
-                <Clock className="w-3.5 h-3.5 text-[var(--text-faint)]" />
+                <Clock className="w-3.5 h-3.5 text-[var(--text-dim)]" />
                 <span>Time Deployed</span>
               </div>
               <div className="text-2xl font-black text-[var(--text-main)]">
-                {totalMinutes} <span className="text-xs font-normal text-[var(--text-faint)]">MIN</span>
+                {totalMinutes} <span className="text-xs font-normal text-[var(--text-dim)]">MIN</span>
               </div>
             </div>
 
             <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
-                <FileText className="w-3.5 h-3.5 text-[var(--text-faint)]" />
+                <FileText className="w-3.5 h-3.5 text-[var(--text-dim)]" />
                 <span>Words Typed</span>
               </div>
               <div className="text-2xl font-black text-[var(--text-main)]">

@@ -670,7 +670,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         {/* Left Telemetry: Time / Words Remaining */}
         <div className="flex items-center gap-2.5 sm:gap-4">
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-faint)]">
+            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-dim)] font-semibold">
               {settings.mode === 'time' ? 'TIME' : settings.mode === 'words' ? 'WORDS' : 'CADENCE'}
             </span>
             <span className="text-sm sm:text-base font-black text-[var(--accent-tactical)]">
@@ -686,11 +686,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
           {/* Live Speed */}
           <div className="flex items-center gap-1 sm:gap-1.5" title={`Raw Speed: ${liveRawWpm} WPM`}>
-            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-faint)]">WPM</span>
+            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-dim)]">WPM</span>
             <span className="text-sm sm:text-base font-black text-[var(--text-main)]">
               {liveWpm}
             </span>
-            <span className="hidden sm:inline text-[11px] text-[var(--text-faint)] font-mono">
+            <span className="hidden sm:inline text-[11px] text-[var(--text-dim)] font-mono">
               ({liveRawWpm} raw)
             </span>
           </div>
@@ -699,7 +699,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
           {/* Live Accuracy */}
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-faint)]">ACC</span>
+            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-dim)]">ACC</span>
             <span className={`text-sm sm:text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
               {liveAccuracy}%
             </span>
@@ -782,7 +782,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           <span className={`w-2 h-2 rounded-full shrink-0 ${isInputFocused ? 'bg-[var(--accent-success)] animate-pulse' : 'bg-[var(--accent-tactical)]'}`} />
           <span className="truncate">{isInputFocused ? 'KEYBOARD ACTIVE // TYPE AWAY' : 'TAP ARENA TO OPEN KEYBOARD'}</span>
         </div>
-        <span className="text-[9px] text-[var(--text-faint)] uppercase shrink-0">TOUCH ENABLED</span>
+        <span className="text-[9px] text-[var(--text-dim)] uppercase font-semibold shrink-0">TOUCH ENABLED</span>
       </div>
 
       {/* Primary Words Display Arena */}
@@ -798,6 +798,8 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         >
           {/* Zero-latency mobile-first input overlay */}
           <input
+            id="typing-test-input"
+            name="typingInput"
             ref={hiddenInputRef}
             type="text"
             value={currentInput}
@@ -895,7 +897,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       </div>
 
       {/* Tactical Shortcut Footer Hints (Desktop) */}
-      <div className="hidden sm:flex items-center justify-between text-xs text-[var(--text-faint)] px-1 pt-1">
+      <div className="hidden sm:flex items-center justify-between text-xs text-[var(--text-dim)] px-1 pt-1">
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
             <kbd>Tab</kbd> + <kbd>Enter</kbd> or <kbd>Esc</kbd> to restart

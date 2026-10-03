@@ -58,15 +58,23 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
             {/* Current WPM */}
             <div>
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="text-[var(--text-dim)]">Current Typing Speed:</span>
+                <label id="calc-current-wpm-label" htmlFor="calc-current-wpm" className="text-[var(--text-dim)]">Current Typing Speed:</label>
                 <span className="font-bold text-sm text-[var(--accent-tactical)]">{currentWpm} WPM</span>
               </div>
               <input
+                id="calc-current-wpm"
+                name="currentWpm"
                 type="range"
                 min="20"
                 max="120"
                 step="1"
                 value={currentWpm}
+                aria-labelledby="calc-current-wpm-label"
+                aria-label="Current Typing Speed in Words Per Minute"
+                aria-valuemin={20}
+                aria-valuemax={120}
+                aria-valuenow={currentWpm}
+                aria-valuetext={`${currentWpm} Words Per Minute`}
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
                   setCurrentWpm(val);
@@ -79,15 +87,23 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
             {/* Target WPM */}
             <div>
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="text-[var(--text-dim)]">Target Benchmark Speed:</span>
+                <label id="calc-target-wpm-label" htmlFor="calc-target-wpm" className="text-[var(--text-dim)]">Target Benchmark Speed:</label>
                 <span className="font-bold text-sm text-[var(--accent-target)]">{targetWpm} WPM</span>
               </div>
               <input
+                id="calc-target-wpm"
+                name="targetWpm"
                 type="range"
                 min={currentWpm + 5}
                 max="150"
                 step="1"
                 value={targetWpm}
+                aria-labelledby="calc-target-wpm-label"
+                aria-label="Target Benchmark Speed in Words Per Minute"
+                aria-valuemin={currentWpm + 5}
+                aria-valuemax={150}
+                aria-valuenow={targetWpm}
+                aria-valuetext={`${targetWpm} Words Per Minute`}
                 onChange={(e) => setTargetWpm(parseInt(e.target.value))}
                 className="w-full h-1.5 bg-[var(--bg-input)] rounded accent-[var(--accent-target)] cursor-pointer"
               />
@@ -96,15 +112,23 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
             {/* Daily Hours */}
             <div>
               <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="text-[var(--text-dim)]">Daily Time Spent Writing & Coding:</span>
+                <label id="calc-daily-hours-label" htmlFor="calc-daily-hours" className="text-[var(--text-dim)]">Daily Time Spent Writing & Coding:</label>
                 <span className="font-bold text-sm text-[var(--accent-success)]">{dailyTypingHours} Hours / day</span>
               </div>
               <input
+                id="calc-daily-hours"
+                name="dailyTypingHours"
                 type="range"
                 min="0.5"
                 max="8"
                 step="0.5"
                 value={dailyTypingHours}
+                aria-labelledby="calc-daily-hours-label"
+                aria-label="Daily Time Spent Writing and Coding in Hours"
+                aria-valuemin={0.5}
+                aria-valuemax={8}
+                aria-valuenow={dailyTypingHours}
+                aria-valuetext={`${dailyTypingHours} Hours per day`}
                 onChange={(e) => setDailyTypingHours(parseFloat(e.target.value))}
                 className="w-full h-1.5 bg-[var(--bg-input)] rounded accent-[var(--accent-success)] cursor-pointer"
               />
@@ -121,7 +145,7 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
           <div className="lg:col-span-5 bg-[var(--bg-surface)] p-5 rounded-xl border border-[var(--border-strong)] space-y-4">
             
             <div>
-              <div className="text-[10px] uppercase tracking-wider text-[var(--text-faint)] flex items-center gap-1.5">
+              <div className="text-[10px] uppercase tracking-wider text-[var(--text-dim)] font-semibold flex items-center gap-1.5">
                 <Clock className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
                 <span>Annual Time Reclaimed</span>
               </div>

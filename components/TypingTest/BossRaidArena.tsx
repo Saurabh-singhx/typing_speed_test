@@ -60,7 +60,7 @@ export const BossRaidArena: React.FC<BossRaidArenaProps> = ({
           )}
 
           <div className="text-right">
-            <div className="text-[10px] uppercase text-[var(--text-faint)]">Core Overload In</div>
+            <div className="text-[10px] uppercase text-[var(--text-dim)] font-semibold">Core Overload In</div>
             <div className="text-lg font-black text-[var(--accent-danger)] leading-none">
               {timeRemaining}s
             </div>
@@ -89,7 +89,7 @@ export const BossRaidArena: React.FC<BossRaidArenaProps> = ({
       </div>
 
       {/* Tactical Raid Hint */}
-      <div className="mt-2.5 pt-2 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 text-[10px] text-[var(--text-faint)]">
+      <div className="mt-2.5 pt-2 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 text-[10px] text-[var(--text-dim)]">
         <span className="flex items-center gap-1">
           <Crosshair className="w-3 h-3 text-[var(--accent-tactical)] shrink-0" />
           <span>Every clean keystroke drains boss core. Mistypes reduce fire rate.</span>

@@ -26,7 +26,7 @@ export const Footer: React.FC = () => {
             <p className="text-xs text-[var(--text-dim)] leading-relaxed max-w-md">
               A high-precision tactical typing benchmark designed for esports players, software developers, and mechanical keyboard purists. Zero distracting neon glow—only chiseled tactile feedback, procedural switch acoustics, and real-time telemetry.
             </p>
-            <div className="text-[10px] text-[var(--text-faint)] flex items-center gap-3">
+            <div className="text-[10px] text-[var(--text-dim)] font-semibold flex items-center gap-3">
               <span>STATUS: NOMINAL</span>
               <span>•</span>
               <span>0-LATENCY WEB AUDIO</span>
@@ -42,22 +42,22 @@ export const Footer: React.FC = () => {
             </div>
             <ul className="space-y-1.5 text-xs">
               <li>
-                <a href="#wpm-tiers" className="hover:text-[var(--accent-tactical)] transition-colors">
+                <a href="#wpm-tiers" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
                   Global WPM Tiers
                 </a>
               </li>
               <li>
-                <a href="#wpm-calculator" className="hover:text-[var(--accent-tactical)] transition-colors">
+                <a href="#wpm-calculator" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
                   Typing ROI Calculator
                 </a>
               </li>
               <li>
-                <a href="#typing-guide" className="hover:text-[var(--accent-tactical)] transition-colors">
+                <a href="#typing-guide" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
                   Ergonomics & Switches
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-[var(--accent-tactical)] transition-colors">
+                <a href="#faq" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
                   Debrief & FAQ
                 </a>
               </li>
@@ -99,35 +99,35 @@ export const Footer: React.FC = () => {
             International Language Editions
           </div>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-            <Link href="/" hrefLang="en" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/" hrefLang="en" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇺🇸</span>
               <span>English (Tactical Typing Test)</span>
             </Link>
-            <Link href="/es" hrefLang="es" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/es" hrefLang="es" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇪🇸</span>
               <span>Español (Test de Mecanografía)</span>
             </Link>
-            <Link href="/de" hrefLang="de" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/de" hrefLang="de" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇩🇪</span>
               <span>Deutsch (Tipptest Online)</span>
             </Link>
-            <Link href="/fr" hrefLang="fr" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/fr" hrefLang="fr" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇫🇷</span>
               <span>Français (Test de Frappe)</span>
             </Link>
-            <Link href="/pt" hrefLang="pt" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/pt" hrefLang="pt" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇧🇷</span>
               <span>Português (Teste de Digitação)</span>
             </Link>
-            <Link href="/ru" hrefLang="ru" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/ru" hrefLang="ru" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇷🇺</span>
               <span>Русский (Тест Скорости Печати)</span>
             </Link>
-            <Link href="/hi" hrefLang="hi" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/hi" hrefLang="hi" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇮🇳</span>
               <span>हिन्दी (हिंदी टाइपिंग टेस्ट)</span>
             </Link>
-            <Link href="/it" hrefLang="it" className="hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/it" hrefLang="it" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
               <span>🇮🇹</span>
               <span>Italiano (Test di Battitura)</span>
             </Link>
@@ -135,7 +135,7 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[var(--text-faint)]">
+        <div className="pt-4 border-t border-[var(--border-subtle)] flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[var(--text-dim)]">
           <div>
             © {new Date().getFullYear()} TypeTrack. Precision mechanical typing benchmark.
           </div>

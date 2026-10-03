@@ -100,9 +100,9 @@ export const PacingGhostBar: React.FC<PacingGhostBarProps> = ({
       </div>
 
       {/* Track Footnote */}
-      <div className="flex items-center justify-between text-[10px] text-[var(--text-faint)] mt-1 px-1">
+      <div className="flex items-center justify-between text-[10px] text-[var(--text-dim)] font-semibold mt-1 px-1">
         <span>0% DISPATCH</span>
-        <span className="font-bold text-[var(--text-dim)]">
+        <span className="font-bold text-[var(--text-main)]">
           PLAYER: {currentWpm} WPM ({Math.round(playerPercent)}%)
         </span>
         <span>100% OBJECTIVE</span>

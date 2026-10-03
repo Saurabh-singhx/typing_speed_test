@@ -157,7 +157,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-3 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] text-[10px] text-center text-[var(--text-faint)]">
+        <div className="p-3 bg-[var(--bg-surface)] border-t border-[var(--border-subtle)] text-[10px] text-center text-[var(--text-dim)]">
           Badges persist locally in your browser. Complete tests across all modes to unlock the full registry.
         </div>
 

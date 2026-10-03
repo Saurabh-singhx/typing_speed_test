@@ -132,7 +132,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               {m.icon}
               <span>{m.label}</span>
               {m.id === 'boss' && (
-                <span className="hidden sm:inline-block text-[10px] px-1 py-0.2 rounded bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/30 font-semibold">
+                <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded bg-red-950/70 text-red-300 border border-red-500/40 font-bold tracking-wider">
                   COMBAT
                 </span>
               )}
@@ -191,11 +191,12 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ punctuation: !settings.punctuation })}
           title="Toggle Punctuation"
+          aria-label="Toggle Punctuation"
           aria-pressed={settings.punctuation}
           className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.punctuation
               ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
-              : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
           }`}
         >
           <AtSign className="w-3 h-3" />
@@ -206,11 +207,12 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ numbers: !settings.numbers })}
           title="Toggle Numbers"
+          aria-label="Toggle Numbers"
           aria-pressed={settings.numbers}
           className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.numbers
               ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
-              : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
           }`}
         >
           <Hash className="w-3 h-3" />
@@ -221,11 +223,12 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         <button
           onClick={() => onUpdateSettings({ hardcore: !settings.hardcore })}
           title="Sudden Death: 1 typo = Instant Mission Abort!"
+          aria-label="Sudden Death mode: 1 typo equals instant mission abort"
           aria-pressed={settings.hardcore}
           className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.hardcore
-              ? 'bg-[var(--accent-danger)]/20 text-[var(--accent-danger)] border border-[var(--accent-danger)]/50 font-bold'
-              : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
+              ? 'bg-[var(--accent-danger)]/20 text-red-300 border border-[var(--accent-danger)]/50 font-bold'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
           }`}
         >
           <Skull className="w-3 h-3" />
@@ -237,17 +240,18 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
 
       {/* Caret Style */}
       <div className="hidden md:flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">
-        <span className="text-[11px] text-[var(--text-faint)] px-1 uppercase tracking-wider">Caret</span>
+        <span className="text-[11px] text-[var(--text-dim)] px-1 uppercase tracking-wider font-semibold">Caret</span>
         {caretOptions.map((c) => (
           <button
             key={c.id}
             onClick={() => onUpdateSettings({ caretStyle: c.id })}
             title={`Caret style: ${c.id}`}
+            aria-label={`Caret style: ${c.id}`}
             aria-pressed={settings.caretStyle === c.id}
-            className={`px-1.5 py-0.5 rounded text-[11px] font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+            className={`px-2 py-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center rounded text-[11px] font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               settings.caretStyle === c.id
-                ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
-                : 'text-[var(--text-faint)] hover:text-[var(--text-dim)]'
+                ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold shadow-sm'
+                : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]'
             }`}
           >
             {c.label}

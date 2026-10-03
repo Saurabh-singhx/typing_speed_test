@@ -268,17 +268,24 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {soundType !== 'off' && (
                   <div className="mt-2 pt-2 border-t border-[var(--border-subtle)] px-2">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-[var(--text-dim)] mb-1">
+                    <label id="desktop-volume-label" htmlFor="desktop-volume-slider" className="flex items-center justify-between text-[11px] font-mono text-[var(--text-dim)] mb-1 cursor-pointer">
                       <span>Volume</span>
-                      <span>{Math.round(volume * 100)}%</span>
-                    </div>
+                      <span className="font-bold text-[var(--text-main)]">{Math.round(volume * 100)}%</span>
+                    </label>
                     <input
+                      id="desktop-volume-slider"
+                      name="desktopVolume"
                       type="range"
                       min="0"
                       max="1"
                       step="0.05"
                       value={volume}
+                      aria-labelledby="desktop-volume-label"
                       aria-label="Sound switch volume"
+                      aria-valuemin={0}
+                      aria-valuemax={1}
+                      aria-valuenow={volume}
+                      aria-valuetext={`${Math.round(volume * 100)} percent`}
                       onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
                       className="w-full h-1.5 bg-[var(--bg-input)] rounded accent-[var(--accent-tactical)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
                     />
@@ -548,16 +555,24 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
               {soundType !== 'off' && (
                 <div className="p-2.5 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)] space-y-1">
-                  <div className="flex items-center justify-between text-[10px] text-[var(--text-dim)]">
+                  <label id="mobile-volume-label" htmlFor="mobile-volume-slider" className="flex items-center justify-between text-[10px] text-[var(--text-dim)] cursor-pointer">
                     <span>Acoustic Volume</span>
                     <span className="font-bold text-[var(--text-main)]">{Math.round(volume * 100)}%</span>
-                  </div>
+                  </label>
                   <input
+                    id="mobile-volume-slider"
+                    name="mobileVolume"
                     type="range"
                     min="0"
                     max="1"
                     step="0.05"
                     value={volume}
+                    aria-labelledby="mobile-volume-label"
+                    aria-label="Acoustic Volume"
+                    aria-valuemin={0}
+                    aria-valuemax={1}
+                    aria-valuenow={volume}
+                    aria-valuetext={`${Math.round(volume * 100)} percent`}
                     onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
                     className="w-full h-2 bg-[var(--bg-input)] rounded accent-[var(--accent-tactical)] cursor-pointer"
                   />

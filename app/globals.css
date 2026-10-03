@@ -12,13 +12,13 @@
   
   --text-main: #f1f5f9;
   --text-dim: #94a3b8;
-  --text-faint: #475569;
+  --text-faint: #8295ac;
   
   --accent-tactical: #eab308; /* Matte Ammo Amber */
   --accent-tactical-rgb: 234, 179, 8;
   --accent-target: #38bdf8; /* Glacial Telemetry Cyan */
   --accent-success: #22c55e; /* Military Green */
-  --accent-danger: #ef4444; /* Tactical Signal Red */
+  --accent-danger: #f87171; /* Tactical Signal Coral Red */
   --accent-streak: #f97316; /* Kinetic Orange */
   
   --keycap-bg: #151d2a;
@@ -37,13 +37,13 @@
   
   --text-main: #f8fafc;
   --text-dim: #94a3b8;
-  --text-faint: #475569;
+  --text-faint: #8292a6;
   
   --accent-tactical: #3b82f6; /* Tactical Blue */
   --accent-tactical-rgb: 59, 130, 246;
   --accent-target: #60a5fa;
   --accent-success: #10b981;
-  --accent-danger: #f43f5e;
+  --accent-danger: #fb7185;
   --accent-streak: #fbbf24;
   
   --keycap-bg: #12161f;
@@ -63,13 +63,13 @@
   
   --text-main: #ecfccb;
   --text-dim: #a3e635;
-  --text-faint: #4d7c0f;
+  --text-faint: #70ac14;
   
   --accent-tactical: #a3e635; /* Tactical Phosphor */
   --accent-tactical-rgb: 163, 230, 53;
   --accent-target: #facc15;
   --accent-success: #84cc16;
-  --accent-danger: #ea580c;
+  --accent-danger: #fb923c;
   --accent-streak: #f59e0b;
   
   --keycap-bg: #1b231c;
@@ -89,7 +89,7 @@
   
   --text-main: #f0f9ff;
   --text-dim: #7dd3fc;
-  --text-faint: #385170;
+  --text-faint: #7397be;
   
   --accent-tactical: #38bdf8; /* Subzero Cyan */
   --accent-tactical-rgb: 56, 189, 248;
@@ -115,13 +115,13 @@
   
   --text-main: #f5f3ff;
   --text-dim: #a5b4fc;
-  --text-faint: #4f46e5;
+  --text-faint: #8b8bf0;
   
   --accent-tactical: #f59e0b; /* Hazard Amber */
   --accent-tactical-rgb: 245, 158, 11;
   --accent-target: #c084fc;
   --accent-success: #10b981;
-  --accent-danger: #f43f5e;
+  --accent-danger: #fb7185;
   --accent-streak: #fb923c;
   
   --keycap-bg: #1b1928;
@@ -140,6 +140,11 @@ body {
   font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.25s ease, color 0.25s ease;
   -webkit-tap-highlight-color: transparent;
+}
+
+a,
+a:visited {
+  color: inherit;
 }
 
 /* Tactical Keycap Button Effect */
