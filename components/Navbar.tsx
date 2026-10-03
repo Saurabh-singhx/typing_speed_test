@@ -428,7 +428,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Mobile Tactical Controls (< md) */}
-        <div className="flex md:hidden items-center gap-1 sm:gap-1.5 shrink-0">
+        <div className="flex md:hidden items-center gap-1.5 shrink-0">
           {/* Quick Mute / Unmute Button */}
           <button
             onClick={() => {
@@ -439,7 +439,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }
             }}
             title={soundType === 'off' ? 'Unmute Switch Audio' : 'Mute Switch Audio'}
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+            className="tactical-keycap min-w-[40px] min-h-[40px] p-2 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label={soundType === 'off' ? 'Unmute Switch Audio' : 'Mute Switch Audio'}
           >
             {soundType === 'off' ? (
@@ -453,12 +453,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenAchievements}
             title="Tactical Badges & Achievements"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+            className="tactical-keycap min-w-[40px] min-h-[40px] p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] relative active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label="Tactical Badges & Achievements"
           >
             <Trophy className="w-4 h-4" />
             {userStats.unlockedAchievements.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[var(--accent-tactical)]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[var(--accent-tactical)]" />
             )}
           </button>
 
@@ -466,7 +466,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={onOpenStats}
             title="Lifetime Typing Telemetry"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+            className="tactical-keycap min-w-[40px] min-h-[40px] p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] active:scale-95 flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
             aria-label="Lifetime Typing Telemetry"
           >
             <BarChart3 className="w-4 h-4" />
@@ -476,7 +476,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             title="Tactical Config & Pacer Menu"
-            className={`tactical-keycap p-2 rounded flex items-center justify-center transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+            className={`tactical-keycap min-w-[40px] min-h-[40px] p-2 rounded flex items-center justify-center transition-colors active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               mobileMenuOpen
                 ? 'bg-[var(--accent-tactical)] text-[var(--bg-page)] border-[var(--accent-tactical)] font-bold'
                 : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'

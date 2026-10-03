@@ -40,24 +40,36 @@ export const Footer: React.FC = () => {
             <div className="font-bold text-[var(--text-main)] text-xs uppercase tracking-wider">
               Telemetry & Intel
             </div>
-            <ul className="space-y-1.5 text-xs">
+            <ul className="space-y-0.5 text-xs">
               <li>
-                <a href="#wpm-tiers" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
+                <a
+                  href="#wpm-tiers"
+                  className="inline-flex items-center min-h-[44px] sm:min-h-[36px] py-2 text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)] rounded"
+                >
                   Global WPM Tiers
                 </a>
               </li>
               <li>
-                <a href="#wpm-calculator" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
+                <a
+                  href="#wpm-calculator"
+                  className="inline-flex items-center min-h-[44px] sm:min-h-[36px] py-2 text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)] rounded"
+                >
                   Typing ROI Calculator
                 </a>
               </li>
               <li>
-                <a href="#typing-guide" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
+                <a
+                  href="#typing-guide"
+                  className="inline-flex items-center min-h-[44px] sm:min-h-[36px] py-2 text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)] rounded"
+                >
                   Ergonomics & Switches
                 </a>
               </li>
               <li>
-                <a href="#faq" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors">
+                <a
+                  href="#faq"
+                  className="inline-flex items-center min-h-[44px] sm:min-h-[36px] py-2 text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)] rounded"
+                >
                   Debrief & FAQ
                 </a>
               </li>
@@ -98,36 +110,36 @@ export const Footer: React.FC = () => {
           <div className="text-[10px] uppercase font-bold text-[var(--accent-tactical)] tracking-wider">
             International Language Editions
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-            <Link href="/" hrefLang="en" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
+            <Link href="/" hrefLang="en" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇺🇸</span>
               <span>English (Tactical Typing Test)</span>
             </Link>
-            <Link href="/es" hrefLang="es" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/es" hrefLang="es" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇪🇸</span>
               <span>Español (Test de Mecanografía)</span>
             </Link>
-            <Link href="/de" hrefLang="de" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/de" hrefLang="de" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇩🇪</span>
               <span>Deutsch (Tipptest Online)</span>
             </Link>
-            <Link href="/fr" hrefLang="fr" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/fr" hrefLang="fr" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇫🇷</span>
               <span>Français (Test de Frappe)</span>
             </Link>
-            <Link href="/pt" hrefLang="pt" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/pt" hrefLang="pt" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇧🇷</span>
               <span>Português (Teste de Digitação)</span>
             </Link>
-            <Link href="/ru" hrefLang="ru" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/ru" hrefLang="ru" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇷🇺</span>
               <span>Русский (Тест Скорости Печати)</span>
             </Link>
-            <Link href="/hi" hrefLang="hi" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/hi" hrefLang="hi" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇮🇳</span>
               <span>हिन्दी (हिंदी टाइपिंग टेस्ट)</span>
             </Link>
-            <Link href="/it" hrefLang="it" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors flex items-center gap-1.5 py-0.5">
+            <Link href="/it" hrefLang="it" className="text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[36px] py-1.5 px-2 -mx-1 rounded hover:bg-[var(--bg-panel)] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[var(--accent-tactical)]">
               <span>🇮🇹</span>
               <span>Italiano (Test di Battitura)</span>
             </Link>
