@@ -1,12 +1,25 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { Navbar } from '@/components/Navbar';
 import { TestSettingsBar } from '@/components/TypingTest/TestSettingsBar';
 import { TypingEngine } from '@/components/TypingTest/TypingEngine';
-import { TestResults } from '@/components/TypingTest/TestResults';
-import { AchievementsModal } from '@/components/Dashboard/AchievementsModal';
-import { StatsModal } from '@/components/Dashboard/StatsModal';
+
+// Dynamically import results & modals to keep initial page load bundle lean
+const TestResults = dynamic(
+  () => import('@/components/TypingTest/TestResults').then((mod) => mod.TestResults),
+  { ssr: false }
+);
+const AchievementsModal = dynamic(
+  () => import('@/components/Dashboard/AchievementsModal').then((mod) => mod.AchievementsModal),
+  { ssr: false }
+);
+const StatsModal = dynamic(
+  () => import('@/components/Dashboard/StatsModal').then((mod) => mod.StatsModal),
+  { ssr: false }
+);
+
 import { WpmRanksSection } from '@/components/SEO/WpmRanksSection';
 import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
 import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
