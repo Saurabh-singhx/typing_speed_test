@@ -147,6 +147,13 @@ a:visited {
   color: inherit;
 }
 
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
+}
+
 /* Tactical Keycap Button Effect */
 .tactical-keycap {
   background-color: var(--keycap-bg);
