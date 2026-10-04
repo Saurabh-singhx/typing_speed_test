@@ -26,6 +26,8 @@ export const DEFAULT_SETTINGS: TestSettings = {
   shatterSpeed: 'normal',
   shatterFxIntensity: 'full',
   shatterSoundProfile: 'crystal',
+  shatterTargetMode: 'time',
+  shatterStreamDensity: 'normal',
 };
 
 export const INITIAL_STATS: UserStats = {

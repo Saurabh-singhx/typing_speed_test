@@ -396,7 +396,7 @@ class SoundSynthesizer {
   }
 
   // Play Keystroke Fracture / Crack Sound (Satisfying Brittle Glass / Heavy Stone / Cyber Crack)
-  public playShatterCrack(profile: 'crystal' | 'stone' | 'laser' = 'crystal', comboMultiplier: number = 1.0, charIndex: number = 0) {
+  public playShatterCrack(profile: 'crystal' | 'stone' | 'laser' | 'glass' = 'crystal', comboMultiplier: number = 1.0, charIndex: number = 0) {
     this.initContext();
     if (!this.ctx) return;
 
@@ -417,7 +417,46 @@ class SoundSynthesizer {
       const vol = Math.max(0.4, this.volume > 0 ? this.volume : 0.65);
       const jitter = (0.94 + Math.random() * 0.12) * Math.min(1.25, 0.95 + comboMultiplier * 0.05) * tierFreqMultiplier;
 
-      if (profile === 'crystal') {
+      if (profile === 'glass') {
+        // High-pitched brittle glass shatter: explosive noise burst + dual high ringing oscillators
+        const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.025));
+        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
+        }
+        const noiseSource = this.ctx.createBufferSource();
+        noiseSource.buffer = buffer;
+
+        const noiseFilter = this.ctx.createBiquadFilter();
+        noiseFilter.type = 'highpass';
+        noiseFilter.frequency.setValueAtTime(5200 * jitter, now);
+
+        const noiseGain = this.ctx.createGain();
+        noiseGain.gain.setValueAtTime(0.5 * vol, now);
+        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+        noiseSource.connect(noiseFilter);
+        noiseFilter.connect(noiseGain);
+        noiseGain.connect(dest);
+        noiseSource.start(now);
+        noiseSource.stop(now + 0.035);
+
+        // Glass resonance ring
+        const osc = this.ctx.createOscillator();
+        const oscGain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(3400 * jitter, now);
+        osc.frequency.exponentialRampToValueAtTime(1900 * jitter, now + 0.045);
+        oscGain.gain.setValueAtTime(0.35 * vol, now);
+        oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+        osc.connect(oscGain);
+        oscGain.connect(dest);
+        osc.start(now);
+        osc.stop(now + 0.065);
+
+      } else if (profile === 'crystal') {
         // 1. Sharp brittle high-frequency snap impulse (white noise burst)
         const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.018));
         const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
@@ -560,7 +599,7 @@ class SoundSynthesizer {
   }
 
   // Play Rewarding Word Shatter / Complete Obliteration Sound
-  public playWordShatter(combo: number = 0, profile: 'crystal' | 'stone' | 'laser' = 'crystal') {
+  public playWordShatter(combo: number = 0, profile: 'crystal' | 'stone' | 'laser' | 'glass' = 'crystal') {
     this.initContext();
     if (!this.ctx) return;
 
@@ -581,7 +620,8 @@ class SoundSynthesizer {
       // 1. Deep Sub-Bass Seismic Boom (movie trailer impact weight)
       const isStone = profile === 'stone';
       const isLaser = profile === 'laser';
-      const baseBoomFreq = isStone ? 85 : isLaser ? 135 : 110;
+      const isGlass = profile === 'glass';
+      const baseBoomFreq = isStone ? 85 : isLaser ? 135 : isGlass ? 95 : 110;
 
       const subOsc = this.ctx.createOscillator();
       const subGain = this.ctx.createGain();
@@ -615,7 +655,7 @@ class SoundSynthesizer {
 
       const blastFilter = this.ctx.createBiquadFilter();
       blastFilter.type = 'bandpass';
-      blastFilter.frequency.setValueAtTime(isStone ? 2800 : isLaser ? 7800 : 6200, now);
+      blastFilter.frequency.setValueAtTime(isStone ? 2800 : isLaser ? 7800 : isGlass ? 8400 : 6200, now);
       blastFilter.frequency.exponentialRampToValueAtTime(1400, now + 0.14);
       blastFilter.Q.setValueAtTime(isStone ? 2.5 : 4.5, now);
 

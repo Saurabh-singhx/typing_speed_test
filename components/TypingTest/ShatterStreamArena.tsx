@@ -7,7 +7,9 @@ import {
   WpmPoint, 
   ShatterSpeed, 
   ShatterFxIntensity, 
-  ShatterSoundProfile 
+  ShatterSoundProfile,
+  ShatterTargetMode,
+  ShatterStreamDensity
 } from '@/lib/types';
 import { getRandomWords, splitGraphemes } from '@/lib/words';
 import { soundFx } from '@/lib/audio';
@@ -18,7 +20,8 @@ import {
   Crosshair, 
   Sparkles,
   Trophy,
-  Volume2
+  Volume2,
+  ShieldAlert
 } from 'lucide-react';
 
 interface ShatterStreamArenaProps {
@@ -92,11 +95,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   onAbort,
 }) => {
   // Settings & Parameters
+  const targetMode: ShatterTargetMode = settings.shatterTargetMode || 'time';
   const speedPreset: ShatterSpeed = settings.shatterSpeed || 'normal';
   const fxIntensity: ShatterFxIntensity = settings.shatterFxIntensity || 'full';
   const soundProfile: ShatterSoundProfile = settings.shatterSoundProfile || 'crystal';
+  const streamDensity: ShatterStreamDensity = settings.shatterStreamDensity || 'normal';
   const targetWordsCount = settings.wordCount || 25;
-  const isTimeMode = settings.mode === 'time' || settings.timeLimit > 0;
+  const timeLimit = settings.timeLimit || 30;
+  const maxSurvivalBreaches = settings.hardcore ? 1 : 5;
 
   // Arena & Words State
   const [words, setWords] = useState<MovingWord[]>([]);
@@ -153,12 +159,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   // Base speed in pixels per second with adaptive APM scaling
   const getSpeedPxPerSec = useCallback((streak: number): number => {
     let base = 95;
-    if (speedPreset === 'slow') base = 65;
-    else if (speedPreset === 'normal') base = 95;
-    else if (speedPreset === 'fast') base = 145;
-    else if (speedPreset === 'hyper') base = 210;
+    if (speedPreset === 'chill') base = 48;
+    else if (speedPreset === 'slow') base = 68;
+    else if (speedPreset === 'normal') base = 98;
+    else if (speedPreset === 'fast') base = 150;
+    else if (speedPreset === 'hyper') base = 215;
+    else if (speedPreset === 'insane') base = 295;
     else if (speedPreset === 'ramp') {
-      base = 75 + Math.min(150, streak * 5);
+      base = 75 + Math.min(180, streak * 6);
     }
 
     // Dynamic APM Scaling: If the typist is typing fast, stream naturally flows faster
@@ -168,8 +176,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       base *= dynamicBoost;
     }
 
+    // In survival mode: ramp up speed as more words are shattered
+    if (targetMode === 'survival') {
+      const survivalEscalation = 1 + Math.min(1.2, (shatteredCountRef.current / 8) * 0.08);
+      base *= survivalEscalation;
+    }
+
     return base;
-  }, [speedPreset]);
+  }, [speedPreset, targetMode]);
 
   // Unlock AudioContext eagerly on mount and interaction
   useEffect(() => {
@@ -180,8 +194,12 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   const initWordStream = useCallback(() => {
     soundFx.unlock();
 
+    const wordsToFetch = targetMode === 'words' 
+      ? Math.max(60, targetWordsCount + 20)
+      : 80;
+
     const rawWords = getRandomWords(
-      Math.max(60, targetWordsCount + 20),
+      wordsToFetch,
       { punctuation: settings.punctuation, numbers: settings.numbers },
       settings.language
     );
@@ -192,6 +210,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     let spawnCursorX = isMobile
       ? Math.max(220, arenaWidth - 60)
       : Math.max(480, Math.min(750, arenaWidth - 120));
+
+    // Dynamic Word Gap based on streamDensity
+    let wordGap = isMobile ? 120 : 180;
+    if (streamDensity === 'relaxed') {
+      wordGap = isMobile ? 170 : 250;
+    } else if (streamDensity === 'rush') {
+      wordGap = isMobile ? 75 : 110;
+    }
 
     const movingList: MovingWord[] = rawWords.map((w, idx) => {
       const graphemes = splitGraphemes(w);
@@ -206,7 +232,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         width: approxWidth,
         status: idx === 0 ? 'active' : 'queued',
       };
-      spawnCursorX += approxWidth + (isMobile ? 120 : 180); // Clear gap between words
+      spawnCursorX += approxWidth + wordGap;
       return wordObj;
     });
 
@@ -245,7 +271,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     setTimeout(() => {
       hiddenInputRef.current?.focus();
     }, 60);
-  }, [settings, targetWordsCount]);
+  }, [settings, targetWordsCount, streamDensity, targetMode]);
 
   useEffect(() => {
     initWordStream();
@@ -438,7 +464,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       missedChars: escapedCount * 5,
       duration,
       mode: 'shatter',
-      settingsSnapshot: `shatter ${speedPreset} ${targetWordsCount}w`,
+      settingsSnapshot: targetMode === 'time'
+        ? `shatter ${timeLimit}s ${speedPreset}`
+        : targetMode === 'words'
+        ? `shatter ${targetWordsCount}w ${speedPreset}`
+        : `shatter survival ${speedPreset}`,
       chartData: chartDataRef.current.length > 0 ? chartDataRef.current : [{ second: 1, wpm: finalWpm, rawWpm: finalRaw, errors: 0 }],
       missedKeysMap: missedKeysMapRef.current,
       highestStreak,
@@ -450,6 +480,8 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     escapedCount, 
     speedPreset, 
     targetWordsCount, 
+    timeLimit,
+    targetMode,
     highestStreak, 
     onFinishTest, 
     onAbort
@@ -530,7 +562,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
         shatteredCountRef.current += 1;
         setShatteredCount(shatteredCountRef.current);
-        if (!isTimeMode && shatteredCountRef.current >= targetWordsCount) {
+        if (targetMode === 'words' && shatteredCountRef.current >= targetWordsCount) {
           setTimeout(() => finalizeTest(false), 250);
         }
 
@@ -625,7 +657,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     settings.language,
     settings.numbers,
     settings.punctuation,
-    isTimeMode
+    targetMode
   ]);
 
   // Main 1-second Telemetry Timer
@@ -659,7 +691,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       });
 
       // Time limit check in time mode (executed outside setState)
-      if (isTimeMode && elapsed >= settings.timeLimit) {
+      if (targetMode === 'time' && elapsed >= timeLimit) {
         if (timerRef.current) clearInterval(timerRef.current);
         finalizeTest(false);
       }
@@ -668,7 +700,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [hasStarted, isFinished, isTimeMode, settings.timeLimit, finalizeTest]);
+  }, [hasStarted, isFinished, targetMode, timeLimit, finalizeTest]);
 
   // Global Keydown Listener
   useEffect(() => {
@@ -787,7 +819,13 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
             word.status = 'escaped';
             soundFx.playBreachEscape();
             setComboStreak(0);
-            setEscapedCount((ec) => ec + 1);
+            setEscapedCount((ec) => {
+              const nextVal = ec + 1;
+              if (targetMode === 'survival' && nextVal >= maxSurvivalBreaches) {
+                setTimeout(() => finalizeTest(false), 200);
+              }
+              return nextVal;
+            });
 
             if (i === activeIdx) {
               activeIdx = i + 1;
@@ -809,7 +847,8 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         if (remainingQueued < 10) {
           const extraWords = getRandomWords(25, { punctuation: settings.punctuation, numbers: settings.numbers }, settings.language);
           const lastWord = wordsRef.current[wordsRef.current.length - 1];
-          let nextSpawnX = (lastWord ? Math.max(900, lastWord.x + lastWord.width) : 900) + 180;
+          const replenishmentGap = streamDensity === 'relaxed' ? 250 : streamDensity === 'rush' ? 110 : 180;
+          let nextSpawnX = (lastWord ? Math.max(900, lastWord.x + lastWord.width) : 900) + replenishmentGap;
           extraWords.forEach((ew, eIdx) => {
             const eGraphemes = splitGraphemes(ew);
             const approxW = Math.max(90, eGraphemes.length * 24 + 32);
@@ -823,7 +862,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
               width: approxW,
               status: 'queued',
             });
-            nextSpawnX += approxW + 180;
+            nextSpawnX += approxW + replenishmentGap;
           });
         }
 
@@ -946,7 +985,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     getSpeedPxPerSec,
     settings.language,
     settings.numbers,
-    settings.punctuation
+    settings.punctuation,
+    targetMode,
+    maxSurvivalBreaches,
+    streamDensity,
+    finalizeTest
   ]);
 
   // Adjust canvas size to parent container
@@ -992,7 +1035,12 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
           <div className="flex items-center gap-1 text-[var(--text-dim)]">
             <span>SPEED:</span>
-            <span className="font-bold text-[var(--text-main)] uppercase">{speedPreset}</span>
+            <span className="font-bold text-amber-300 uppercase">{speedPreset}</span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-1 text-[var(--text-dim)]">
+            <span>GOAL:</span>
+            <span className="font-bold text-[var(--text-main)] uppercase">{targetMode}</span>
           </div>
 
           {/* Sound Profile + Test Button */}
@@ -1046,10 +1094,23 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
           <div className="text-right px-2.5 py-1 rounded-xl neo-inset">
             <div className="text-[9px] text-[var(--text-dim)] uppercase">
-              {isTimeMode ? 'Time Left' : 'Shattered'}
+              {targetMode === 'time' ? 'Time Left' : targetMode === 'words' ? 'Shattered' : 'Shields'}
             </div>
-            <div className="text-sm sm:text-base font-bold text-amber-400">
-              {isTimeMode ? `${Math.max(0, settings.timeLimit - timeElapsed)}s` : `${shatteredCount} / ${targetWordsCount}`}
+            <div className={`text-sm sm:text-base font-bold ${
+              targetMode === 'survival'
+                ? (maxSurvivalBreaches - escapedCount <= 2 ? 'text-red-400 animate-pulse' : 'text-emerald-400')
+                : 'text-amber-400'
+            }`}>
+              {targetMode === 'time'
+                ? `${Math.max(0, timeLimit - timeElapsed)}s`
+                : targetMode === 'words'
+                ? `${shatteredCount} / ${targetWordsCount}`
+                : (
+                  <span className="flex items-center gap-1">
+                    <ShieldAlert className="w-3.5 h-3.5 text-red-400" />
+                    <span>{Math.max(0, maxSurvivalBreaches - escapedCount)} / {maxSurvivalBreaches}</span>
+                  </span>
+                )}
             </div>
           </div>
 

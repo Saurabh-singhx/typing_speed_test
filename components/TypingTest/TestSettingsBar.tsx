@@ -13,7 +13,9 @@ import {
   ChevronDown,
   Zap,
   Gauge,
-  Sparkles
+  Sparkles,
+  ShieldAlert,
+  Layers
 } from 'lucide-react';
 import { 
   TestMode, 
@@ -23,7 +25,9 @@ import {
   TestSettings,
   ShatterSpeed,
   ShatterFxIntensity,
-  ShatterSoundProfile
+  ShatterSoundProfile,
+  ShatterTargetMode,
+  ShatterStreamDensity
 } from '@/lib/types';
 import { SUPPORTED_LANGUAGES, getLanguageInfo } from '@/lib/languages';
 
@@ -42,32 +46,45 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
   const currentLang = settings.language || 'en';
   const currentLangInfo = getLanguageInfo(currentLang);
 
-  const modes: { id: TestMode; label: string; icon: React.ReactNode }[] = [
+  const modes: { id: TestMode; label: string; icon: React.ReactNode; badge?: string }[] = [
+    { id: 'shatter', label: 'Shatter Stream', icon: <Zap className="w-3.5 h-3.5 text-amber-400" />, badge: 'ARCADE' },
     { id: 'time', label: 'Time', icon: <Clock className="w-3.5 h-3.5" /> },
     { id: 'words', label: 'Words', icon: <AlignLeft className="w-3.5 h-3.5" /> },
     { id: 'quote', label: 'Quote', icon: <Quote className="w-3.5 h-3.5" /> },
-    { id: 'boss', label: 'Boss Raid', icon: <Swords className="w-3.5 h-3.5 text-[var(--accent-danger)]" /> },
-    { id: 'shatter', label: 'Shatter Stream', icon: <Zap className="w-3.5 h-3.5 text-amber-400" /> },
+    { id: 'boss', label: 'Boss Raid', icon: <Swords className="w-3.5 h-3.5 text-[var(--accent-danger)]" />, badge: 'COMBAT' },
   ];
 
   const timeOptions: TimeOption[] = [15, 30, 60, 120];
   const wordOptions: WordOption[] = [10, 25, 50, 100];
-  const shatterSpeedOptions: { id: ShatterSpeed; label: string }[] = [
-    { id: 'slow', label: '0.8x' },
-    { id: 'normal', label: '1.2x' },
-    { id: 'fast', label: '1.8x' },
-    { id: 'hyper', label: '2.5x' },
-    { id: 'ramp', label: 'Ramp⚡' },
+  const shatterSpeedOptions: { id: ShatterSpeed; label: string; tooltip: string }[] = [
+    { id: 'chill', label: '0.5x', tooltip: 'Warmup & Flow' },
+    { id: 'slow', label: '0.8x', tooltip: 'Tactical Pacing' },
+    { id: 'normal', label: '1.2x', tooltip: 'Balanced Standard' },
+    { id: 'fast', label: '1.8x', tooltip: 'Rapid Velocity' },
+    { id: 'hyper', label: '2.5x', tooltip: 'Hyper Velocity' },
+    { id: 'insane', label: '3.2x', tooltip: 'Insane Overdrive' },
+    { id: 'ramp', label: 'Ramp⚡', tooltip: 'APM dynamic speed scaling' },
+  ];
+  const shatterDensityOptions: { id: ShatterStreamDensity; label: string; tooltip: string }[] = [
+    { id: 'relaxed', label: 'Spaced', tooltip: 'Wide word spacing' },
+    { id: 'normal', label: 'Flow', tooltip: 'Natural tactical pacing' },
+    { id: 'rush', label: 'Rush', tooltip: 'High-density word barrage' },
   ];
   const shatterSoundProfiles: { id: ShatterSoundProfile; label: string }[] = [
     { id: 'crystal', label: '💎 Crystal' },
     { id: 'stone', label: '🪨 Stone' },
     { id: 'laser', label: '⚡ Laser' },
+    { id: 'glass', label: '🪟 Glass' },
   ];
   const fxOptions: { id: ShatterFxIntensity; label: string }[] = [
-    { id: 'full', label: 'Full VFX' },
-    { id: 'balanced', label: 'Balanced' },
-    { id: 'minimal', label: 'Minimal' },
+    { id: 'full', label: '💥 Full' },
+    { id: 'balanced', label: '⚡ Balanced' },
+    { id: 'minimal', label: '🎯 Minimal' },
+  ];
+  const shatterTargetOptions: { id: ShatterTargetMode; label: string; icon: React.ReactNode; tooltip: string }[] = [
+    { id: 'time', label: 'Time', icon: <Clock className="w-3 h-3" />, tooltip: 'Time Attack: Score until clock expires' },
+    { id: 'words', label: 'Words', icon: <AlignLeft className="w-3 h-3" />, tooltip: 'Word Quota: Obliterate a fixed quota of target words' },
+    { id: 'survival', label: 'Survival', icon: <ShieldAlert className="w-3 h-3 text-red-400" />, tooltip: 'Survival: Endless accelerating waves with 5 perimeter breach lives' },
   ];
   const caretOptions: { id: CaretStyle; label: string }[] = [
     { id: 'line', label: '|' },
@@ -148,6 +165,33 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
       <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 neo-inset p-1 rounded-xl">
         {modes.map((m) => {
           const isActive = settings.mode === m.id;
+
+          if (m.id === 'shatter') {
+            return (
+              <button
+                key={m.id}
+                onClick={() => onUpdateSettings({ mode: m.id })}
+                aria-pressed={isActive}
+                title="Shatter Stream: Kinetic destruction typing mode"
+                className={`relative px-3 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-xl flex items-center gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                  isActive
+                    ? 'bg-gradient-to-r from-amber-500/25 via-amber-400/20 to-orange-500/25 text-amber-200 font-extrabold border border-amber-400/80 shadow-[0_0_18px_rgba(245,158,11,0.45)] ring-1 ring-amber-400/50 scale-[1.02]'
+                    : 'text-amber-400/90 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 hover:border-amber-400/40 font-semibold'
+                }`}
+              >
+                <Zap className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400 fill-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'text-amber-400'}`} />
+                <span>{m.label}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black tracking-wider uppercase transition-all ${
+                  isActive 
+                    ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]' 
+                    : 'hidden sm:inline-block bg-amber-500/15 text-amber-300/90 border border-amber-500/30'
+                }`}>
+                  {isActive ? 'KINETIC' : 'HOT'}
+                </span>
+              </button>
+            );
+          }
+
           return (
             <button
               key={m.id}
@@ -215,6 +259,77 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
       {/* Shatter Stream Specialized Controls */}
       {settings.mode === 'shatter' && (
         <>
+          {/* Target / Goal Mode */}
+          <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+            {shatterTargetOptions.map((opt) => {
+              const active = (settings.shatterTargetMode || 'time') === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => onUpdateSettings({ shatterTargetMode: opt.id })}
+                  aria-pressed={active}
+                  title={opt.tooltip}
+                  className={`px-2 py-1 rounded-lg flex items-center gap-1 text-xs transition-all ${
+                    active
+                      ? opt.id === 'survival'
+                        ? 'neo-pill-active text-red-400 font-bold'
+                        : 'neo-pill-active text-amber-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {opt.icon}
+                  <span>{opt.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Goal Selectors (Time or Word pills) */}
+          {(settings.shatterTargetMode || 'time') === 'time' && (
+            <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+              {timeOptions.map((t) => (
+                <button
+                  key={t}
+                  onClick={() => onUpdateSettings({ timeLimit: t })}
+                  aria-pressed={settings.timeLimit === t}
+                  className={`px-2 py-1 rounded-lg text-xs transition-all ${
+                    settings.timeLimit === t
+                      ? 'neo-pill-active text-amber-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {t}s
+                </button>
+              ))}
+            </div>
+          )}
+
+          {settings.shatterTargetMode === 'words' && (
+            <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+              {wordOptions.map((w) => (
+                <button
+                  key={w}
+                  onClick={() => onUpdateSettings({ wordCount: w })}
+                  aria-pressed={settings.wordCount === w}
+                  className={`px-2 py-1 rounded-lg text-xs transition-all ${
+                    settings.wordCount === w
+                      ? 'neo-pill-active text-amber-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {w}w
+                </button>
+              ))}
+            </div>
+          )}
+
+          {settings.shatterTargetMode === 'survival' && (
+            <div className="flex items-center gap-1.5 neo-inset px-2.5 py-1 rounded-xl shrink-0 text-xs text-red-300 font-semibold">
+              <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse mr-0.5" />
+              <span>5 Lives • Endless Waves</span>
+            </div>
+          )}
+
           {/* Speed Presets */}
           <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
             <span className="text-[10px] text-[var(--text-dim)] uppercase px-1.5 font-bold flex items-center gap-1">
@@ -228,13 +343,40 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   key={sp.id}
                   onClick={() => onUpdateSettings({ shatterSpeed: sp.id })}
                   aria-pressed={active}
-                  className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                  title={sp.tooltip}
+                  className={`px-1.5 sm:px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
                       ? 'neo-pill-active text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
                   {sp.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Stream Density Flow */}
+          <div className="hidden lg:flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+            <span className="text-[10px] text-[var(--text-dim)] uppercase px-1 font-bold flex items-center gap-0.5">
+              <Layers className="w-3 h-3 text-amber-400" />
+              <span>Flow:</span>
+            </span>
+            {shatterDensityOptions.map((den) => {
+              const active = (settings.shatterStreamDensity || 'normal') === den.id;
+              return (
+                <button
+                  key={den.id}
+                  onClick={() => onUpdateSettings({ shatterStreamDensity: den.id })}
+                  aria-pressed={active}
+                  title={den.tooltip}
+                  className={`px-2 py-0.5 rounded-lg transition-all text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    active
+                      ? 'neo-pill-active text-amber-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {den.label}
                 </button>
               );
             })}
@@ -251,7 +393,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={active}
                   className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active text-[var(--accent-tactical)] font-bold'
+                      ? 'neo-pill-active text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >

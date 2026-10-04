@@ -202,7 +202,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
             />
           ) : settings.mode === 'shatter' ? (
             <ShatterStreamArena
-              key={`shatter-${settings.language}-${settings.shatterSpeed}-${settings.wordCount}-${settings.timeLimit}-${settings.shatterSoundProfile}-${settings.shatterFxIntensity}`}
+              key={`shatter-${settings.language}-${settings.shatterSpeed}-${settings.wordCount}-${settings.timeLimit}-${settings.shatterSoundProfile}-${settings.shatterFxIntensity}-${settings.shatterTargetMode}-${settings.shatterStreamDensity}`}
               settings={settings}
               bestWpm={userStats.bestWpm}
               onFinishTest={handleFinishTest}

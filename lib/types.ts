@@ -19,9 +19,11 @@ export type WordOption = 10 | 25 | 50 | 100;
 export type CaretStyle = 'line' | 'block' | 'underline' | 'box';
 export type SoundType = 'crescendo' | 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';
 
-export type ShatterSpeed = 'slow' | 'normal' | 'fast' | 'hyper' | 'ramp';
+export type ShatterSpeed = 'chill' | 'slow' | 'normal' | 'fast' | 'hyper' | 'insane' | 'ramp';
 export type ShatterFxIntensity = 'full' | 'balanced' | 'minimal';
-export type ShatterSoundProfile = 'crystal' | 'stone' | 'laser';
+export type ShatterSoundProfile = 'crystal' | 'stone' | 'laser' | 'glass';
+export type ShatterTargetMode = 'time' | 'words' | 'survival';
+export type ShatterStreamDensity = 'relaxed' | 'normal' | 'rush';
 
 export type GameTheme = 'neomorphism' | 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha';
 
@@ -41,6 +43,8 @@ export interface TestSettings {
   shatterSpeed?: ShatterSpeed;
   shatterFxIntensity?: ShatterFxIntensity;
   shatterSoundProfile?: ShatterSoundProfile;
+  shatterTargetMode?: ShatterTargetMode;
+  shatterStreamDensity?: ShatterStreamDensity;
 }
 
 export interface WpmPoint {
