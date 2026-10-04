@@ -33,7 +33,7 @@ export interface LocalizedContent {
 export const LOCALIZED_CONTENT: Record<LanguageCode, LocalizedContent> = {
   en: {
     headline: "Tactical Typing Speed Test & APM Telemetry",
-    subheadline: "Precision mechanical switch acoustics, zero-latency caret telemetry, pacing ghost racer, and combat boss raid mode.",
+    subheadline: "Precision mechanical switch acoustics, kinetic shatter stream destruction mode, zero-latency caret telemetry, and pacing ghost racer.",
     badgeText: "PRO TELEMETRY // 0-LATENCY HUD",
     wpmTiersTitle: "Operator Speed Classification Tiers",
     wpmTiersSubtitle: "Global APM distribution and typing velocity benchmark standards.",
@@ -70,7 +70,7 @@ export const LOCALIZED_CONTENT: Record<LanguageCode, LocalizedContent> = {
   },
   es: {
     headline: "Test de Mecanografía Táctico y Medidor de Velocidad PPM",
-    subheadline: "Acústica auténtica de switches mecánicos, telemetría sin latencia, d drone pacer fantasma y modo combate contra jefes.",
+    subheadline: "Acústica de switches mecánicos, modo cinético Shatter Stream, telemetría sin latencia y drone pacer fantasma.",
     badgeText: "TELEMETRÍA PROFESIONAL // LATENCIA CERO",
     wpmTiersTitle: "Clasificación de Rangos de Velocidad (PPM / WPM)",
     wpmTiersSubtitle: "Estándares mundiales de velocidad de escritura y percentiles competitivos.",
@@ -96,6 +96,10 @@ export const LOCALIZED_CONTENT: Record<LanguageCode, LocalizedContent> = {
       {
         question: "¿Cómo pasar de 50 a 100+ palabras por minuto rápidamente?",
         answer: "1) Prioriza el 98% de precisión antes que la velocidad. 2) Mantén siempre los dedos anclados en la fila guía (ASDF JKLÑ). 3) Practica 15 minutos al día con el Pacing Ghost. 4) Activa el modo Sudden Death para eliminar la dependencia de la tecla borrar."
+      },
+      {
+        question: "¿Qué es el modo Shatter Stream en TypeTrack?",
+        answer: "Shatter Stream es un modo de mecanografía cinético donde las palabras se desplazan horizontalmente a gran velocidad. Cada pulsación acertada reproduce síntesis de sonido de fractura y hace estallar los caracteres en fragmentos poligonales en 2D. Completar palabras genera ondas de choque e incrementa la velocidad según tu ritmo de tecleo."
       }
     ],
     ranks: [
@@ -824,7 +828,30 @@ export function generateLocalizedJsonLd(lang: LanguageCode, baseUrl: string = 'h
           "ratingCount": "14280",
           "bestRating": "5",
           "worstRating": "1"
-        }
+        },
+        "featureList": [
+          "Shatter Stream Kinetic Typing Engine with Real-Time Shard Physics",
+          "Procedural Mechanical Switch Sound Synthesis",
+          "Real-Time WPM & APM Telemetry with Live Accuracy Gauges",
+          "Pacing Ghost Drone Racer",
+          "Multi-Language Speed Tests in 8 Global Languages",
+          "Neomorphism Tactical UI Architecture"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${baseUrl}/#website`,
+        "url": baseUrl,
+        "name": "TypeTrack",
+        "description": "Tactical Typing Speed Test & APM Telemetry Benchmark",
+        "inLanguage": lang
+      },
+      {
+        "@type": "Organization",
+        "@id": `${baseUrl}/#organization`,
+        "name": "TypeTrack",
+        "url": baseUrl,
+        "logo": `${baseUrl}/icon-512.png`
       },
       {
         "@type": "FAQPage",

@@ -1,7 +1,7 @@
 export const SITE_CONFIG = {
   name: 'TypeTrack // Tactical Typing Speed Test',
   shortName: 'TypeTrack',
-  description: 'Pro-grade tactical typing speed test with authentic mechanical switch acoustics, zero-latency caret telemetry, pacing ghost racer, and combat boss raid mode. No neon glare—pure precision.',
+  description: 'Pro-grade tactical typing speed test with authentic mechanical switch acoustics, zero-latency caret telemetry, kinetic shatter stream destruction mode, pacing ghost racer, and combat boss raid mode.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site',
   ogImage: '/og-image.png',
   creator: '@saurabh_singh',
@@ -13,6 +13,11 @@ export const SITE_CONFIG = {
     'words per minute test',
     'keyboard speed test',
     'mechanical keyboard typing test',
+    'shatter stream typing',
+    'kinetic typing speed test',
+    'crack sound typing test',
+    'satisfying typing test',
+    'breaking text typing test',
     'monkeytype alternative',
     'touch typing practice',
     'gaming typing test',
@@ -47,6 +52,10 @@ export const FAQ_ITEMS = [
   {
     question: "What is the Pacing Ghost feature?",
     answer: "The Pacing Ghost is an esports HUD tracker that visualizes a virtual pacing drone traveling alongside you in real-time. You can pace against your Personal Best (PB) or set a target speed (e.g., 60, 80, 100, or 120 WPM) to immediately see whether your current burst cadence is ahead or behind schedule."
+  },
+  {
+    question: "What is Shatter Stream mode in TypeTrack?",
+    answer: "Shatter Stream is a kinetic typing mode where words move horizontally at dynamic speeds across the arena. Every accurate keystroke triggers procedural acoustic crack synthesis and shatters letters into realistic 2D canvas polygon shards. Completing words unleashes explosive sound feedback, screen shake impact frames, and dynamic APM velocity scaling that speeds up as you type faster."
   }
 ];
 
@@ -112,7 +121,7 @@ export const JSON_LD_DATA = {
       "applicationCategory": "GameApplication, EducationalApplication",
       "operatingSystem": "All",
       "browserRequirements": "Requires JavaScript. Requires HTML5 Audio API for switch sounds.",
-      "description": "Tactical typing speed test and keyboard benchmark featuring mechanical switch sound synthesis, live telemetry, pacing ghost racer, and combat boss defense mode.",
+      "description": "Tactical typing speed test and keyboard benchmark featuring mechanical switch sound synthesis, live telemetry, pacing ghost racer, kinetic shatter stream destruction mode, and combat boss defense mode.",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -124,7 +133,30 @@ export const JSON_LD_DATA = {
         "ratingCount": "14280",
         "bestRating": "5",
         "worstRating": "1"
-      }
+      },
+      "featureList": [
+        "Shatter Stream Kinetic Typing Engine with Real-Time Shard Physics",
+        "Procedural Mechanical Switch Sound Synthesis (Linear, Clicky, Topre)",
+        "Real-Time WPM & APM Telemetry with Live Accuracy Gauges",
+        "Pacing Ghost Drone Racer",
+        "Multi-Language Speed Tests in 8 Global Languages",
+        "Neomorphism Tactical UI Architecture"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://typetrack.saurabhx.site/#website",
+      "url": "https://typetrack.saurabhx.site",
+      "name": "TypeTrack",
+      "description": "Tactical Typing Speed Test & APM Telemetry Benchmark",
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://typetrack.saurabhx.site/#organization",
+      "name": "TypeTrack",
+      "url": "https://typetrack.saurabhx.site",
+      "logo": "https://typetrack.saurabhx.site/icon-512.png"
     },
     {
       "@type": "FAQPage",

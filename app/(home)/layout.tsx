@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0a0d14',
+  themeColor: '#191c24',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -66,7 +66,8 @@ export default function HomeLayout({
   return (
     <html
       lang="en"
-      data-theme="tactical"
+      dir="ltr"
+      data-theme="neomorphism"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">

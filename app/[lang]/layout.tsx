@@ -15,13 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: '#0a0d14',
+  themeColor: '#191c24',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
+  title: {
+    default: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
+    template: '%s | TypeTrack',
+  },
+  description: SITE_CONFIG.description,
+  keywords: SITE_CONFIG.keywords,
+  authors: [{ name: 'TypeTrack' }],
+  creator: 'TypeTrack',
   metadataBase: new URL(SITE_CONFIG.url),
   icons: {
     icon: [
@@ -69,7 +77,8 @@ export default async function LocalizedLayout({ children, params }: Props) {
   return (
     <html
       lang={validLang}
-      data-theme="tactical"
+      dir="ltr"
+      data-theme="neomorphism"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">

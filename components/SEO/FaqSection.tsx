@@ -59,11 +59,14 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ lang = 'en' }) => {
                 </span>
               </button>
 
-              {isOpen && (
-                <div className="px-4 pb-4 pt-1 text-xs text-[var(--text-dim)] leading-relaxed border-t border-[var(--border-subtle)]/50 bg-[var(--bg-input)]/30">
-                  {item.answer}
-                </div>
-              )}
+              <div
+                className={`px-4 pb-4 pt-2 text-xs text-[var(--text-dim)] leading-relaxed border-t border-[var(--border-subtle)]/50 bg-[var(--bg-input)]/30 transition-all ${
+                  isOpen ? 'block' : 'hidden'
+                }`}
+                aria-hidden={!isOpen}
+              >
+                {item.answer}
+              </div>
             </div>
           );
         })}

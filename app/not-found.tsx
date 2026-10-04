@@ -1,7 +1,17 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AlertTriangle, Home } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: '404 - Sector Not Found | TypeTrack',
+  description: 'The requested tactical typing test coordinate was not found.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,7 +27,7 @@ export default function NotFound() {
   return (
     <html
       lang="en"
-      data-theme="tactical"
+      data-theme="neomorphism"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col items-center justify-center bg-[var(--bg-page)] text-[var(--text-main)] font-mono p-4">

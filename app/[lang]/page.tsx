@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { TypingApp } from '@/components/TypingApp';
 import { JsonLd } from '@/components/SEO/JsonLd';
 import { isValidLanguage, getLanguageInfo, SUPPORTED_LANGUAGES } from '@/lib/languages';
+import { SITE_CONFIG } from '@/lib/seo-data';
 
 type Props = {
   params: Promise<{ lang: string }>;
@@ -67,6 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       card: 'summary_large_image',
       title: info.metaTitle,
       description: info.metaDescription,
+      creator: SITE_CONFIG.creator,
       images: ['/og-image.png'],
     },
   };

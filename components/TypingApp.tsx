@@ -6,9 +6,13 @@ import { Navbar } from '@/components/Navbar';
 import { TestSettingsBar } from '@/components/TypingTest/TestSettingsBar';
 import { TypingEngine } from '@/components/TypingTest/TypingEngine';
 
-// Dynamically import results & modals to keep initial page load bundle lean
+// Dynamically import results, modals & specialized arenas to keep initial page load bundle lean
 const TestResults = dynamic(
   () => import('@/components/TypingTest/TestResults').then((mod) => mod.TestResults),
+  { ssr: false }
+);
+const ShatterStreamArena = dynamic(
+  () => import('@/components/TypingTest/ShatterStreamArena').then((mod) => mod.ShatterStreamArena),
   { ssr: false }
 );
 const AchievementsModal = dynamic(
@@ -25,6 +29,7 @@ import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
 import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
 import { FaqSection } from '@/components/SEO/FaqSection';
 import { Footer } from '@/components/SEO/Footer';
+import { getLocalizedContent } from '@/lib/seo-i18n';
 import { 
   TestSettings, 
   TestResult, 
@@ -130,9 +135,13 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
   };
 
   const currentLang = settings.language || 'en';
+  const localizedContent = getLocalizedContent(currentLang);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
+    <div 
+      className="min-h-screen flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors"
+      onPointerDown={() => soundFx.unlock()}
+    >
       
       {/* Tactical Top Navbar */}
       <Navbar
@@ -152,14 +161,31 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
       />
 
       {/* Main Testing Arena */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col items-center justify-start space-y-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col items-center justify-start space-y-6">
         
-        {/* Settings Bar */}
-        <TestSettingsBar
-          settings={settings}
-          onUpdateSettings={handleUpdateSettings}
-          disabled={testResult !== null}
-        />
+        {/* Semantic H1 & Tactical Intro Header - Visible when not in scorecard */}
+        {!testResult && (
+          <header className="w-full text-center space-y-1.5 max-w-3xl mx-auto pt-1">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neo-inset text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-[var(--accent-tactical)]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-tactical)] animate-pulse" />
+              <span>{localizedContent.badgeText}</span>
+            </div>
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-black font-mono tracking-tight text-[var(--text-main)]">
+              {localizedContent.headline}
+            </h1>
+            <p className="text-xs sm:text-sm text-[var(--text-dim)] font-mono max-w-xl mx-auto leading-relaxed">
+              {localizedContent.subheadline}
+            </p>
+          </header>
+        )}
+
+        {/* Settings Bar - Hidden when viewing performance scorecard */}
+        {!testResult && (
+          <TestSettingsBar
+            settings={settings}
+            onUpdateSettings={handleUpdateSettings}
+          />
+        )}
 
         {/* Dynamic Display: Active Engine vs Test Telemetry Results */}
         <div className="w-full my-auto py-4">
@@ -169,6 +195,14 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
               userStats={userStats}
               newAchievements={newAchievements}
               onRestart={handleRestart}
+            />
+          ) : settings.mode === 'shatter' ? (
+            <ShatterStreamArena
+              key={`shatter-${settings.language}-${settings.shatterSpeed}-${settings.wordCount}-${settings.timeLimit}-${settings.shatterSoundProfile}-${settings.shatterFxIntensity}`}
+              settings={settings}
+              bestWpm={userStats.bestWpm}
+              onFinishTest={handleFinishTest}
+              onAbort={handleRestart}
             />
           ) : (
             <TypingEngine
