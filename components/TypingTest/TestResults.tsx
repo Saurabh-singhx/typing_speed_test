@@ -448,7 +448,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
         {/* Next Mission / Restart CTA */}
         <button
           onClick={onRestart}
-          className="neo-btn w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-black font-mono text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-500 hover:from-indigo-400 hover:to-indigo-500 active:scale-95 flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(99,102,241,0.5),0_0_12px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_28px_rgba(99,102,241,0.7)] transition-all cursor-pointer ring-1 ring-white/20"
+          className="neo-btn w-full sm:w-auto px-8 py-3.5 min-h-[48px] rounded-2xl text-base font-black font-mono text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-500 hover:from-indigo-400 hover:to-indigo-500 active:scale-95 flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(99,102,241,0.5),0_0_12px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_28px_rgba(99,102,241,0.7)] transition-all cursor-pointer ring-1 ring-white/20"
         >
           <RotateCcw className="w-5 h-5 text-white shrink-0" />
           <span className="text-white tracking-wider font-black">START AGAIN</span>
@@ -462,7 +462,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
           
           <button
             onClick={handleCopyScorecard}
-            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'COPIED!' : 'COPY CARD'}</span>
@@ -470,7 +470,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
 
           <button
             onClick={handleDownloadScorecard}
-            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>EXPORT PNG</span>

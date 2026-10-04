@@ -187,23 +187,26 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     );
 
     const arenaWidth = arenaRef.current?.clientWidth || 800;
+    const isMobile = arenaWidth < 640;
     // Word 0 starts near the right edge of the arena so it is immediately visible!
-    let spawnCursorX = Math.max(480, Math.min(750, arenaWidth - 120));
+    let spawnCursorX = isMobile
+      ? Math.max(220, arenaWidth - 60)
+      : Math.max(480, Math.min(750, arenaWidth - 120));
 
     const movingList: MovingWord[] = rawWords.map((w, idx) => {
       const graphemes = splitGraphemes(w);
-      const approxWidth = Math.max(90, graphemes.length * 24 + 32);
+      const approxWidth = Math.max(80, graphemes.length * (isMobile ? 18 : 24) + 24);
       const wordObj: MovingWord = {
         id: `word_${idx}_${Date.now()}`,
         original: w,
         graphemes,
         crackedGraphemes: new Array(graphemes.length).fill(false),
         x: spawnCursorX,
-        y: 130, // Centered vertically in arena track
+        y: isMobile ? 115 : 130, // Centered vertically in arena track
         width: approxWidth,
         status: idx === 0 ? 'active' : 'queued',
       };
-      spawnCursorX += approxWidth + 180; // Clear 180px gap between words
+      spawnCursorX += approxWidth + (isMobile ? 120 : 180); // Clear gap between words
       return wordObj;
     });
 
@@ -977,23 +980,6 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   return (
     <div className="w-full flex flex-col items-center select-none font-mono">
       
-      {/* Hidden Mobile / IME input */}
-      <input
-        ref={hiddenInputRef}
-        type="text"
-        className="absolute opacity-0 pointer-events-none w-0 h-0"
-        onBlur={() => setIsFocused(false)}
-        onFocus={() => setIsFocused(true)}
-        onChange={(e) => {
-          const val = e.target.value;
-          if (val.length > 0) {
-            handleKeyStrike(val[val.length - 1]);
-            e.target.value = '';
-          }
-        }}
-        aria-hidden="true"
-      />
-
       {/* Top HUD Telemetry Panel */}
       <div className="w-full max-w-5xl flex flex-wrap items-center justify-between gap-3 p-3.5 sm:p-4 bg-[var(--bg-panel)] rounded-t-2xl neo-extruded text-xs">
         
@@ -1102,16 +1088,42 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           colorDrainActive ? 'saturate-[0.15] contrast-[1.4] filter' : ''
         }`}
       >
+        {/* Zero-latency mobile virtual keyboard & desktop IME input overlay */}
+        <input
+          id="shatter-mobile-input"
+          ref={hiddenInputRef}
+          type="text"
+          onBlur={() => setIsFocused(false)}
+          onFocus={() => setIsFocused(true)}
+          onChange={(e) => {
+            const val = e.target.value;
+            if (val.length > 0) {
+              const char = val[val.length - 1];
+              if (char !== ' ') {
+                handleKeyStrike(char);
+              }
+              e.target.value = '';
+            }
+          }}
+          className="absolute inset-0 w-full h-full opacity-0 cursor-text z-30"
+          style={{ fontSize: '16px' }}
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect="off"
+          spellCheck={false}
+          aria-label="Shatter Stream kinetic typing test input"
+        />
+
         {/* Top & Bottom Magnetic Acceleration Hazard Rails */}
         <div className="absolute top-0 left-0 right-0 h-2 bg-[repeating-linear-gradient(90deg,rgba(234,179,8,0.25),rgba(234,179,8,0.25)_15px,transparent_15px,transparent_30px)] border-b border-[var(--border-subtle)] z-10 opacity-70" />
         <div className="absolute bottom-0 left-0 right-0 h-3 bg-[repeating-linear-gradient(90deg,rgba(56,189,248,0.25),rgba(56,189,248,0.25)_15px,transparent_15px,transparent_30px)] border-t border-[var(--border-subtle)] z-10 opacity-70" />
 
-        {/* Tactical Crosshair / Impact Target Zone Guide (x = 180px) */}
-        <div className="absolute top-0 bottom-0 left-[180px] w-0.5 bg-gradient-to-b from-cyan-400 via-amber-400 to-cyan-400 z-10 opacity-80 shadow-[0_0_12px_rgba(56,189,248,0.8)] pointer-events-none">
-          <div className="absolute -top-1 -left-2 text-[9px] font-bold text-cyan-300 tracking-wider uppercase px-1 rounded bg-black/70 border border-cyan-500/50">
+        {/* Tactical Crosshair / Impact Target Zone Guide (x = 70px on mobile, 180px on desktop) */}
+        <div className="absolute top-0 bottom-0 left-[70px] sm:left-[180px] w-0.5 bg-gradient-to-b from-cyan-400 via-amber-400 to-cyan-400 z-10 opacity-80 shadow-[0_0_12px_rgba(56,189,248,0.8)] pointer-events-none">
+          <div className="absolute -top-1 -left-2 text-[10px] font-bold text-cyan-300 tracking-wider uppercase px-1 rounded bg-black/70 border border-cyan-500/50">
             FIRING ZONE
           </div>
-          <div className="absolute -bottom-1 -left-2 text-[9px] font-bold text-amber-300 tracking-wider uppercase px-1 rounded bg-black/70 border border-amber-500/50">
+          <div className="absolute -bottom-1 -left-2 text-[10px] font-bold text-amber-300 tracking-wider uppercase px-1 rounded bg-black/70 border border-amber-500/50">
             LOCK RETICLE
           </div>
         </div>

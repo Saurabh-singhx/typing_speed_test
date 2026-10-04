@@ -124,7 +124,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                     onUpdateSettings({ language: l.code });
                     setShowLangMenu(false);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                  className={`w-full text-left px-3 py-2.5 min-h-[44px] rounded-xl text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     currentLang === l.code
                       ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                       : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -153,7 +153,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               key={m.id}
               onClick={() => onUpdateSettings({ mode: m.id })}
               aria-pressed={isActive}
-              className={`px-2 sm:px-3 py-1 rounded-lg flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+              className={`px-2.5 sm:px-3 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-lg flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 isActive
                   ? 'neo-pill-active font-bold shadow-sm'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'

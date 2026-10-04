@@ -161,19 +161,19 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
       />
 
       {/* Main Testing Arena */}
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col items-center justify-start space-y-6">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-2.5 sm:px-6 py-4 sm:py-8 flex flex-col items-center justify-start space-y-4 sm:space-y-6 overflow-x-hidden">
         
         {/* Semantic H1 & Tactical Intro Header - Visible when not in scorecard */}
         {!testResult && (
-          <header className="w-full text-center space-y-1.5 max-w-3xl mx-auto pt-1">
+          <header className="w-full text-center space-y-1.5 max-w-3xl mx-auto pt-1 px-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neo-inset text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-[var(--accent-tactical)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-tactical)] animate-pulse" />
               <span>{localizedContent.badgeText}</span>
             </div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-black font-mono tracking-tight text-[var(--text-main)]">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-black font-mono tracking-tight text-[var(--text-main)] px-2">
               {localizedContent.headline}
             </h1>
-            <p className="text-xs sm:text-sm text-[var(--text-dim)] font-mono max-w-xl mx-auto leading-relaxed">
+            <p className="text-[11px] sm:text-sm text-[var(--text-dim)] font-mono max-w-xl mx-auto leading-relaxed px-2">
               {localizedContent.subheadline}
             </p>
           </header>
@@ -188,7 +188,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
         )}
 
         {/* Dynamic Display: Active Engine vs Test Telemetry Results */}
-        <div className="w-full my-auto py-4">
+        <div className="w-full my-auto py-2 sm:py-4">
           {testResult ? (
             <TestResults
               result={testResult}
