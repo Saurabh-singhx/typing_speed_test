@@ -17,11 +17,11 @@ import {
   Zap, 
   RotateCcw, 
   Flame, 
-  Crosshair, 
   Sparkles,
   Trophy,
   Volume2,
-  ShieldAlert
+  ShieldAlert,
+  Play
 } from 'lucide-react';
 
 interface ShatterStreamArenaProps {
@@ -135,6 +135,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   const lastTimeRef = useRef<number>(0);
   const hitStopRemainingRef = useRef<number>(0);
   const isFinishedRef = useRef(false);
+  const hasStartedRef = useRef(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const timeElapsedRef = useRef(0);
   const shatteredCountRef = useRef(0);
@@ -252,6 +253,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
     if (timerRef.current) clearInterval(timerRef.current);
     isFinishedRef.current = false;
+    hasStartedRef.current = false;
     timeElapsedRef.current = 0;
     shatteredCountRef.current = 0;
 
@@ -487,13 +489,28 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     onAbort
   ]);
 
+  // Explicit or implicit stream commencement
+  const startStream = useCallback(() => {
+    if (hasStartedRef.current || isFinishedRef.current) return;
+    soundFx.unlock();
+    hasStartedRef.current = true;
+    setHasStarted(true);
+    startTimeRef.current = Date.now();
+    hiddenInputRef.current?.focus();
+    setTimeout(() => {
+      hiddenInputRef.current?.focus();
+    }, 20);
+  }, []);
+
   // Keystroke Processor
   const handleKeyStrike = useCallback((key: string) => {
     if (isFinishedRef.current) return;
 
     soundFx.unlock();
 
-    if (!hasStarted) {
+    const isFirstKeystroke = !hasStartedRef.current;
+    if (isFirstKeystroke) {
+      hasStartedRef.current = true;
       setHasStarted(true);
       startTimeRef.current = Date.now();
     }
@@ -621,7 +638,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       }
 
     } else {
-      // Typo Strike
+      // If this was the keystroke that woke up/commenced the game and it didn't match the first letter,
+      // DO NOT mark it as a typo! The user simply clicked or hit a key to start the stream.
+      // Keep the first word intact at character 0 so the user can type normally!
+      if (isFirstKeystroke) {
+        return;
+      }
+
+      // Typo Strike during active gameplay
       totalIncorrectCharsRef.current += 1;
       soundFx.playError();
       setComboStreak(0);
@@ -645,7 +669,6 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       }
     }
   }, [
-    hasStarted,
     comboStreak,
     soundProfile,
     settings.hardcore,
@@ -723,7 +746,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         return;
       }
 
-      // Spacebar: smoothly consume Space so typists' muscle memory between words is not penalized!
+      // Spacebar or Enter when stream has not commenced yet starts stream smoothly without penalizing
+      if (!hasStartedRef.current && (e.key === ' ' || e.key === 'Enter')) {
+        e.preventDefault();
+        startStream();
+        return;
+      }
+
+      // Spacebar during active test: smoothly consume Space so typists' muscle memory is preserved
       if (e.key === ' ') {
         e.preventDefault();
         return;
@@ -737,7 +767,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyStrike, isFinished, initWordStream, finalizeTest]);
+  }, [handleKeyStrike, isFinished, initWordStream, finalizeTest, startStream]);
 
   // Screen Shake Spring Decay
   useEffect(() => {
@@ -1006,7 +1036,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
 
   const handleArenaClick = () => {
     soundFx.unlock();
-    hiddenInputRef.current?.focus();
+    if (!hasStartedRef.current) {
+      startStream();
+    } else {
+      hiddenInputRef.current?.focus();
+    }
   };
 
   // Sound test handler
@@ -1160,7 +1194,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
             const val = e.target.value;
             if (val.length > 0) {
               const char = val[val.length - 1];
-              if (char !== ' ') {
+              if (char === ' ') {
+                if (!hasStartedRef.current) {
+                  startStream();
+                }
+              } else {
                 handleKeyStrike(char);
               }
               e.target.value = '';
@@ -1340,15 +1378,28 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           })}
         </div>
 
-        {/* Start / Unfocused Overlay */}
+        {/* Start / Standby Overlay */}
         {!hasStarted && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center gap-2 z-40">
-            <div className="text-sm sm:text-base font-bold text-amber-300 tracking-wider flex items-center gap-2 animate-bounce">
-              <Crosshair className="w-5 h-5 text-cyan-400" />
-              <span>CLICK OR STRIKE ANY KEY TO COMMENCE HORIZON STREAM</span>
-            </div>
-            <div className="text-xs text-[var(--text-dim)] max-w-md text-center px-4">
-              Type the incoming target words before they breach the perimeter. Every keystroke shatters fragments with intense kinetic force!
+          <div 
+            onClick={startStream}
+            className="absolute inset-0 bg-black/35 backdrop-blur-[2px] flex flex-col items-center justify-center gap-3 z-40 cursor-pointer select-none"
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                startStream();
+              }}
+              className="px-6 py-2.5 rounded-2xl neo-btn bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 hover:from-amber-300 hover:to-amber-400 text-black font-black text-sm tracking-wider flex items-center gap-2.5 shadow-[0_4px_24px_rgba(245,158,11,0.5)] cursor-pointer transition-all active:scale-95 ring-1 ring-white/30 animate-pulse"
+            >
+              <Play className="w-4 h-4 fill-current text-black" />
+              <span>START STREAM</span>
+            </button>
+            <div className="text-xs text-amber-200/90 font-mono text-center px-4 flex flex-wrap items-center justify-center gap-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+              <span>Press</span>
+              <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-amber-400/40 text-amber-300 font-bold text-[10px]">Space</kbd>
+              <span>or</span>
+              <kbd className="px-1.5 py-0.5 rounded bg-black/60 border border-amber-400/40 text-amber-300 font-bold text-[10px]">Enter</kbd>
+              <span>or type target letter to begin</span>
             </div>
           </div>
         )}
