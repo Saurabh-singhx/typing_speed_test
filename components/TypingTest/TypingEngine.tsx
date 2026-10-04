@@ -400,6 +400,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     if (e.key === ' ') {
       e.preventDefault();
       if (currentInput.trim().length === 0) return; // Don't advance on empty space
+      soundFx.playKey(' ', -1);
       advanceWord();
       return;
     }
@@ -415,6 +416,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         const graphemes = splitGraphemes(currentInput);
         graphemes.pop();
         const nextInput = graphemes.join('');
+        soundFx.playKey('Backspace', Math.max(0, graphemes.length - 1));
         setCurrentInput(nextInput);
         if (hiddenInputRef.current) hiddenInputRef.current.value = nextInput;
         updateWordChars(currentWordIndex, nextInput);
@@ -442,14 +444,16 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         lastWordTimeRef.current = Date.now();
       }
 
-      // Play switch acoustic feedback
-      soundFx.playKey(e.key);
-
       const activeWord = words[currentWordIndex];
       if (!activeWord) return;
 
       const origGraphemes = splitGraphemes(activeWord.original);
       const inputGraphemes = splitGraphemes(currentInput);
+      const charIndex = inputGraphemes.length; // 0-based character progression within the word
+
+      // Play ascending satisfactory acoustic feedback (6 progressive tiers per word)
+      soundFx.playKey(e.key, charIndex);
+
       const targetChar = origGraphemes[inputGraphemes.length];
       const isMatch = e.key === targetChar;
 
@@ -509,6 +513,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     // Space advances word on mobile software keyboard
     if (val.endsWith(' ')) {
       if (currentInput.trim().length > 0) {
+        soundFx.playKey(' ', -1);
         advanceWord();
       }
       return;
@@ -523,7 +528,8 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       const activeWord = words[currentWordIndex];
 
       addedChars.forEach((char, idx) => {
-        soundFx.playKey(char);
+        const charIndex = oldGraphemes.length + idx;
+        soundFx.playKey(char, charIndex);
 
         if (activeWord) {
           const origGraphemes = splitGraphemes(activeWord.original);
@@ -564,7 +570,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       });
     } else if (newGraphemes.length < oldGraphemes.length) {
       // Backspace on virtual keyboard
-      soundFx.playKey('Backspace');
+      soundFx.playKey('Backspace', Math.max(0, newGraphemes.length - 1));
     }
 
     setCurrentInput(val);

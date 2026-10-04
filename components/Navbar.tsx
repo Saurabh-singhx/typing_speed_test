@@ -85,6 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   ];
 
   const soundOptions: { id: SoundType; name: string; desc: string }[] = [
+    { id: 'crescendo', name: 'ASMR Crescendo', desc: 'Ascending marble resonance' },
     { id: 'thock', name: 'Linear Thock', desc: 'Deep acoustic clack' },
     { id: 'clicky', name: 'Clicky Blue', desc: 'Tactile mechanical snap' },
     { id: 'topre', name: 'Topre Dome', desc: 'Cushioned capacitive pop' },

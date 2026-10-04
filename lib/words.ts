@@ -49,61 +49,190 @@ export function splitGraphemes(text: string): string[] {
   return Array.from(text);
 }
 
+// Cadence Buckets for natural typing rhythm
+interface CadenceBuckets {
+  short: string[];   // 3-4 characters (quick transition cadence)
+  medium: string[];  // 5-6 characters (rhythmic anchor cadence)
+  long: string[];    // 7-8 characters (flow stamina cadence)
+}
+
+const CADENCE_BUCKETS_BY_LANG: Partial<Record<LanguageCode, CadenceBuckets>> = {};
+
+function getCadenceBuckets(lang: LanguageCode): CadenceBuckets {
+  if (CADENCE_BUCKETS_BY_LANG[lang]) {
+    return CADENCE_BUCKETS_BY_LANG[lang]!;
+  }
+  const list = WORDS_BY_LANG[lang] || WORDS_EN;
+  const buckets: CadenceBuckets = {
+    short: [],
+    medium: [],
+    long: [],
+  };
+
+  for (const w of list) {
+    if (w.length <= 4) {
+      buckets.short.push(w);
+    } else if (w.length <= 6) {
+      buckets.medium.push(w);
+    } else {
+      buckets.long.push(w);
+    }
+  }
+
+  // Fallbacks if any bucket is sparse
+  if (buckets.short.length === 0) buckets.short = list;
+  if (buckets.medium.length === 0) buckets.medium = list;
+  if (buckets.long.length === 0) buckets.long = list;
+
+  CADENCE_BUCKETS_BY_LANG[lang] = buckets;
+  return buckets;
+}
+
+// Session Anti-Repetition Ring Buffer (tracks last 80 generated words)
+const recentHistoryByLang: Record<string, string[]> = {};
+const MAX_HISTORY_WINDOW = 80;
+
+// Signature Monkeytype natural typing cadence pattern
+const CADENCE_RHYTHM_PATTERN: ('short' | 'medium' | 'long')[] = [
+  'medium', 'short', 'medium', 'long', 'medium', 'short', 'long', 'medium',
+];
+
 export function getRandomWords(
   count: number,
   options?: { punctuation?: boolean; numbers?: boolean },
   language: LanguageCode = 'en'
 ): string[] {
   const wordList = WORDS_BY_LANG[language] || WORDS_EN;
+  const buckets = getCadenceBuckets(language);
   const result: string[] = [];
-  
+
+  // Initialize or fetch language recent history
+  if (!recentHistoryByLang[language]) {
+    recentHistoryByLang[language] = [];
+  }
+  const recentHistory = recentHistoryByLang[language];
+  const recentSet = new Set(recentHistory);
+  const usedInCurrentTest = new Set<string>();
+
   // Localized punctuation marks
   const punctuationMarks = language === 'es' 
-    ? [".", ",", "!", "?", ";", ":", "-"]
+    ? [",", ".", "!", "?", ";", ":", "-"]
     : language === 'hi'
     ? ["।", ",", "!", "?", "-"]
-    : [".", ",", "!", "?", ";", ":", "-", "'"];
+    : [",", ".", "!", "?", ";", ":", "-", "'"];
 
   for (let i = 0; i < count; i++) {
-    // Pick random word
-    let word = wordList[Math.floor(Math.random() * wordList.length)];
-
-    // Inject numbers occasionally if enabled
-    if (options?.numbers && Math.random() < 0.15) {
-      if (Math.random() < 0.5) {
-        word = Math.floor(Math.random() * 999 + 1).toString();
+    // Inject realistic numbers occasionally if enabled
+    if (options?.numbers && Math.random() < 0.14) {
+      let numWord = '';
+      const numRoll = Math.random();
+      if (numRoll < 0.35) {
+        // Current/recent year
+        numWord = `${Math.floor(Math.random() * 30 + 2000)}`;
+      } else if (numRoll < 0.65) {
+        // 2-3 digit score / metric
+        numWord = `${Math.floor(Math.random() * 890 + 10)}`;
+      } else if (numRoll < 0.85) {
+        // Percentage
+        numWord = `${Math.floor(Math.random() * 95 + 5)}%`;
       } else {
-        word = `${Math.floor(Math.random() * 20 + 2020)}`;
+        // Currency / count
+        numWord = `$${Math.floor(Math.random() * 250 + 5)}`;
+      }
+
+      result.push(numWord);
+      continue;
+    }
+
+    // Determine target cadence bucket for rhythmic variety
+    const targetBucketType = CADENCE_RHYTHM_PATTERN[i % CADENCE_RHYTHM_PATTERN.length];
+    const candidatePool = buckets[targetBucketType] || wordList;
+
+    let pickedWord = '';
+
+    // Attempt 1: Pick a word not in current test and not in recent history
+    for (let attempt = 0; attempt < 40; attempt++) {
+      const candidate = candidatePool[Math.floor(Math.random() * candidatePool.length)];
+      if (!usedInCurrentTest.has(candidate) && !recentSet.has(candidate)) {
+        pickedWord = candidate;
+        break;
       }
     }
 
-    // Capitalize occasionally or if following punctuation (only for alphabetic languages)
+    // Attempt 2: If pool was exhausted, pick word not in current test
+    if (!pickedWord) {
+      for (let attempt = 0; attempt < 30; attempt++) {
+        const candidate = candidatePool[Math.floor(Math.random() * candidatePool.length)];
+        if (!usedInCurrentTest.has(candidate)) {
+          pickedWord = candidate;
+          break;
+        }
+      }
+    }
+
+    // Attempt 3: Fallback to entire wordlist
+    if (!pickedWord) {
+      for (let attempt = 0; attempt < 30; attempt++) {
+        const candidate = wordList[Math.floor(Math.random() * wordList.length)];
+        if (!usedInCurrentTest.has(candidate)) {
+          pickedWord = candidate;
+          break;
+        }
+      }
+    }
+
+    // Ultimate fallback if count > wordList.length
+    if (!pickedWord) {
+      pickedWord = wordList[Math.floor(Math.random() * wordList.length)];
+    }
+
+    usedInCurrentTest.add(pickedWord);
+
+    // Track in session history buffer
+    recentHistory.push(pickedWord);
+    if (recentHistory.length > MAX_HISTORY_WINDOW) {
+      recentHistory.shift();
+    }
+
+    let formattedWord = pickedWord;
+
+    // Sentence Capitalization (if punctuation mode is active)
     if (
       language !== 'hi' &&
       options?.punctuation &&
-      (i === 0 || result[i - 1]?.endsWith(".") || result[i - 1]?.endsWith("!") || result[i - 1]?.endsWith("?"))
+      (i === 0 || 
+        result[i - 1]?.endsWith(".") || 
+        result[i - 1]?.endsWith("!") || 
+        result[i - 1]?.endsWith("?") ||
+        result[i - 1]?.endsWith(".\"") ||
+        result[i - 1]?.endsWith("!\""))
     ) {
-      word = word.charAt(0).toUpperCase() + word.slice(1);
+      formattedWord = formattedWord.charAt(0).toUpperCase() + formattedWord.slice(1);
     }
 
-    // Append punctuation if enabled
+    // Natural Punctuation Injection (~22% cadence)
     if (options?.punctuation && i < count - 1 && Math.random() < 0.22) {
       const p = punctuationMarks[Math.floor(Math.random() * punctuationMarks.length)];
       if (p === "'" && language === 'en') {
-        word = `${word}'s`;
+        formattedWord = `${formattedWord}'s`;
       } else {
-        word = `${word}${p}`;
+        formattedWord = `${formattedWord}${p}`;
       }
     }
 
-    result.push(word);
+    result.push(formattedWord);
   }
 
   // Ensure last word has a concluding sentence punctuation if punctuation is enabled
   if (options?.punctuation && result.length > 0) {
     const lastIdx = result.length - 1;
     const endMark = language === 'hi' ? '।' : '.';
-    if (!result[lastIdx].endsWith(".") && !result[lastIdx].endsWith("!") && !result[lastIdx].endsWith("।")) {
+    if (
+      !result[lastIdx].endsWith(".") && 
+      !result[lastIdx].endsWith("!") && 
+      !result[lastIdx].endsWith("?") && 
+      !result[lastIdx].endsWith("।")
+    ) {
       result[lastIdx] = `${result[lastIdx]}${endMark}`;
     }
   }

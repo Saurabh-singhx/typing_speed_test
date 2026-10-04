@@ -502,8 +502,8 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       // Forward kinetic pulse when cracking letters (+8px surge)
       surgeVelocityRef.current = Math.min(220, surgeVelocityRef.current + 8);
 
-      // Play satisfying crack audio
-      soundFx.playShatterCrack(soundProfile, nextCombo >= 20 ? 3 : nextCombo >= 10 ? 2 : 1);
+      // Play satisfying crack audio with progressive character satisfaction
+      soundFx.playShatterCrack(soundProfile, nextCombo >= 20 ? 3 : nextCombo >= 10 ? 2 : 1, uncrackedIdx);
 
       // Trigger environmental micro-impact
       triggerImpactEffects(false, nextCombo);

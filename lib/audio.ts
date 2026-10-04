@@ -25,8 +25,8 @@ class SoundSynthesizer {
     this.volume = Math.max(0, Math.min(1, vol));
   }
 
-  // Play keystroke sound based on current selected switch type
-  public playKey(key: string = '') {
+  // Play keystroke sound with ascending satisfaction per character in word (up to 6 progressive sounds)
+  public playKey(key: string = '', charIndexInWord: number = 0) {
     if (this.soundType === 'off' || this.volume <= 0) return;
     this.initContext();
     if (!this.ctx) return;
@@ -35,64 +35,187 @@ class SoundSynthesizer {
     const isEnter = key === 'Enter';
     const now = this.ctx.currentTime;
 
-    // Pitch jitter for natural acoustic resonance
-    const pitchJitter = 0.95 + Math.random() * 0.1;
+    // Pitch jitter for natural acoustic organic feel
+    const pitchJitter = 0.97 + Math.random() * 0.06;
+
+    // Dedicated weighty spacebar actuation thock
+    if (isSpace || isEnter || charIndexInWord < 0) {
+      this.playSpacebar(now);
+      return;
+    }
+
+    // Tier 0 to 5 (6 progressive satisfactory acoustic levels per word)
+    const tier = Math.min(5, Math.max(0, charIndexInWord));
 
     switch (this.soundType) {
+      case 'crescendo':
+        this.playCrescendo(now, tier, pitchJitter);
+        break;
       case 'thock':
-        this.playThock(now, isSpace, pitchJitter);
+        this.playThock(now, tier, pitchJitter);
         break;
       case 'clicky':
-        this.playClicky(now, isSpace || isEnter, pitchJitter);
+        this.playClicky(now, tier, pitchJitter);
         break;
       case 'topre':
-        this.playTopre(now, isSpace, pitchJitter);
+        this.playTopre(now, tier, pitchJitter);
         break;
       case 'arcade':
-        this.playArcade(now, isSpace, pitchJitter);
+        this.playArcade(now, tier, pitchJitter);
         break;
     }
   }
 
-  // Linear / Thocky mechanical switch (Deep low-frequency clack)
-  private playThock(now: number, isSpace: boolean, jitter: number) {
+  // 1. Dedicated Spacebar / Word Resolution Latch Thock
+  private playSpacebar(now: number) {
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
     const filter = this.ctx.createBiquadFilter();
 
     filter.type = 'lowpass';
-    filter.frequency.setValueAtTime(isSpace ? 450 : 600, now);
+    filter.frequency.setValueAtTime(420, now);
 
-    const baseFreq = (isSpace ? 110 : 155) * jitter;
+    // Deep weighted bottom-out chirp
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(baseFreq, now);
-    osc.frequency.exponentialRampToValueAtTime(45, now + 0.05);
+    osc.frequency.setValueAtTime(105, now);
+    osc.frequency.exponentialRampToValueAtTime(36, now + 0.06);
 
-    const peakVol = (isSpace ? 0.35 : 0.28) * this.volume;
+    const peakVol = 0.36 * this.volume;
     gain.gain.setValueAtTime(peakVol, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + (isSpace ? 0.07 : 0.05));
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
 
     osc.connect(filter);
     filter.connect(gain);
     gain.connect(this.ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.08);
+    osc.stop(now + 0.085);
   }
 
-  // Tactile Clicky switch (Cherry Blue style click + clack)
-  private playClicky(now: number, isSpace: boolean, jitter: number) {
+  // 2. ASMR Crescendo Profile: Harmonious ascending marble resonance (6 increasingly satisfying tiers)
+  private playCrescendo(now: number, tier: number, jitter: number) {
     if (!this.ctx) return;
 
-    // 1. High frequency click
+    // Harmonic pentatonic fundamental progression
+    const freqs = [174.61, 196.00, 220.00, 261.63, 293.66, 349.23]; // F3 -> F4
+    const filterCutoffs = [550, 750, 980, 1250, 1600, 2100];
+    const baseFreq = freqs[tier] * jitter;
+
+    // A. Sub-thock fundamental body
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(filterCutoffs[tier], now);
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(45 + tier * 5, now + 0.045);
+
+    const peakVol = (0.26 + tier * 0.025) * this.volume;
+    gain.gain.setValueAtTime(peakVol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05 + tier * 0.004);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.07);
+
+    // B. Crystalline Marble Transient Tick (increasingly crisp and rewarding per character)
+    if (tier >= 1) {
+      const clickOsc = this.ctx.createOscillator();
+      const clickGain = this.ctx.createGain();
+      clickOsc.type = 'sine';
+      clickOsc.frequency.setValueAtTime((2400 + tier * 550) * jitter, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(900, now + 0.015);
+
+      clickGain.gain.setValueAtTime((0.08 + tier * 0.035) * this.volume, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
+
+      clickOsc.connect(clickGain);
+      clickGain.connect(this.ctx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.025);
+    }
+
+    // C. Tier 5 Climax Harmonic Shimmer (pure dopamine release on 6th+ char)
+    if (tier === 5) {
+      const chimOsc = this.ctx.createOscillator();
+      const chimGain = this.ctx.createGain();
+      chimOsc.type = 'sine';
+      chimOsc.frequency.setValueAtTime(baseFreq * 2, now + 0.003);
+      chimGain.gain.setValueAtTime(0.12 * this.volume, now + 0.003);
+      chimGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+
+      chimOsc.connect(chimGain);
+      chimGain.connect(this.ctx.destination);
+      chimOsc.start(now + 0.003);
+      chimOsc.stop(now + 0.065);
+    }
+  }
+
+  // 3. Linear / Thocky mechanical switch (Deep acoustic clack with 6 ascending satisfaction tiers)
+  private playThock(now: number, tier: number, jitter: number) {
+    if (!this.ctx) return;
+    const tierPitches = [120, 136, 154, 175, 200, 230];
+    const cutoffs = [480, 620, 800, 1020, 1300, 1650];
+
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(cutoffs[tier], now);
+
+    const baseFreq = tierPitches[tier] * jitter;
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(baseFreq, now);
+    osc.frequency.exponentialRampToValueAtTime(42 + tier * 4, now + 0.048);
+
+    const peakVol = (0.28 + tier * 0.02) * this.volume;
+    gain.gain.setValueAtTime(peakVol, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05 + tier * 0.004);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(now);
+    osc.stop(now + 0.075);
+
+    // Tactile stem collision snap on higher tiers
+    if (tier >= 2) {
+      const stemOsc = this.ctx.createOscillator();
+      const stemGain = this.ctx.createGain();
+      stemOsc.type = 'sine';
+      stemOsc.frequency.setValueAtTime((1200 + tier * 400) * jitter, now);
+      stemGain.gain.setValueAtTime((0.05 + tier * 0.02) * this.volume, now);
+      stemGain.gain.exponentialRampToValueAtTime(0.001, now + 0.018);
+
+      stemOsc.connect(stemGain);
+      stemGain.connect(this.ctx.destination);
+      stemOsc.start(now);
+      stemOsc.stop(now + 0.02);
+    }
+  }
+
+  // 4. Tactile Clicky switch (Cherry Blue style click + clack with ascending crispness)
+  private playClicky(now: number, tier: number, jitter: number) {
+    if (!this.ctx) return;
+    const clickFreqs = [2200, 2600, 3100, 3700, 4400, 5200];
+    const bodyFreqs = [175, 205, 240, 280, 325, 375];
+
+    // High frequency click
     const clickOsc = this.ctx.createOscillator();
     const clickGain = this.ctx.createGain();
     clickOsc.type = 'sine';
-    clickOsc.frequency.setValueAtTime(2600 * jitter, now);
-    clickOsc.frequency.exponentialRampToValueAtTime(800, now + 0.015);
+    clickOsc.frequency.setValueAtTime(clickFreqs[tier] * jitter, now);
+    clickOsc.frequency.exponentialRampToValueAtTime(800 + tier * 80, now + 0.015);
 
-    clickGain.gain.setValueAtTime(0.22 * this.volume, now);
+    clickGain.gain.setValueAtTime((0.19 + tier * 0.025) * this.volume, now);
     clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.02);
 
     clickOsc.connect(clickGain);
@@ -100,14 +223,14 @@ class SoundSynthesizer {
     clickOsc.start(now);
     clickOsc.stop(now + 0.025);
 
-    // 2. Bottom out clack
+    // Bottom out clack
     const bodyOsc = this.ctx.createOscillator();
     const bodyGain = this.ctx.createGain();
     bodyOsc.type = 'triangle';
-    bodyOsc.frequency.setValueAtTime((isSpace ? 160 : 220) * jitter, now + 0.005);
-    bodyOsc.frequency.exponentialRampToValueAtTime(70, now + 0.04);
+    bodyOsc.frequency.setValueAtTime(bodyFreqs[tier] * jitter, now + 0.005);
+    bodyOsc.frequency.exponentialRampToValueAtTime(70 + tier * 10, now + 0.04);
 
-    bodyGain.gain.setValueAtTime(0.18 * this.volume, now + 0.005);
+    bodyGain.gain.setValueAtTime((0.16 + tier * 0.02) * this.volume, now + 0.005);
     bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
     bodyOsc.connect(bodyGain);
@@ -116,38 +239,48 @@ class SoundSynthesizer {
     bodyOsc.stop(now + 0.06);
   }
 
-  // Topre Electro-Capacitive switch (Damped rounded dome sound)
-  private playTopre(now: number, isSpace: boolean, jitter: number) {
+  // 5. Topre Electro-Capacitive switch (Damped rounded dome sound with ascending harmonic depth)
+  private playTopre(now: number, tier: number, jitter: number) {
     if (!this.ctx) return;
+    const topreFreqs = [135, 155, 180, 210, 245, 290];
+    const cutoffs = [400, 520, 660, 840, 1050, 1300];
+
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
+    const filter = this.ctx.createBiquadFilter();
+
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(cutoffs[tier], now);
 
     osc.type = 'sine';
-    const baseFreq = (isSpace ? 140 : 190) * jitter;
+    const baseFreq = topreFreqs[tier] * jitter;
     osc.frequency.setValueAtTime(baseFreq, now);
-    osc.frequency.exponentialRampToValueAtTime(55, now + 0.06);
+    osc.frequency.exponentialRampToValueAtTime(55 + tier * 6, now + 0.055);
 
-    gain.gain.setValueAtTime(0.25 * this.volume, now);
+    gain.gain.setValueAtTime((0.24 + tier * 0.02) * this.volume, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
 
-    osc.connect(gain);
+    osc.connect(filter);
+    filter.connect(gain);
     gain.connect(this.ctx.destination);
     osc.start(now);
     osc.stop(now + 0.07);
   }
 
-  // Retro Arcade 8-bit blip
-  private playArcade(now: number, isSpace: boolean, jitter: number) {
+  // 6. Retro Arcade 8-bit blip (Pentatonic melody climbing on each character)
+  private playArcade(now: number, tier: number, jitter: number) {
     if (!this.ctx) return;
+    const arcadeFreqs = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C E G C E G
+
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
 
     osc.type = 'square';
-    const baseFreq = (isSpace ? 280 : 440) * jitter;
+    const baseFreq = arcadeFreqs[tier] * jitter;
     osc.frequency.setValueAtTime(baseFreq, now);
-    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, now + 0.03);
+    osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.4, now + 0.03);
 
-    gain.gain.setValueAtTime(0.12 * this.volume, now);
+    gain.gain.setValueAtTime((0.11 + tier * 0.015) * this.volume, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
 
     osc.connect(gain);
@@ -263,13 +396,13 @@ class SoundSynthesizer {
   }
 
   // Play Keystroke Fracture / Crack Sound (Satisfying Brittle Glass / Heavy Stone / Cyber Crack)
-  public playShatterCrack(profile: 'crystal' | 'stone' | 'laser' = 'crystal', comboMultiplier: number = 1.0) {
+  public playShatterCrack(profile: 'crystal' | 'stone' | 'laser' = 'crystal', comboMultiplier: number = 1.0, charIndex: number = 0) {
     this.initContext();
     if (!this.ctx) return;
 
     if (this.ctx.state === 'suspended') {
       this.ctx.resume().then(() => {
-        this.playShatterCrack(profile, comboMultiplier);
+        this.playShatterCrack(profile, comboMultiplier, charIndex);
       }).catch(() => {});
       return;
     }
@@ -279,8 +412,10 @@ class SoundSynthesizer {
       const dest = this.getDestination();
       if (!dest) return;
 
+      const tier = Math.min(5, Math.max(0, charIndex));
+      const tierFreqMultiplier = 1 + tier * 0.09;
       const vol = Math.max(0.4, this.volume > 0 ? this.volume : 0.65);
-      const jitter = (0.94 + Math.random() * 0.12) * Math.min(1.25, 0.95 + comboMultiplier * 0.05);
+      const jitter = (0.94 + Math.random() * 0.12) * Math.min(1.25, 0.95 + comboMultiplier * 0.05) * tierFreqMultiplier;
 
       if (profile === 'crystal') {
         // 1. Sharp brittle high-frequency snap impulse (white noise burst)

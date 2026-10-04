@@ -17,7 +17,7 @@ export type TestMode = 'time' | 'words' | 'quote' | 'boss' | 'shatter';
 export type TimeOption = 15 | 30 | 60 | 120;
 export type WordOption = 10 | 25 | 50 | 100;
 export type CaretStyle = 'line' | 'block' | 'underline' | 'box';
-export type SoundType = 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';
+export type SoundType = 'crescendo' | 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';
 
 export type ShatterSpeed = 'slow' | 'normal' | 'fast' | 'hyper' | 'ramp';
 export type ShatterFxIntensity = 'full' | 'balanced' | 'minimal';
