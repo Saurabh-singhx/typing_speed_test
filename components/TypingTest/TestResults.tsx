@@ -16,12 +16,13 @@ import {
   Check
 } from 'lucide-react';
 import { TestResult, Achievement } from '@/lib/types';
-import { UserStats, getRankTitle } from '@/lib/storage';
+import { UserStats, getRankTitle, getRankByLevel } from '@/lib/storage';
 
 interface TestResultsProps {
   result: TestResult;
   userStats: UserStats;
   newAchievements: Achievement[];
+  levelUpData?: { leveledUp: boolean; oldLevel: number; newLevel: number } | null;
   onRestart: () => void;
 }
 
@@ -29,6 +30,7 @@ export const TestResults: React.FC<TestResultsProps> = ({
   result,
   userStats,
   newAchievements,
+  levelUpData,
   onRestart,
 }) => {
   const [copied, setCopied] = useState(false);
@@ -38,17 +40,17 @@ export const TestResults: React.FC<TestResultsProps> = ({
   const isPersonalBest = result.wpm >= userStats.bestWpm && userStats.bestWpm > 0;
   const rank = getRankTitle(result.wpm);
 
-  // Trigger celebration confetti for achievements or high WPM
+  // Trigger celebration confetti for achievements, high WPM, or level promotions
   useEffect(() => {
-    if (isPersonalBest || result.wpm >= 100 || newAchievements.length > 0) {
+    if (isPersonalBest || result.wpm >= 100 || newAchievements.length > 0 || levelUpData?.leveledUp) {
       confetti({
-        particleCount: 80,
-        spread: 70,
+        particleCount: levelUpData?.leveledUp ? 120 : 80,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#eab308', '#38bdf8', '#22c55e', '#f97316'],
+        colors: ['#eab308', '#38bdf8', '#22c55e', '#a855f7', '#f43f5e'],
       });
     }
-  }, [isPersonalBest, result.wpm, newAchievements]);
+  }, [isPersonalBest, result.wpm, newAchievements, levelUpData]);
 
   // Instant keyboard restart shortcut (Enter, Tab, or Escape)
   useEffect(() => {
@@ -605,6 +607,34 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
     <div className="w-full max-w-4xl mx-auto space-y-6 font-mono animate-fadeIn">
       
       {/* Top Banner Alert if Personal Best or Achievements */}
+      {/* Top Banner Alert if Personal Best or Level Promotion */}
+      {levelUpData?.leveledUp && (
+        <div className="p-4 rounded-2xl bg-gradient-to-r from-amber-500/15 via-purple-500/15 to-sky-500/15 border border-amber-400/40 shadow-[0_0_20px_rgba(245,158,11,0.2)] flex flex-wrap items-center justify-between gap-3 animate-fadeIn">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 shadow-[0_0_12px_rgba(245,158,11,0.3)] shrink-0">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-black text-amber-300 tracking-wider">
+                  OPERATIVE LEVEL PROMOTION!
+                </span>
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/25 text-amber-300 border border-amber-400/40">
+                  LVL {levelUpData.newLevel}
+                </span>
+              </div>
+              <div className="text-[11px] text-[var(--text-dim)] mt-0.5">
+                Promoted from Level {levelUpData.oldLevel} → Level {levelUpData.newLevel} • Operative Rank: <strong className="text-[var(--text-main)]">{getRankByLevel(levelUpData.newLevel).title}</strong> [{getRankByLevel(levelUpData.newLevel).badge}]
+              </div>
+            </div>
+          </div>
+          <div className="text-right text-[10px] text-[var(--text-dim)] ml-auto sm:ml-0">
+            <span className="text-[var(--accent-success)] font-bold">★ UNLOCKED PERK:</span>{' '}
+            <span className="text-[var(--text-main)] font-semibold">{getRankByLevel(levelUpData.newLevel).perk}</span>
+          </div>
+        </div>
+      )}
+
       {isPersonalBest && (
         <div className="p-3 rounded-lg bg-[var(--accent-tactical)]/10 border border-[var(--accent-tactical)]/40 flex items-center justify-between">
           <div className="flex items-center gap-2 text-[var(--accent-tactical)] text-sm font-bold">
@@ -616,19 +646,30 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
       )}
 
       {newAchievements.length > 0 && (
-        <div className="p-3 rounded-lg bg-[var(--accent-success)]/10 border border-[var(--accent-success)]/40 space-y-1">
-          <div className="flex items-center gap-2 text-[var(--accent-success)] text-sm font-bold">
-            <Sparkles className="w-4 h-4" />
-            <span>TACTICAL BADGE UNLOCKED!</span>
+        <div className="p-3.5 sm:p-4 rounded-2xl bg-[var(--accent-success)]/10 border border-[var(--accent-success)]/40 space-y-2">
+          <div className="flex items-center justify-between text-[var(--accent-success)] text-xs sm:text-sm font-bold">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4" />
+              <span>TACTICAL BADGE OBJECTIVE UNLOCKED!</span>
+            </div>
+            <span className="text-[10px] font-mono text-[var(--text-dim)]">
+              +{newAchievements.reduce((acc, a) => acc + a.xpReward, 0)} BONUS XP
+            </span>
           </div>
           <div className="flex flex-wrap gap-2 pt-1">
             {newAchievements.map((ach) => (
-              <span
+              <div
                 key={ach.id}
-                className="px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-success)]/40 text-xs text-[var(--accent-success)] font-bold flex items-center gap-1"
+                className="px-3 py-1 rounded-xl bg-[var(--bg-input)] border border-[var(--accent-success)]/40 text-xs text-[var(--text-main)] font-bold flex items-center gap-2"
               >
-                ★ {ach.title} ({ach.codename})
-              </span>
+                <span className="text-[var(--accent-success)]">★ {ach.title}</span>
+                <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-black/30 text-[var(--text-dim)] font-mono">
+                  {ach.codename}
+                </span>
+                <span className="text-[10px] text-[var(--accent-tactical)]">
+                  +{ach.xpReward} XP
+                </span>
+              </div>
             ))}
           </div>
         </div>

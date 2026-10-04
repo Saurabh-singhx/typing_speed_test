@@ -60,6 +60,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
   const [userStats, setUserStats] = useState(INITIAL_STATS);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+  const [levelUpData, setLevelUpData] = useState<{ leveledUp: boolean; oldLevel: number; newLevel: number } | null>(null);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
 
@@ -122,9 +123,10 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
 
   // Test Completed Handler
   const handleFinishTest = (result: TestResult) => {
-    const { updatedStats, newAchievements: newlyUnlocked } = recordTestResult(result);
+    const { updatedStats, newAchievements: newlyUnlocked, leveledUp, oldLevel, newLevel } = recordTestResult(result);
     setUserStats(updatedStats);
     setNewAchievements(newlyUnlocked);
+    setLevelUpData(leveledUp ? { leveledUp, oldLevel, newLevel } : null);
     setTestResult(result);
   };
 
@@ -132,6 +134,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
   const handleRestart = () => {
     setTestResult(null);
     setNewAchievements([]);
+    setLevelUpData(null);
   };
 
   const currentLang = settings.language || 'en';
@@ -194,6 +197,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
               result={testResult}
               userStats={userStats}
               newAchievements={newAchievements}
+              levelUpData={levelUpData}
               onRestart={handleRestart}
             />
           ) : settings.mode === 'shatter' ? (
@@ -240,6 +244,10 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
         onClose={() => setShowStatsModal(false)}
         userStats={userStats}
         onStatsReset={() => setUserStats(loadUserStats())}
+        onOpenAchievements={() => {
+          setShowStatsModal(false);
+          setShowAchievementsModal(true);
+        }}
       />
 
     </div>

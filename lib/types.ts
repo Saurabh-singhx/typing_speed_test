@@ -82,7 +82,14 @@ export interface UserStats {
   xp: number;
   level: number;
   unlockedAchievements: string[];
+  highestStreak?: number;
+  bestFlawlessChars?: number;
+  shatteredWordsTotal?: number;
+  bossesDefeated?: number;
 }
+
+export type AchievementTier = 'bronze' | 'silver' | 'gold' | 'platinum' | 'mythic';
+export type AchievementCategory = 'speed' | 'precision' | 'endurance' | 'arcade' | 'career';
 
 export interface Achievement {
   id: string;
@@ -90,9 +97,11 @@ export interface Achievement {
   codename: string;
   description: string;
   icon: string;
-  tier: 'bronze' | 'silver' | 'gold' | 'platinum';
+  tier: AchievementTier;
+  category: AchievementCategory;
+  xpReward: number;
   unlocked: boolean;
-  progress?: { current: number; max: number };
+  progress?: { current: number; max: number; unit?: string };
 }
 
 export interface BossEnemy {
