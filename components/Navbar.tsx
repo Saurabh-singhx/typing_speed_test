@@ -76,6 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const rank = getRankTitle(userStats.bestWpm);
 
   const themes: { id: GameTheme; name: string; tag: string }[] = [
+    { id: 'neomorphism', name: 'Neomorphism Soft UI', tag: 'Tactile Dual-Shadow' },
     { id: 'tactical', name: 'Tactical Gunmetal', tag: 'Charcoal & Amber' },
     { id: 'obsidian', name: 'Obsidian Stealth', tag: 'OLED Black & Graphite' },
     { id: 'cyberdeck', name: 'Cyberdeck 1984', tag: 'Retro Terminal Olive' },
@@ -100,11 +101,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Brand Logo & Telemetry Status */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center shadow-inner overflow-hidden p-0.5 shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl neo-inset flex items-center justify-center overflow-hidden p-1 shrink-0">
               <img
                 src="/logo.png"
                 alt="TypeTrack Logo"
-                className="w-full h-full object-contain rounded"
+                className="w-full h-full object-contain rounded-lg"
               />
             </div>
             <div className="min-w-0">
@@ -112,12 +113,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="font-mono font-black tracking-wider text-sm sm:text-base md:text-lg text-[var(--text-main)] truncate">
                   TYPE<span className="text-[var(--accent-tactical)]">TRACK</span>
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-mono tracking-widest px-1 sm:px-1.5 py-0.5 rounded bg-[var(--border-subtle)] text-[var(--text-dim)] border border-[var(--border-strong)] shrink-0">
+                <span className="text-[9px] sm:text-[10px] font-mono tracking-widest px-1.5 py-0.5 rounded-full neo-inset text-[var(--text-dim)] shrink-0 font-bold">
                   v2.0
                 </span>
               </div>
               <div className="hidden sm:flex text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] animate-pulse" />
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] shadow-[0_0_8px_var(--accent-success)] animate-pulse" />
                 <span>SYS_READY // APM TELEMETRY</span>
               </div>
             </div>
@@ -125,7 +126,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         {/* Center: Operator Rank & XP Bar (Interactive - Tablet/Desktop) */}
-        <div className="hidden md:flex items-center gap-3 px-3 py-1.5 rounded bg-[var(--bg-panel)] border border-[var(--border-subtle)]">
+        <div className="hidden md:flex items-center gap-3 px-3.5 py-1.5 rounded-xl neo-extruded-sm">
           <div className="text-right">
             <div className="text-[11px] font-mono font-bold text-[var(--text-main)] flex items-center justify-end gap-1.5">
               <span className="text-[var(--accent-tactical)]">LVL {levelInfo.level}</span>
@@ -136,9 +137,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               {levelInfo.currentLevelXp} / {levelInfo.nextLevelXp} XP ({levelInfo.progressPercent}%)
             </div>
           </div>
-          <div className="w-20 h-2 bg-[var(--bg-input)] rounded-full overflow-hidden border border-[var(--border-subtle)]">
+          <div className="w-24 h-2 neo-inset rounded-full overflow-hidden p-[1px]">
             <div 
-              className="h-full bg-[var(--accent-tactical)] transition-all duration-300 rounded-full"
+              className="h-full bg-gradient-to-r from-[var(--accent-tactical)] to-[var(--accent-target)] shadow-[0_0_8px_rgba(var(--accent-tactical-rgb),0.5)] transition-all duration-300 rounded-full"
               style={{ width: `${levelInfo.progressPercent}%` }}
             />
           </div>
@@ -184,7 +185,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Target pacing ghost options"
-                className="absolute right-0 mt-2 w-48 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50 animate-modal"
+                className="absolute right-0 mt-2.5 w-52 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Target Pacing Ghost
@@ -197,7 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onTargetWpmChange(wpm);
                       setShowPacerMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-mono flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       targetWpm === wpm
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -238,7 +239,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Mechanical switch sound options"
-                className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-2 shadow-xl z-50 animate-modal"
+                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2.5 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Switch Acoustics</span>
@@ -318,10 +319,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Color theme options"
-                className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-xl z-50 animate-modal"
+                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
-                  Matte Gaming Palettes
+                  Tactile & Gaming Palettes
                 </div>
                 {themes.map((t) => (
                   <button
@@ -331,7 +332,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onThemeChange(t.id);
                       setShowThemeMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       theme === t.id
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -369,7 +370,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Language selection options"
-                className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-modal"
+                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Language</span>

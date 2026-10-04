@@ -1,7 +1,41 @@
 @import "tailwindcss";
 
-:root {
-  /* Tactical Gunmetal (Default) */
+:root,
+[data-theme="neomorphism"] {
+  /* Neomorphism Soft UI Slate (Primary Default) */
+  --bg-page: #191c24;
+  --bg-surface: #1e222d;
+  --bg-panel: #232836;
+  --bg-input: #171a22;
+  
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.1);
+  --border-active: #6366f1;
+  
+  --text-main: #f8fafc;
+  --text-dim: #94a3b8;
+  --text-faint: #64748b;
+  
+  --accent-tactical: #6366f1; /* Electric Indigo */
+  --accent-tactical-rgb: 99, 102, 241;
+  --accent-target: #38bdf8; /* Cyan Glow */
+  --accent-success: #10b981; /* Mint Emerald */
+  --accent-danger: #f43f5e; /* Neon Rose */
+  --accent-streak: #f59e0b; /* Amber Kinetic */
+  
+  --keycap-bg: #232836;
+  --keycap-border: rgba(255, 255, 255, 0.08);
+  --keycap-shadow: rgba(0, 0, 0, 0.5);
+
+  /* Neomorphic Dual Shadow Variables */
+  --neo-shadow-dark: #11141c;
+  --neo-shadow-light: #2d3345;
+  --neo-shadow-inset-dark: #12141a;
+  --neo-shadow-inset-light: #282f40;
+}
+
+[data-theme="tactical"] {
+  /* Tactical Gunmetal */
   --bg-page: #0a0d14;
   --bg-surface: #101622;
   --bg-panel: #162030;
@@ -16,14 +50,19 @@
   
   --accent-tactical: #eab308; /* Matte Ammo Amber */
   --accent-tactical-rgb: 234, 179, 8;
-  --accent-target: #38bdf8; /* Glacial Telemetry Cyan */
-  --accent-success: #22c55e; /* Military Green */
-  --accent-danger: #f87171; /* Tactical Signal Coral Red */
-  --accent-streak: #f97316; /* Kinetic Orange */
+  --accent-target: #38bdf8;
+  --accent-success: #22c55e;
+  --accent-danger: #f87171;
+  --accent-streak: #f97316;
   
   --keycap-bg: #151d2a;
   --keycap-border: #28374d;
   --keycap-shadow: rgba(0, 0, 0, 0.4);
+
+  --neo-shadow-dark: #07090e;
+  --neo-shadow-light: #1f2b40;
+  --neo-shadow-inset-dark: #07090e;
+  --neo-shadow-inset-light: #1a2436;
 }
 
 [data-theme="obsidian"] {
@@ -49,6 +88,11 @@
   --keycap-bg: #12161f;
   --keycap-border: #222b3a;
   --keycap-shadow: rgba(0, 0, 0, 0.6);
+
+  --neo-shadow-dark: #020304;
+  --neo-shadow-light: #202734;
+  --neo-shadow-inset-dark: #030406;
+  --neo-shadow-inset-light: #1c2330;
 }
 
 [data-theme="cyberdeck"] {
@@ -75,6 +119,11 @@
   --keycap-bg: #1b231c;
   --keycap-border: #314032;
   --keycap-shadow: rgba(0, 0, 0, 0.4);
+
+  --neo-shadow-dark: #0b0e0c;
+  --neo-shadow-light: #29342b;
+  --neo-shadow-inset-dark: #0a0d0b;
+  --neo-shadow-inset-light: #253026;
 }
 
 [data-theme="arctic"] {
@@ -101,6 +150,11 @@
   --keycap-bg: #141d2d;
   --keycap-border: #253752;
   --keycap-shadow: rgba(0, 0, 0, 0.5);
+
+  --neo-shadow-dark: #05080e;
+  --neo-shadow-light: #21304d;
+  --neo-shadow-inset-dark: #05080e;
+  --neo-shadow-inset-light: #1b2840;
 }
 
 [data-theme="mecha"] {
@@ -127,6 +181,11 @@
   --keycap-bg: #1b1928;
   --keycap-border: #322e49;
   --keycap-shadow: rgba(0, 0, 0, 0.5);
+
+  --neo-shadow-dark: #09080d;
+  --neo-shadow-light: #2c293e;
+  --neo-shadow-inset-dark: #08070c;
+  --neo-shadow-inset-light: #252235;
 }
 
 html, body {
@@ -154,23 +213,78 @@ select {
   touch-action: manipulation;
 }
 
-/* Tactical Keycap Button Effect */
-.tactical-keycap {
+/* Neomorphism & Tactical Keycap Button Effect */
+.tactical-keycap,
+.neo-btn {
   background-color: var(--keycap-bg);
   border: 1px solid var(--keycap-border);
-  box-shadow: 0 2px 0 var(--keycap-shadow);
-  transition: all 0.08s ease;
+  box-shadow: 3px 3px 8px var(--neo-shadow-dark), -3px -3px 8px var(--neo-shadow-light);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
 }
 
-.tactical-keycap:active {
-  transform: translateY(2px);
-  box-shadow: 0 0 0 transparent;
+.tactical-keycap:hover,
+.neo-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 5px 5px 12px var(--neo-shadow-dark), -5px -5px 12px var(--neo-shadow-light);
+}
+
+.tactical-keycap:active,
+.neo-btn:active {
+  transform: translateY(1px);
+  box-shadow: inset 2px 2px 5px var(--neo-shadow-inset-dark), inset -2px -2px 5px var(--neo-shadow-inset-light);
 }
 
 .tactical-keycap:focus-visible,
+.neo-btn:focus-visible,
 .tactical-focus:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--accent-tactical);
+}
+
+/* Neomorphic Soft UI Utility Surfaces */
+.neo-extruded {
+  background-color: var(--bg-panel);
+  box-shadow: 6px 6px 16px var(--neo-shadow-dark), -6px -6px 16px var(--neo-shadow-light);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-extruded-sm {
+  background-color: var(--bg-panel);
+  box-shadow: 3px 3px 8px var(--neo-shadow-dark), -3px -3px 8px var(--neo-shadow-light);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.neo-inset {
+  background-color: var(--bg-input);
+  box-shadow: inset 3px 3px 7px var(--neo-shadow-inset-dark), inset -3px -3px 7px var(--neo-shadow-inset-light);
+  border: 1px solid var(--border-subtle);
+}
+
+.neo-inset-deep {
+  background-color: var(--bg-input);
+  box-shadow: inset 5px 5px 14px var(--neo-shadow-inset-dark), inset -5px -5px 14px var(--neo-shadow-inset-light);
+  border: 1px solid var(--border-subtle);
+}
+
+.neo-pill {
+  box-shadow: 2px 2px 5px var(--neo-shadow-dark), -2px -2px 5px var(--neo-shadow-light);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.15s ease;
+}
+
+.neo-pill:hover {
+  filter: brightness(1.05);
+}
+
+.neo-pill-active {
+  background-color: var(--bg-input) !important;
+  box-shadow: inset 2px 2px 5px var(--neo-shadow-inset-dark), inset -2px -2px 5px var(--neo-shadow-inset-light) !important;
+  color: var(--accent-tactical) !important;
+  border-color: rgba(var(--accent-tactical-rgb), 0.5) !important;
 }
 
 /* Caret blinking and smooth animations */

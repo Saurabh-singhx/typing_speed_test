@@ -48,10 +48,10 @@ export const TestResults: React.FC<TestResultsProps> = ({
     }
   }, [isPersonalBest, result.wpm, newAchievements]);
 
-  // Instant keyboard restart shortcut (Enter or Escape)
+  // Instant keyboard restart shortcut (Enter, Tab, or Escape)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'Enter') {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === 'Tab') {
         e.preventDefault();
         onRestart();
       }
@@ -230,67 +230,92 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
       )}
 
       {/* Main Tactical Stats Panel */}
-      <div className="bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl p-4 sm:p-6 shadow-xl relative overflow-hidden">
+      <div className="neo-extruded rounded-3xl p-5 sm:p-8 relative overflow-hidden">
         
-        {/* Subtle HUD Grid Overlay */}
-        <div className="hidden sm:block absolute top-0 right-0 p-4 text-[10px] text-[var(--text-faint)] uppercase tracking-widest pointer-events-none">
-          SEC_CODE: {result.id.slice(0, 8)} {'// APM VALIDATED'}
+        {/* Scorecard Header Bar with Aligned Top-Right Telemetry */}
+        <div className="flex flex-wrap items-center justify-between gap-2.5 pb-4 mb-5 border-b border-[var(--border-subtle)] text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)] shadow-[0_0_8px_var(--accent-tactical)] animate-pulse" />
+            <h2 className="font-bold text-[var(--text-main)] tracking-wider uppercase text-xs sm:text-sm inline">
+              PERFORMANCE SCORECARD
+            </h2>
+            <span className="text-[10px] font-mono text-[var(--accent-target)] px-2.5 py-0.5 rounded-full neo-inset uppercase font-semibold">
+              {result.mode} mode
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 text-[11px] font-mono text-[var(--text-dim)] uppercase tracking-wider ml-auto">
+            <span>SEC_CODE: <span className="font-bold text-[var(--text-main)]">{result.id.slice(0, 8)}</span></span>
+            <span className="text-[var(--border-strong)]">•</span>
+            <span className="text-[var(--accent-success)] font-bold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] shadow-[0_0_6px_var(--accent-success)] inline-block" />
+              APM VALIDATED
+            </span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 items-end pb-5 sm:pb-6 border-b border-[var(--border-subtle)]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 items-stretch pb-6 sm:pb-8 border-b border-[var(--border-subtle)]">
           
           {/* Hero WPM */}
-          <div className="col-span-1 min-w-0">
-            <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)] shrink-0" />
-              <span>Net Speed</span>
+          <div className="col-span-1 min-w-0 neo-inset p-4 rounded-2xl flex flex-col justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)] shrink-0" />
+                <span>Net Speed</span>
+              </div>
+              <div className="text-4xl sm:text-5xl md:text-6xl font-black text-[var(--accent-tactical)] leading-none truncate">
+                {result.wpm}
+              </div>
             </div>
-            <div className="text-4xl sm:text-6xl md:text-7xl font-black text-[var(--accent-tactical)] leading-none truncate">
-              {result.wpm}
-            </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 font-bold tracking-widest">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2 font-bold tracking-widest">
               WORDS PER MINUTE
             </div>
           </div>
 
           {/* Accuracy */}
-          <div className="col-span-1 min-w-0">
-            <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Target className="w-3.5 h-3.5 text-[var(--accent-success)] shrink-0" />
-              <span>Accuracy</span>
+          <div className="col-span-1 min-w-0 neo-inset p-4 rounded-2xl flex flex-col justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
+                <Target className="w-3.5 h-3.5 text-[var(--accent-success)] shrink-0" />
+                <span>Accuracy</span>
+              </div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--text-main)] leading-none truncate">
+                {result.accuracy}%
+              </div>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--text-main)] leading-none truncate">
-              {result.accuracy}%
-            </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2 truncate">
               {result.correctChars} hits / {result.incorrectChars} misses
             </div>
           </div>
 
           {/* Raw WPM */}
-          <div className="col-span-1 min-w-0">
-            <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-[var(--accent-target)] shrink-0" />
-              <span>Raw Speed</span>
+          <div className="col-span-1 min-w-0 neo-inset p-4 rounded-2xl flex flex-col justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
+                <Activity className="w-3.5 h-3.5 text-[var(--accent-target)] shrink-0" />
+                <span>Raw Speed</span>
+              </div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--accent-target)] leading-none truncate">
+                {result.rawWpm}
+              </div>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-target)] leading-none truncate">
-              {result.rawWpm}
-            </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2 truncate">
               Unadjusted cadence
             </div>
           </div>
 
           {/* Consistency & Streak */}
-          <div className="col-span-1 min-w-0">
-            <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
-              <Flame className="w-3.5 h-3.5 text-[var(--accent-streak)] shrink-0" />
-              <span>Flow Streak</span>
+          <div className="col-span-1 min-w-0 neo-inset p-4 rounded-2xl flex flex-col justify-between">
+            <div>
+              <div className="text-xs uppercase tracking-wider text-[var(--text-dim)] mb-1 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-[var(--accent-streak)] shrink-0" />
+                <span>Flow Streak</span>
+              </div>
+              <div className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--accent-streak)] leading-none truncate">
+                {result.highestStreak}x
+              </div>
             </div>
-            <div className="text-3xl sm:text-5xl font-black text-[var(--accent-streak)] leading-none truncate">
-              {result.highestStreak}x
-            </div>
-            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-1.5 sm:mt-2 truncate">
+            <div className="text-[10px] sm:text-xs text-[var(--text-dim)] mt-2 truncate">
               Consistency: {result.consistency}%
             </div>
           </div>
@@ -314,7 +339,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
             </span>
           </div>
 
-          <div className="w-full bg-[var(--bg-input)] rounded-lg p-2 border border-[var(--border-subtle)] overflow-hidden">
+          <div className="w-full bg-[var(--bg-input)] rounded-2xl p-3 sm:p-4 neo-inset overflow-hidden">
             <svg
               viewBox={`0 0 ${chartWidth} ${chartHeight}`}
               className="w-full h-36 overflow-visible"
@@ -423,12 +448,12 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
         {/* Next Mission / Restart CTA */}
         <button
           onClick={onRestart}
-          className="tactical-keycap w-full sm:w-auto px-6 py-3 rounded-lg text-sm font-bold font-mono text-[var(--bg-page)] bg-[var(--accent-tactical)] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] focus-visible:ring-offset-2 flex items-center justify-center gap-2 shadow-md transition-all"
+          className="neo-btn w-full sm:w-auto px-8 py-4 rounded-2xl text-base font-black font-mono text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-500 hover:from-indigo-400 hover:to-indigo-500 active:scale-95 flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(99,102,241,0.5),0_0_12px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_28px_rgba(99,102,241,0.7)] transition-all cursor-pointer ring-1 ring-white/20"
         >
-          <RotateCcw className="w-4 h-4" />
-          <span>RETRY MISSION</span>
-          <span className="hidden sm:inline text-xs opacity-90 font-normal px-2 py-0.5 rounded bg-black/25 flex items-center gap-1">
-            <kbd className="bg-transparent border-0 text-[var(--bg-page)] font-bold shadow-none p-0">Enter</kbd> or <kbd className="bg-transparent border-0 text-[var(--bg-page)] font-bold shadow-none p-0">Esc</kbd>
+          <RotateCcw className="w-5 h-5 text-white shrink-0" />
+          <span className="text-white tracking-wider font-black">START AGAIN</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-black/40 text-white/95 border border-white/25 shadow-inner">
+            <kbd className="bg-transparent border-0 text-white font-black shadow-none p-0">Enter</kbd> or <kbd className="bg-transparent border-0 text-white font-black shadow-none p-0">Tab</kbd>
           </span>
         </button>
 
@@ -437,7 +462,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
           
           <button
             onClick={handleCopyScorecard}
-            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center justify-center gap-1.5"
+            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             {copied ? <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copied ? 'COPIED!' : 'COPY CARD'}</span>
@@ -445,7 +470,7 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
 
           <button
             onClick={handleDownloadScorecard}
-            className="tactical-keycap flex-1 sm:flex-initial px-3.5 py-2.5 rounded-lg text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-target)] flex items-center justify-center gap-1.5"
+            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <Download className="w-3.5 h-3.5" />
             <span>EXPORT PNG</span>

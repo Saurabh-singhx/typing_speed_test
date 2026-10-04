@@ -10,9 +10,21 @@ import {
   AtSign, 
   Skull, 
   Globe,
-  ChevronDown
+  ChevronDown,
+  Zap,
+  Gauge,
+  Sparkles
 } from 'lucide-react';
-import { TestMode, TimeOption, WordOption, CaretStyle, TestSettings } from '@/lib/types';
+import { 
+  TestMode, 
+  TimeOption, 
+  WordOption, 
+  CaretStyle, 
+  TestSettings,
+  ShatterSpeed,
+  ShatterFxIntensity,
+  ShatterSoundProfile
+} from '@/lib/types';
 import { SUPPORTED_LANGUAGES, getLanguageInfo } from '@/lib/languages';
 
 interface TestSettingsBarProps {
@@ -35,10 +47,28 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
     { id: 'words', label: 'Words', icon: <AlignLeft className="w-3.5 h-3.5" /> },
     { id: 'quote', label: 'Quote', icon: <Quote className="w-3.5 h-3.5" /> },
     { id: 'boss', label: 'Boss Raid', icon: <Swords className="w-3.5 h-3.5 text-[var(--accent-danger)]" /> },
+    { id: 'shatter', label: 'Shatter Stream', icon: <Zap className="w-3.5 h-3.5 text-amber-400" /> },
   ];
 
   const timeOptions: TimeOption[] = [15, 30, 60, 120];
   const wordOptions: WordOption[] = [10, 25, 50, 100];
+  const shatterSpeedOptions: { id: ShatterSpeed; label: string }[] = [
+    { id: 'slow', label: '0.8x' },
+    { id: 'normal', label: '1.2x' },
+    { id: 'fast', label: '1.8x' },
+    { id: 'hyper', label: '2.5x' },
+    { id: 'ramp', label: 'Ramp⚡' },
+  ];
+  const shatterSoundProfiles: { id: ShatterSoundProfile; label: string }[] = [
+    { id: 'crystal', label: '💎 Crystal' },
+    { id: 'stone', label: '🪨 Stone' },
+    { id: 'laser', label: '⚡ Laser' },
+  ];
+  const fxOptions: { id: ShatterFxIntensity; label: string }[] = [
+    { id: 'full', label: 'Full VFX' },
+    { id: 'balanced', label: 'Balanced' },
+    { id: 'minimal', label: 'Minimal' },
+  ];
   const caretOptions: { id: CaretStyle; label: string }[] = [
     { id: 'line', label: '|' },
     { id: 'block', label: '█' },
@@ -47,7 +77,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
   ];
 
   return (
-    <div className={`w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-1.5 sm:p-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-mono shadow-sm transition-opacity ${
+    <div className={`w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-2xl neo-extruded text-xs font-mono transition-opacity ${
       disabled ? 'opacity-40 pointer-events-none' : 'opacity-100'
     }`}>
       
@@ -67,7 +97,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           aria-label={`Select language. Currently ${currentLang}`}
           aria-haspopup="true"
           aria-expanded={showLangMenu}
-          className="px-2 sm:px-2.5 py-1.5 rounded flex items-center gap-1 sm:gap-1.5 bg-[var(--bg-panel)] border border-[var(--border-subtle)] text-[var(--text-main)] hover:border-[var(--accent-tactical)]/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] transition-colors shadow-sm whitespace-nowrap"
+          className="px-2.5 sm:px-3 py-1.5 rounded-xl flex items-center gap-1.5 neo-btn text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] transition-colors whitespace-nowrap"
         >
           <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
           <span className="text-xs">{currentLangInfo.flag}</span>
@@ -79,7 +109,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           <div
             role="menu"
             aria-label="Language selection"
-            className="absolute left-0 mt-1 w-48 max-w-[calc(100vw-2.5rem)] rounded bg-[var(--bg-panel)] border border-[var(--border-strong)] p-1.5 shadow-2xl z-50 animate-modal"
+            className="absolute left-0 mt-2 w-52 max-w-[calc(100vw-2.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
           >
             <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
               <span>Language Bank</span>
@@ -94,7 +124,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                     onUpdateSettings({ language: l.code });
                     setShowLangMenu(false);
                   }}
-                  className={`w-full text-left px-2.5 py-1.5 rounded text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                  className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     currentLang === l.code
                       ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                       : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -112,10 +142,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         )}
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
+      <div className="h-5 w-px bg-gradient-to-b from-transparent via-[var(--border-strong)] to-transparent shrink-0 hidden lg:block" />
       
       {/* Primary Mode Selector */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">
+      <div className="flex flex-wrap sm:flex-nowrap items-center gap-1 neo-inset p-1 rounded-xl">
         {modes.map((m) => {
           const isActive = settings.mode === m.id;
           return (
@@ -123,16 +153,16 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               key={m.id}
               onClick={() => onUpdateSettings({ mode: m.id })}
               aria-pressed={isActive}
-              className={`px-1.5 sm:px-2.5 py-1 rounded flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+              className={`px-2 sm:px-3 py-1 rounded-lg flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 isActive
-                  ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold shadow-sm'
-                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]'
+                  ? 'neo-pill-active font-bold shadow-sm'
+                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
               {m.icon}
               <span>{m.label}</span>
               {m.id === 'boss' && (
-                <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded bg-red-950/70 text-red-300 border border-red-500/40 font-bold tracking-wider">
+                <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded-md bg-red-950/70 text-red-300 border border-red-500/40 font-bold tracking-wider">
                   COMBAT
                 </span>
               )}
@@ -141,20 +171,20 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         })}
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
+      <div className="h-5 w-px bg-gradient-to-b from-transparent via-[var(--border-strong)] to-transparent shrink-0 hidden lg:block" />
 
       {/* Sub-Options based on Mode */}
       {settings.mode === 'time' && (
-        <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
+        <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
           {timeOptions.map((t) => (
             <button
               key={t}
               onClick={() => onUpdateSettings({ timeLimit: t })}
               aria-pressed={settings.timeLimit === t}
-              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+              className={`px-2 py-1 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.timeLimit === t
-                  ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
-                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
+                  ? 'neo-pill-active font-bold'
+                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
               {t}s
@@ -164,16 +194,16 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
       )}
 
       {settings.mode === 'words' && (
-        <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
+        <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
           {wordOptions.map((w) => (
             <button
               key={w}
               onClick={() => onUpdateSettings({ wordCount: w })}
               aria-pressed={settings.wordCount === w}
-              className={`px-1.5 sm:px-2 py-1 rounded transition-colors whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+              className={`px-2 py-1 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.wordCount === w
-                  ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold'
-                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
+                  ? 'neo-pill-active font-bold'
+                  : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
               {w}
@@ -182,10 +212,86 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </div>
       )}
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] shrink-0 hidden lg:block" />
+      {/* Shatter Stream Specialized Controls */}
+      {settings.mode === 'shatter' && (
+        <>
+          {/* Speed Presets */}
+          <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+            <span className="text-[10px] text-[var(--text-dim)] uppercase px-1.5 font-bold flex items-center gap-1">
+              <Gauge className="w-3 h-3 text-amber-400" />
+              <span>Speed:</span>
+            </span>
+            {shatterSpeedOptions.map((sp) => {
+              const active = (settings.shatterSpeed || 'normal') === sp.id;
+              return (
+                <button
+                  key={sp.id}
+                  onClick={() => onUpdateSettings({ shatterSpeed: sp.id })}
+                  aria-pressed={active}
+                  className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    active
+                      ? 'neo-pill-active text-amber-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {sp.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Sound Profile */}
+          <div className="hidden sm:flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+            {shatterSoundProfiles.map((snd) => {
+              const active = (settings.shatterSoundProfile || 'crystal') === snd.id;
+              return (
+                <button
+                  key={snd.id}
+                  onClick={() => onUpdateSettings({ shatterSoundProfile: snd.id })}
+                  aria-pressed={active}
+                  className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    active
+                      ? 'neo-pill-active text-[var(--accent-tactical)] font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {snd.label}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* VFX Toggle */}
+          <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
+            <span className="text-[10px] text-[var(--text-dim)] uppercase px-1 font-bold flex items-center gap-0.5">
+              <Sparkles className="w-3 h-3 text-cyan-400" />
+            </span>
+            {fxOptions.map((fx) => {
+              const active = (settings.shatterFxIntensity || 'full') === fx.id;
+              return (
+                <button
+                  key={fx.id}
+                  onClick={() => onUpdateSettings({ shatterFxIntensity: fx.id })}
+                  aria-pressed={active}
+                  title={`Visual impact effects: ${fx.label}`}
+                  className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    active
+                      ? 'neo-pill-active text-cyan-300 font-bold'
+                      : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
+                  }`}
+                >
+                  {fx.label}
+                </button>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      <div className="h-5 w-px bg-gradient-to-b from-transparent via-[var(--border-strong)] to-transparent shrink-0 hidden lg:block" />
 
       {/* Modifiers: Punctuation, Numbers, Hardcore */}
-      <div className="flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)] shrink-0">
+      <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
         
         {/* Punctuation */}
         <button
@@ -193,10 +299,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           title="Toggle Punctuation"
           aria-label="Toggle Punctuation"
           aria-pressed={settings.punctuation}
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+          className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.punctuation
-              ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
-              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
+              ? 'neo-pill-active font-bold text-[var(--accent-tactical)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
           <AtSign className="w-3 h-3" />
@@ -209,10 +315,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           title="Toggle Numbers"
           aria-label="Toggle Numbers"
           aria-pressed={settings.numbers}
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+          className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.numbers
-              ? 'bg-[var(--accent-tactical)]/20 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/40 font-bold'
-              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
+              ? 'neo-pill-active font-bold text-[var(--accent-tactical)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
           <Hash className="w-3 h-3" />
@@ -225,10 +331,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           title="Sudden Death: 1 typo = Instant Mission Abort!"
           aria-label="Sudden Death mode: 1 typo equals instant mission abort"
           aria-pressed={settings.hardcore}
-          className={`px-1.5 sm:px-2 py-1 rounded flex items-center gap-1 transition-colors whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+          className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.hardcore
-              ? 'bg-[var(--accent-danger)]/20 text-red-300 border border-[var(--accent-danger)]/50 font-bold'
-              : 'text-[var(--text-dim)] hover:text-[var(--text-main)]'
+              ? 'neo-pill-active font-bold text-[var(--accent-danger)] border-[var(--accent-danger)]/50'
+              : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
           <Skull className="w-3 h-3" />
@@ -236,11 +342,11 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
         </button>
       </div>
 
-      <div className="h-4 w-px bg-[var(--border-subtle)] hidden lg:block" />
+      <div className="h-5 w-px bg-gradient-to-b from-transparent via-[var(--border-strong)] to-transparent hidden lg:block" />
 
       {/* Caret Style */}
-      <div className="hidden md:flex items-center gap-1 bg-[var(--bg-panel)] p-1 rounded border border-[var(--border-subtle)]">
-        <span className="text-[11px] text-[var(--text-dim)] px-1 uppercase tracking-wider font-semibold">Caret</span>
+      <div className="hidden md:flex items-center gap-1 neo-inset p-1 rounded-xl">
+        <span className="text-[11px] text-[var(--text-dim)] px-1.5 uppercase tracking-wider font-semibold">Caret</span>
         {caretOptions.map((c) => (
           <button
             key={c.id}
@@ -248,10 +354,10 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
             title={`Caret style: ${c.id}`}
             aria-label={`Caret style: ${c.id}`}
             aria-pressed={settings.caretStyle === c.id}
-            className={`px-2 py-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center rounded text-[11px] font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+            className={`px-2.5 py-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center rounded-lg text-[11px] font-mono transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               settings.caretStyle === c.id
-                ? 'bg-[var(--keycap-bg)] text-[var(--accent-tactical)] border border-[var(--border-strong)] font-bold shadow-sm'
-                : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)]'
+                ? 'neo-pill-active font-bold shadow-sm'
+                : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
             }`}
           >
             {c.label}

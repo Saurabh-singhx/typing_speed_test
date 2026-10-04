@@ -13,13 +13,17 @@ export interface LanguageInfo {
   ogLocale: string;
 }
 
-export type TestMode = 'time' | 'words' | 'quote' | 'boss';
+export type TestMode = 'time' | 'words' | 'quote' | 'boss' | 'shatter';
 export type TimeOption = 15 | 30 | 60 | 120;
 export type WordOption = 10 | 25 | 50 | 100;
 export type CaretStyle = 'line' | 'block' | 'underline' | 'box';
 export type SoundType = 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';
 
-export type GameTheme = 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha';
+export type ShatterSpeed = 'slow' | 'normal' | 'fast' | 'hyper' | 'ramp';
+export type ShatterFxIntensity = 'full' | 'balanced' | 'minimal';
+export type ShatterSoundProfile = 'crystal' | 'stone' | 'laser';
+
+export type GameTheme = 'neomorphism' | 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha';
 
 export interface TestSettings {
   language: LanguageCode;
@@ -34,6 +38,9 @@ export interface TestSettings {
   soundVolume: number; // 0 to 1
   caretStyle: CaretStyle;
   theme: GameTheme;
+  shatterSpeed?: ShatterSpeed;
+  shatterFxIntensity?: ShatterFxIntensity;
+  shatterSoundProfile?: ShatterSoundProfile;
 }
 
 export interface WpmPoint {

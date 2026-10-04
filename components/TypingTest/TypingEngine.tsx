@@ -665,11 +665,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       className="w-full max-w-5xl mx-auto space-y-2.5 sm:space-y-3 font-mono cursor-text select-none focus:outline-none"
     >
       {/* Live Tactical Telemetry HUD */}
-      <div className="flex items-center justify-between px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs">
+      <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl neo-extruded text-xs">
         
         {/* Left Telemetry: Time / Words Remaining */}
-        <div className="flex items-center gap-2.5 sm:gap-4">
-          <div className="flex items-center gap-1 sm:gap-1.5">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset">
             <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-dim)] font-semibold">
               {settings.mode === 'time' ? 'TIME' : settings.mode === 'words' ? 'WORDS' : 'CADENCE'}
             </span>
@@ -682,11 +682,9 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
             </span>
           </div>
 
-          <div className="h-3.5 w-px bg-[var(--border-subtle)]" />
-
           {/* Live Speed */}
-          <div className="flex items-center gap-1 sm:gap-1.5" title={`Raw Speed: ${liveRawWpm} WPM`}>
-            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-dim)]">WPM</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset" title={`Raw Speed: ${liveRawWpm} WPM`}>
+            <span className="text-[9px] sm:text-[10px] font-semibold uppercase text-[var(--text-dim)]">WPM</span>
             <span className="text-sm sm:text-base font-black text-[var(--text-main)]">
               {liveWpm}
             </span>
@@ -695,11 +693,9 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
             </span>
           </div>
 
-          <div className="h-3.5 w-px bg-[var(--border-subtle)]" />
-
           {/* Live Accuracy */}
-          <div className="flex items-center gap-1 sm:gap-1.5">
-            <span className="text-[11px] sm:text-xs font-semibold uppercase text-[var(--text-dim)]">ACC</span>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset">
+            <span className="text-[9px] sm:text-[10px] font-semibold uppercase text-[var(--text-dim)]">ACC</span>
             <span className={`text-sm sm:text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
               {liveAccuracy}%
             </span>
@@ -709,7 +705,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         {/* Right Telemetry: Flow Streak & Multiplier */}
         <div className="flex items-center gap-2 sm:gap-3">
           {comboStreak > 3 && (
-            <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 rounded bg-[var(--bg-input)] border border-[var(--accent-streak)]/40 text-[var(--accent-streak)] font-bold text-xs animate-pulse">
+            <div className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-xl neo-inset text-[var(--accent-streak)] font-bold text-xs animate-pulse">
               <Flame className="w-3.5 h-3.5" />
               <span>{comboStreak}x</span>
               <span className="hidden sm:inline text-[11px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
@@ -724,7 +720,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
             }}
             title="Restart Test (Esc or Tab+Enter)"
             aria-label="Restart typing test (Esc or Tab+Enter)"
-            className="tactical-keycap p-1.5 sm:px-2.5 sm:py-1 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center gap-1.5"
+            className="tactical-keycap p-1.5 sm:px-3 sm:py-1.5 rounded-xl text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span className="hidden md:inline text-xs font-mono font-medium">Restart</span>
@@ -790,10 +786,10 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         <div
           ref={wordsContainerRef}
           onClick={() => hiddenInputRef.current?.focus()}
-          className={`relative w-full min-h-[140px] sm:min-h-[170px] max-h-[190px] sm:max-h-[220px] p-3.5 sm:p-6 rounded-xl bg-[var(--bg-input)] border transition-all duration-200 overflow-hidden shadow-inner leading-relaxed text-lg sm:text-2xl cursor-text ${
+          className={`relative w-full min-h-[150px] sm:min-h-[180px] max-h-[200px] sm:max-h-[230px] p-4 sm:p-7 rounded-2xl neo-inset-deep border transition-all duration-200 overflow-hidden leading-relaxed text-lg sm:text-2xl cursor-text ${
             isInputFocused
-              ? 'border-[var(--accent-tactical)]/70 ring-2 ring-[var(--accent-tactical)]/20 shadow-lg'
-              : 'border-[var(--border-strong)] hover:border-[var(--border-active)]'
+              ? 'border-[var(--accent-tactical)]/70 ring-2 ring-[var(--accent-tactical)]/20 shadow-[0_0_24px_rgba(var(--accent-tactical-rgb),0.12)]'
+              : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
           }`}
         >
           {/* Zero-latency mobile-first input overlay */}

@@ -12,7 +12,7 @@ const LEGACY_HISTORY_KEY = 'keyops_tactical_history_v1';
 
 export const DEFAULT_SETTINGS: TestSettings = {
   language: 'en',
-  mode: 'time',
+  mode: 'shatter',
   timeLimit: 30,
   wordCount: 25,
   punctuation: false,
@@ -22,7 +22,10 @@ export const DEFAULT_SETTINGS: TestSettings = {
   soundType: 'thock',
   soundVolume: 0.5,
   caretStyle: 'line',
-  theme: 'tactical',
+  theme: 'neomorphism',
+  shatterSpeed: 'normal',
+  shatterFxIntensity: 'full',
+  shatterSoundProfile: 'crystal',
 };
 
 export const INITIAL_STATS: UserStats = {
@@ -111,6 +114,15 @@ export const ACHIEVEMENTS_LIST: Achievement[] = [
     icon: 'award',
     tier: 'silver',
     unlocked: false,
+  },
+  {
+    id: 'shatter_demolisher',
+    title: 'Kinetic Demolisher',
+    codename: 'OP_SHATTER',
+    description: 'Shatter incoming words with 90%+ accuracy in Shatter Stream mode.',
+    icon: 'zap',
+    tier: 'gold',
+    unlocked: false,
   }
 ];
 
@@ -144,7 +156,20 @@ export function loadSettings(): TestSettings {
   try {
     const data = localStorage.getItem(SETTINGS_KEY) || localStorage.getItem(LEGACY_SETTINGS_KEY);
     if (!data) return DEFAULT_SETTINGS;
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(data) };
+    const parsed = JSON.parse(data);
+    // Smoothly upgrade previous default 'tactical' theme to 'neomorphism'
+    if (parsed.theme === 'tactical' && !localStorage.getItem('typetrack_theme_migrated_neo_v1')) {
+      parsed.theme = 'neomorphism';
+      localStorage.setItem('typetrack_theme_migrated_neo_v1', 'true');
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, ...parsed, theme: 'neomorphism' }));
+    }
+    // Smoothly upgrade default mode to 'shatter'
+    if (!localStorage.getItem('typetrack_mode_migrated_shatter_v1')) {
+      parsed.mode = 'shatter';
+      localStorage.setItem('typetrack_mode_migrated_shatter_v1', 'true');
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, ...parsed, mode: 'shatter' }));
+    }
+    return { ...DEFAULT_SETTINGS, ...parsed };
   } catch {
     return DEFAULT_SETTINGS;
   }
@@ -238,6 +263,7 @@ export function recordTestResult(result: TestResult): { updatedStats: UserStats;
     if (ach.id === 'combo_king' && result.highestStreak >= 50) unlocked = true;
     if (ach.id === 'iron_discipline' && result.settingsSnapshot.includes('hardcore') && result.accuracy === 100) unlocked = true;
     if (ach.id === 'titan_slayer' && result.mode === 'boss' && result.accuracy >= 90) unlocked = true;
+    if (ach.id === 'shatter_demolisher' && result.mode === 'shatter' && result.accuracy >= 90) unlocked = true;
     if (ach.id === 'veteran_typist' && totalTests >= 25) unlocked = true;
 
     if (unlocked) {

@@ -61,12 +61,12 @@ export const StatsModal: React.FC<StatsModalProps> = ({
       aria-modal="true"
       aria-labelledby="stats-modal-title"
     >
-      <div className="w-full max-w-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] rounded-xl shadow-2xl overflow-hidden font-mono animate-modal">
+      <div className="w-full max-w-xl rounded-3xl neo-extruded shadow-2xl overflow-hidden font-mono animate-modal">
         
         {/* Header */}
-        <div className="p-3 sm:p-4 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
+        <div className="p-3.5 sm:p-5 border-b border-[var(--border-subtle)] flex items-center justify-between gap-2 bg-[var(--bg-surface)]">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <div className="w-8 h-8 rounded bg-[var(--keycap-bg)] border border-[var(--border-strong)] flex items-center justify-center text-[var(--accent-target)] shrink-0">
+            <div className="w-9 h-9 rounded-xl neo-inset flex items-center justify-center text-[var(--accent-target)] shrink-0">
               <BarChart3 className="w-4 h-4" />
             </div>
             <div className="min-w-0">
@@ -81,10 +81,10 @@ export const StatsModal: React.FC<StatsModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-input)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] shrink-0"
+            className="tactical-keycap p-2 rounded-xl text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] shrink-0 cursor-pointer"
             aria-label="Close modal"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -92,7 +92,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
         <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
           
           {/* Level & Rank Hero */}
-          <div className="p-3 sm:p-4 rounded-lg bg-[var(--bg-surface)] border border-[var(--border-strong)] flex items-center justify-between gap-2">
+          <div className="p-4 sm:p-5 rounded-2xl neo-inset flex items-center justify-between gap-3">
             <div className="min-w-0">
               <div className="text-[10px] sm:text-xs text-[var(--text-dim)] uppercase">Rank Qualification</div>
               <div className={`text-base sm:text-xl font-black ${rank.color} mt-0.5 truncate`}>
@@ -103,7 +103,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[var(--bg-input)] border-2 border-[var(--accent-tactical)] flex items-center justify-center text-center shrink-0">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl neo-extruded flex items-center justify-center text-center shrink-0">
               <div>
                 <div className="text-[8px] sm:text-[9px] text-[var(--text-dim)] font-semibold">LVL</div>
                 <div className="text-base sm:text-lg font-black text-[var(--accent-tactical)] leading-none">
@@ -114,9 +114,9 @@ export const StatsModal: React.FC<StatsModalProps> = ({
           </div>
 
           {/* Core Metrics Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-3.5 text-xs">
             
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <Zap className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
                 <span>Peak Record</span>
@@ -126,7 +126,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <TrendingUp className="w-3.5 h-3.5 text-[var(--accent-target)]" />
                 <span>Average WPM</span>
@@ -136,7 +136,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <Target className="w-3.5 h-3.5 text-[var(--accent-success)]" />
                 <span>Accuracy</span>
@@ -146,7 +146,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <Clock className="w-3.5 h-3.5 text-[var(--text-dim)]" />
                 <span>Time Deployed</span>
@@ -156,7 +156,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <FileText className="w-3.5 h-3.5 text-[var(--text-dim)]" />
                 <span>Words Typed</span>
@@ -166,7 +166,7 @@ export const StatsModal: React.FC<StatsModalProps> = ({
               </div>
             </div>
 
-            <div className="p-3 rounded-lg bg-[var(--bg-input)] border border-[var(--border-subtle)]">
+            <div className="p-3.5 rounded-2xl neo-inset">
               <div className="flex items-center gap-1.5 text-[var(--text-dim)] mb-1">
                 <Award className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
                 <span>Tests Finished</span>
