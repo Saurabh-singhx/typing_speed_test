@@ -1311,7 +1311,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
                 )}
 
                 {/* Individual Characters & Fracture Animations */}
-                <div className="flex items-center tracking-wide text-2xl sm:text-3xl font-bold font-mono">
+                <div className={`flex items-center ${settings.language === 'hi' ? 'tracking-normal font-hindi font-semibold' : 'tracking-wide font-mono font-bold'} text-2xl sm:text-3xl`}>
                   {word.graphemes.map((char, cIdx) => {
                     const isCracked = word.crackedGraphemes[cIdx];
                     const isNextTarget = isActive && cIdx === uncrackedIdx;
@@ -1319,7 +1319,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
                     return (
                       <span
                         key={cIdx}
-                        className={`relative inline-block px-0.5 transition-all ${
+                        className={`relative inline-block px-0.5 ${settings.language === 'hi' ? 'font-hindi' : ''} transition-all ${
                           isCracked
                             ? 'text-transparent scale-95'
                             : isNextTarget

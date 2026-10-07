@@ -793,6 +793,8 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           ref={wordsContainerRef}
           onClick={() => hiddenInputRef.current?.focus()}
           className={`relative w-full min-h-[150px] sm:min-h-[180px] max-h-[200px] sm:max-h-[230px] p-4 sm:p-7 rounded-2xl neo-inset-deep border transition-all duration-200 overflow-hidden leading-relaxed text-lg sm:text-2xl cursor-text ${
+            settings.language === 'hi' ? 'font-hindi' : ''
+          } ${
             isInputFocused
               ? 'border-[var(--accent-tactical)]/70 ring-2 ring-[var(--accent-tactical)]/20 shadow-[0_0_24px_rgba(var(--accent-tactical-rgb),0.12)]'
               : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
@@ -833,11 +835,12 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
             {words.map((w, wordIdx) => {
               const isCurrent = wordIdx === currentWordIndex;
+              const isHindi = settings.language === 'hi';
               return (
                 <div
                   key={wordIdx}
                   data-word-index={wordIdx}
-                  className={`inline-flex items-center tracking-wide transition-opacity duration-150 ${
+                  className={`inline-flex items-center ${isHindi ? 'tracking-normal font-hindi' : 'tracking-wide'} transition-opacity duration-150 ${
                     isCurrent
                       ? 'opacity-100 font-semibold'
                       : wordIdx < currentWordIndex
@@ -862,7 +865,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
                     return (
                       <span
                         key={charIdx}
-                        className={`char-item font-mono transition-colors ${charColor} ${bgStyle}`}
+                        className={`char-item ${isHindi ? 'font-hindi font-medium' : 'font-mono'} transition-colors ${charColor} ${bgStyle}`}
                       >
                         {c.char}
                       </span>
