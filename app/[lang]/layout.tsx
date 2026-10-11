@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Noto_Sans_Devanagari } from 'next/font/google';
 import '../globals.css';
 import { SITE_CONFIG } from '@/lib/seo-data';
 import { isValidLanguage, SUPPORTED_LANGUAGES } from '@/lib/languages';
+import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -90,6 +91,7 @@ export default async function LocalizedLayout({ children, params }: Props) {
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
+        <GoogleAnalytics gaId={SITE_CONFIG.gaId} />
         {children}
       </body>
     </html>

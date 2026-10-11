@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AlertTriangle, Home } from 'lucide-react';
+import { SITE_CONFIG } from '@/lib/seo-data';
+import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 
 export const metadata: Metadata = {
   title: '404 - Sector Not Found | TypeTrack',
@@ -31,6 +33,7 @@ export default function NotFound() {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col items-center justify-center bg-[var(--bg-page)] text-[var(--text-main)] font-mono p-4">
+        <GoogleAnalytics gaId={SITE_CONFIG.gaId} />
         <div className="max-w-md w-full p-6 rounded-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] text-center space-y-4 shadow-2xl">
           <div className="w-12 h-12 mx-auto rounded bg-[var(--accent-danger)]/15 border border-[var(--accent-danger)]/30 flex items-center justify-center text-[var(--accent-danger)]">
             <AlertTriangle className="w-6 h-6" />

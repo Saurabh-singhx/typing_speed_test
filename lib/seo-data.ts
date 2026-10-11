@@ -5,6 +5,7 @@ export const SITE_CONFIG = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site',
   ogImage: '/og-image.png',
   creator: '@saurabh_singh',
+  gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-4YJX979HKX',
   keywords: [
     'typetrack',
     'typing speed test',

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Noto_Sans_Devanagari } from 'next/font/google';
 import '../globals.css';
 import { SITE_CONFIG } from '@/lib/seo-data';
+import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -79,6 +80,7 @@ export default function HomeLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
+        <GoogleAnalytics gaId={SITE_CONFIG.gaId} />
         {children}
       </body>
     </html>
