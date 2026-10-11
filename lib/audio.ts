@@ -4,6 +4,21 @@ class SoundSynthesizer {
   private ctx: AudioContext | null = null;
   private soundType: SoundType = 'thock';
   private volume: number = 0.5;
+  private sharedNoiseBuffer: AudioBuffer | null = null;
+
+  private getSharedNoiseBuffer(): AudioBuffer | null {
+    if (!this.ctx) return null;
+    if (!this.sharedNoiseBuffer || this.sharedNoiseBuffer.sampleRate !== this.ctx.sampleRate) {
+      const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.035));
+      const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.22));
+      }
+      this.sharedNoiseBuffer = buffer;
+    }
+    return this.sharedNoiseBuffer;
+  }
 
   private initContext() {
     if (!this.ctx && typeof window !== 'undefined') {
@@ -419,28 +434,25 @@ class SoundSynthesizer {
 
       if (profile === 'glass') {
         // High-pitched brittle glass shatter: explosive noise burst + dual high ringing oscillators
-        const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.025));
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.18));
+        const noiseBuf = this.getSharedNoiseBuffer();
+        if (noiseBuf) {
+          const noiseSource = this.ctx.createBufferSource();
+          noiseSource.buffer = noiseBuf;
+
+          const noiseFilter = this.ctx.createBiquadFilter();
+          noiseFilter.type = 'highpass';
+          noiseFilter.frequency.setValueAtTime(5200 * jitter, now);
+
+          const noiseGain = this.ctx.createGain();
+          noiseGain.gain.setValueAtTime(0.5 * vol, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+
+          noiseSource.connect(noiseFilter);
+          noiseFilter.connect(noiseGain);
+          noiseGain.connect(dest);
+          noiseSource.start(now);
+          noiseSource.stop(now + 0.035);
         }
-        const noiseSource = this.ctx.createBufferSource();
-        noiseSource.buffer = buffer;
-
-        const noiseFilter = this.ctx.createBiquadFilter();
-        noiseFilter.type = 'highpass';
-        noiseFilter.frequency.setValueAtTime(5200 * jitter, now);
-
-        const noiseGain = this.ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.5 * vol, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-
-        noiseSource.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(dest);
-        noiseSource.start(now);
-        noiseSource.stop(now + 0.035);
 
         // Glass resonance ring
         const osc = this.ctx.createOscillator();
@@ -458,29 +470,26 @@ class SoundSynthesizer {
 
       } else if (profile === 'crystal') {
         // 1. Sharp brittle high-frequency snap impulse (white noise burst)
-        const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.018));
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.22));
+        const noiseBuf = this.getSharedNoiseBuffer();
+        if (noiseBuf) {
+          const noiseSource = this.ctx.createBufferSource();
+          noiseSource.buffer = noiseBuf;
+
+          const noiseFilter = this.ctx.createBiquadFilter();
+          noiseFilter.type = 'bandpass';
+          noiseFilter.frequency.setValueAtTime(4900 * jitter, now);
+          noiseFilter.Q.setValueAtTime(6, now);
+
+          const noiseGain = this.ctx.createGain();
+          noiseGain.gain.setValueAtTime(0.45 * vol, now);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
+
+          noiseSource.connect(noiseFilter);
+          noiseFilter.connect(noiseGain);
+          noiseGain.connect(dest);
+          noiseSource.start(now);
+          noiseSource.stop(now + 0.025);
         }
-        const noiseSource = this.ctx.createBufferSource();
-        noiseSource.buffer = buffer;
-
-        const noiseFilter = this.ctx.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.setValueAtTime(4900 * jitter, now);
-        noiseFilter.Q.setValueAtTime(6, now);
-
-        const noiseGain = this.ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.45 * vol, now);
-        noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.022);
-
-        noiseSource.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(dest);
-        noiseSource.start(now);
-        noiseSource.stop(now + 0.025);
 
         // 2. Crystalline resonant tine ping (dual inharmonic sine ring)
         const osc1 = this.ctx.createOscillator();
@@ -554,28 +563,25 @@ class SoundSynthesizer {
         osc.stop(now + 0.08);
 
         // Low-mid stone crunch noise
-        const bufferSize = Math.max(1, Math.floor(this.ctx.sampleRate * 0.03));
-        const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.3));
+        const noiseBuf = this.getSharedNoiseBuffer();
+        if (noiseBuf) {
+          const noise = this.ctx.createBufferSource();
+          noise.buffer = noiseBuf;
+          const filter = this.ctx.createBiquadFilter();
+          filter.type = 'bandpass';
+          filter.frequency.setValueAtTime(1400 * jitter, now);
+          filter.Q.setValueAtTime(4, now);
+
+          const nGain = this.ctx.createGain();
+          nGain.gain.setValueAtTime(0.42 * vol, now);
+          nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+
+          noise.connect(filter);
+          filter.connect(nGain);
+          nGain.connect(dest);
+          noise.start(now);
+          noise.stop(now + 0.045);
         }
-        const noise = this.ctx.createBufferSource();
-        noise.buffer = buffer;
-        const filter = this.ctx.createBiquadFilter();
-        filter.type = 'bandpass';
-        filter.frequency.setValueAtTime(1400 * jitter, now);
-        filter.Q.setValueAtTime(4, now);
-
-        const nGain = this.ctx.createGain();
-        nGain.gain.setValueAtTime(0.42 * vol, now);
-        nGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-
-        noise.connect(filter);
-        filter.connect(nGain);
-        nGain.connect(dest);
-        noise.start(now);
-        noise.stop(now + 0.045);
 
       } else {
         // Cyber / Mecha Laser Impact (high-tech snappy crack)

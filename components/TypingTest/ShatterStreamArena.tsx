@@ -120,12 +120,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
   const [liveAccuracy, setLiveAccuracy] = useState(100);
   const [timeElapsed, setTimeElapsed] = useState(0);
 
-  // Environmental FX States
+  // Environmental FX States (high-frequency visual variables managed in refs for zero React re-render lag)
   const [impactFrameActive, setImpactFrameActive] = useState(false);
   const [colorDrainActive, setColorDrainActive] = useState(false);
-  const [flashAlpha, setFlashAlpha] = useState(0);
-  const [screenTrauma, setScreenTrauma] = useState(0);
-  const [floatingBadges, setFloatingBadges] = useState<FloatingBadge[]>([]);
+  const flashAlphaRef = useRef(0);
+  const screenTraumaRef = useRef(0);
+  const floatingBadgesRef = useRef<FloatingBadge[]>([]);
+  const flashOverlayRef = useRef<HTMLDivElement | null>(null);
+  const wordNodesRef = useRef<Map<string, HTMLDivElement>>(new Map());
 
   // Refs for Animation & Particle Engine
   const arenaRef = useRef<HTMLDivElement | null>(null);
@@ -163,27 +165,28 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     if (speedPreset === 'chill') base = 48;
     else if (speedPreset === 'slow') base = 68;
     else if (speedPreset === 'normal') base = 98;
-    else if (speedPreset === 'fast') base = 150;
-    else if (speedPreset === 'hyper') base = 215;
-    else if (speedPreset === 'insane') base = 295;
+    else if (speedPreset === 'fast') base = 145;
+    else if (speedPreset === 'hyper') base = 195;
+    else if (speedPreset === 'insane') base = 250;
     else if (speedPreset === 'ramp') {
-      base = 75 + Math.min(180, streak * 6);
+      base = 75 + Math.min(150, streak * 5);
     }
 
-    // Dynamic APM Scaling: If the typist is typing fast, stream naturally flows faster
+    // Dynamic APM Scaling: Logarithmic curve so high speed typists (100-150+ WPM) don't get overwhelmed
     const currentWpm = liveWpmRef.current;
     if (currentWpm > 45) {
-      const dynamicBoost = Math.min(1.85, 1 + (currentWpm - 45) * 0.008);
+      const dynamicBoost = Math.min(1.45, 1 + Math.log10(1 + (currentWpm - 45) / 50) * 0.6);
       base *= dynamicBoost;
     }
 
-    // In survival mode: ramp up speed as more words are shattered
+    // In survival mode: ramp up speed smoothly as words are shattered
     if (targetMode === 'survival') {
-      const survivalEscalation = 1 + Math.min(1.2, (shatteredCountRef.current / 8) * 0.08);
+      const survivalEscalation = 1 + Math.min(0.5, (shatteredCountRef.current / 12) * 0.05);
       base *= survivalEscalation;
     }
 
-    return base;
+    // Cap maximum speed to ensure a fair minimum ~700ms reaction window between reticle and escape
+    return Math.min(320, base);
   }, [speedPreset, targetMode]);
 
   // Unlock AudioContext eagerly on mount and interaction
@@ -268,7 +271,17 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     shardsRef.current = [];
     sparksRef.current = [];
     shockwavesRef.current = [];
-    setFloatingBadges([]);
+    floatingBadgesRef.current = [];
+    flashAlphaRef.current = 0;
+    screenTraumaRef.current = 0;
+    wordNodesRef.current.clear();
+    if (flashOverlayRef.current) {
+      flashOverlayRef.current.style.opacity = '0';
+      flashOverlayRef.current.style.display = 'none';
+    }
+    if (arenaRef.current) {
+      arenaRef.current.style.transform = '';
+    }
 
     setTimeout(() => {
       hiddenInputRef.current?.focus();
@@ -388,7 +401,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     });
 
     const badgeText = combo >= 5 ? `🔥 HYPER SHATTER x${combo}` : combo >= 2 ? `CRACKED! x${combo}` : `+100 SHATTERED!`;
-    const newBadge: FloatingBadge = {
+    floatingBadgesRef.current.push({
       id: `badge_${Date.now()}_${Math.random()}`,
       text: badgeText,
       x: centerX,
@@ -396,8 +409,10 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       color: combo >= 5 ? '#f59e0b' : '#38bdf8',
       alpha: 1.0,
       scale: 1.25,
-    };
-    setFloatingBadges((prev) => [...prev.slice(-4), newBadge]);
+    });
+    if (floatingBadgesRef.current.length > 5) {
+      floatingBadgesRef.current = floatingBadgesRef.current.slice(-5);
+    }
   }, []);
 
   // Trigger Dynamic Environmental Impacts
@@ -405,7 +420,10 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     if (fxIntensity === 'minimal') return;
 
     if (isWordClear) {
-      hitStopRemainingRef.current = 65; // Freeze movement for 65ms
+      // Dynamic hit-stop: Scaled to player WPM so high-speed typists (100-150+ WPM) don't experience cadence-breaking lag
+      const currentWpm = liveWpmRef.current;
+      const hitStopDuration = currentWpm >= 110 ? 15 : currentWpm >= 75 ? 25 : 42;
+      hitStopRemainingRef.current = fxIntensity === 'full' ? hitStopDuration : (fxIntensity === 'balanced' ? 12 : 0);
       soundFx.playTimeFreezeSound();
 
       if (fxIntensity === 'full') {
@@ -413,17 +431,25 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         setTimeout(() => setImpactFrameActive(false), 45);
       }
 
-      setFlashAlpha(0.75);
+      flashAlphaRef.current = 0.65;
+      if (flashOverlayRef.current) {
+        flashOverlayRef.current.style.opacity = '0.65';
+        flashOverlayRef.current.style.display = 'block';
+      }
 
       setColorDrainActive(true);
-      setTimeout(() => setColorDrainActive(false), 190);
+      setTimeout(() => setColorDrainActive(false), 160);
 
-      setScreenTrauma((prev) => Math.min(24, prev + 12 + Math.min(8, combo * 1.5)));
+      screenTraumaRef.current = Math.min(20, screenTraumaRef.current + 10 + Math.min(6, combo * 1.2));
 
     } else {
-      setScreenTrauma((prev) => Math.min(8, prev + 3));
+      screenTraumaRef.current = Math.min(8, screenTraumaRef.current + 2.5);
       if (fxIntensity === 'full' && Math.random() < 0.2) {
-        setFlashAlpha(0.2);
+        flashAlphaRef.current = 0.2;
+        if (flashOverlayRef.current) {
+          flashOverlayRef.current.style.opacity = '0.2';
+          flashOverlayRef.current.style.display = 'block';
+        }
       }
     }
   }, [fxIntensity]);
@@ -592,19 +618,25 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         }
 
         // FAST-FORWARD STREAM & REEL IN QUEUE:
-        // When typing fast, smoothly pull the next queued words into the ready engagement zone
-        // so the player never experiences dead waiting time!
+        // Smoothly pull the next queued words into the ready engagement zone
+        // so the player never experiences dead waiting time, while capping surge so it never flings words uncontrollably
         const nextWord = wordsRef.current[nextActiveIdx];
         if (nextWord) {
-          const targetReadyX = 320; // Ready engagement zone right before crosshair (180px)
+          const arenaWidth = arenaRef.current?.clientWidth || 800;
+          const isMobile = arenaWidth < 640;
+          const targetReadyX = isMobile ? 180 : 320;
           if (nextWord.x > targetReadyX) {
-            const pullDistance = Math.min(nextWord.x - targetReadyX, 280);
+            const pullDistance = Math.min(nextWord.x - targetReadyX, 160);
             for (let i = nextActiveIdx; i < wordsRef.current.length; i++) {
               wordsRef.current[i].x -= pullDistance;
+              const node = wordNodesRef.current.get(wordsRef.current[i].id);
+              if (node) {
+                node.style.transform = `translate3d(${Math.round(wordsRef.current[i].x)}px, ${wordsRef.current[i].y}px, 0)`;
+              }
             }
           }
-          // Kinetic surge speed boost so the incoming word whooshes right into position
-          surgeVelocityRef.current = Math.min(280, surgeVelocityRef.current + 110);
+          // Controlled kinetic surge boost so incoming word moves briskly without overshooting
+          surgeVelocityRef.current = Math.min(100, surgeVelocityRef.current + 35);
         }
 
         // Auto-replenish queued words if running low
@@ -769,38 +801,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyStrike, isFinished, initWordStream, finalizeTest, startStream]);
 
-  // Screen Shake Spring Decay
-  useEffect(() => {
-    if (screenTrauma <= 0) return;
-    const interval = setInterval(() => {
-      setScreenTrauma((prev) => Math.max(0, prev * 0.82 - 0.2));
-    }, 16);
-    return () => clearInterval(interval);
-  }, [screenTrauma]);
-
-  // Flash Alpha Fade Decay
-  useEffect(() => {
-    if (flashAlpha <= 0) return;
-    const interval = setInterval(() => {
-      setFlashAlpha((prev) => Math.max(0, prev - 0.08));
-    }, 16);
-    return () => clearInterval(interval);
-  }, [flashAlpha]);
-
-  // Floating Badges Animation Decay
-  useEffect(() => {
-    if (floatingBadges.length === 0) return;
-    const interval = setInterval(() => {
-      setFloatingBadges((prev) =>
-        prev
-          .map((b) => ({ ...b, y: b.y - 1.5, alpha: b.alpha - 0.04 }))
-          .filter((b) => b.alpha > 0)
-      );
-    }, 24);
-    return () => clearInterval(interval);
-  }, [floatingBadges]);
-
-  // Main High-Performance Physics Loop (Canvas Shards, Shockwaves, Conveyor Movement)
+  // Main High-Performance Physics Loop (Canvas Shards, Shockwaves, GPU Conveyor Movement)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -825,6 +826,27 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         effectiveDtSec = 0; // Frozen!
       }
 
+      // Update screen shake directly on arenaRef GPU transform (Zero React re-render lag)
+      if (screenTraumaRef.current > 0) {
+        screenTraumaRef.current = Math.max(0, screenTraumaRef.current * 0.88 - 0.2);
+        const shakeX = (Math.random() - 0.5) * screenTraumaRef.current * 1.5;
+        const shakeY = (Math.random() - 0.5) * screenTraumaRef.current * 1.5;
+        if (arenaRef.current) {
+          arenaRef.current.style.transform = `translate3d(${shakeX.toFixed(1)}px, ${shakeY.toFixed(1)}px, 0)`;
+        }
+      } else if (arenaRef.current && arenaRef.current.style.transform !== '') {
+        arenaRef.current.style.transform = '';
+      }
+
+      // Update flash alpha bloom overlay directly without React re-render
+      if (flashAlphaRef.current > 0) {
+        flashAlphaRef.current = Math.max(0, flashAlphaRef.current - dtSec * 4.0);
+        if (flashOverlayRef.current) {
+          flashOverlayRef.current.style.opacity = `${flashAlphaRef.current.toFixed(2)}`;
+          flashOverlayRef.current.style.display = flashAlphaRef.current > 0.02 ? 'block' : 'none';
+        }
+      }
+
       // 1. Move Words horizontally if active and not frozen
       if (hasStarted && !isFinishedRef.current && effectiveDtSec > 0) {
         const baseSpeed = getSpeedPxPerSec(comboStreak);
@@ -843,6 +865,12 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           if (word.status === 'shattered' || word.status === 'escaped') continue;
 
           word.x -= shiftAmount;
+
+          // Directly apply GPU transform to DOM node - 0ms React VDOM diffing!
+          const node = wordNodesRef.current.get(word.id);
+          if (node) {
+            node.style.transform = `translate3d(${Math.round(word.x)}px, ${word.y}px, 0)`;
+          }
 
           // Only escape when completely off-screen to the left (x + width < -20)
           if (word.x + word.width < -20) {
@@ -867,14 +895,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           }
         }
 
-        if (activeChanged) {
-          activeWordIndexRef.current = activeIdx;
-          setActiveWordIndex(activeIdx);
-        }
-
+        let wordsReplenished = false;
         // Auto-replenish queued words if running low
         const remainingQueued = wordsRef.current.filter((w) => w.status === 'queued' || w.status === 'active').length;
         if (remainingQueued < 10) {
+          wordsReplenished = true;
           const extraWords = getRandomWords(25, { punctuation: settings.punctuation, numbers: settings.numbers }, settings.language);
           const lastWord = wordsRef.current[wordsRef.current.length - 1];
           const replenishmentGap = streamDensity === 'relaxed' ? 250 : streamDensity === 'rush' ? 110 : 180;
@@ -896,7 +921,15 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           });
         }
 
-        setWords([...wordsRef.current]);
+        // ONLY trigger React re-render when active word index changes or new words are added!
+        // Smooth horizontal scrolling runs 100% on GPU at monitor refresh rate (60/120/144Hz) with 0 React overhead.
+        if (activeChanged || wordsReplenished) {
+          if (activeChanged) {
+            activeWordIndexRef.current = activeIdx;
+            setActiveWordIndex(activeIdx);
+          }
+          setWords([...wordsRef.current]);
+        }
       }
 
       // 2. Clear & Render Canvas Particles
@@ -938,11 +971,9 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           ctx.closePath();
 
           ctx.fillStyle = shard.color;
-          ctx.shadowColor = shard.glowColor;
-          ctx.shadowBlur = 8;
           ctx.fill();
 
-          ctx.strokeStyle = '#ffffff';
+          ctx.strokeStyle = shard.glowColor;
           ctx.lineWidth = 1;
           ctx.stroke();
 
@@ -975,7 +1006,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       }
       sparksRef.current = aliveSparks;
 
-      // Update & Render Shockwaves
+      // Update & Render Shockwaves with Additive Blending (Instant, 0 Gaussian blur lag)
       const aliveShockwaves: Shockwave[] = [];
       for (const sw of shockwavesRef.current) {
         if (effectiveDtSec > 0) {
@@ -986,18 +1017,44 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         if (sw.alpha > 0.02 && sw.radius < sw.maxRadius) {
           ctx.save();
           ctx.globalAlpha = sw.alpha;
+          ctx.globalCompositeOperation = 'lighter';
           ctx.strokeStyle = sw.color;
           ctx.lineWidth = sw.lineWidth;
-          ctx.shadowColor = sw.color;
-          ctx.shadowBlur = 14;
           ctx.beginPath();
           ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // High-energy white core ring
+          ctx.lineWidth = Math.max(1, sw.lineWidth * 0.5);
+          ctx.strokeStyle = '#ffffff';
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, Math.max(0, sw.radius - 2), 0, Math.PI * 2);
           ctx.stroke();
           ctx.restore();
           aliveShockwaves.push(sw);
         }
       }
       shockwavesRef.current = aliveShockwaves;
+
+      // Update & Render Floating Badges directly on Canvas
+      const aliveBadges: FloatingBadge[] = [];
+      for (const badge of floatingBadgesRef.current) {
+        if (effectiveDtSec > 0) {
+          badge.y -= 42 * effectiveDtSec;
+          badge.alpha -= 0.85 * effectiveDtSec;
+        }
+        if (badge.alpha > 0.02) {
+          ctx.save();
+          ctx.globalAlpha = Math.max(0, Math.min(1, badge.alpha));
+          ctx.fillStyle = badge.color;
+          ctx.font = '900 13px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText(badge.text, badge.x, badge.y);
+          ctx.restore();
+          aliveBadges.push(badge);
+        }
+      }
+      floatingBadgesRef.current = aliveBadges;
 
       animFrameRef.current = requestAnimationFrame(renderLoop);
     };
@@ -1049,10 +1106,6 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     soundFx.unlock();
     soundFx.playShatterCrack(soundProfile, 1);
   };
-
-  const shakeX = screenTrauma > 0 ? (Math.random() - 0.5) * screenTrauma * 1.5 : 0;
-  const shakeY = screenTrauma > 0 ? (Math.random() - 0.5) * screenTrauma * 1.5 : 0;
-  const shakeTransform = `translate(${shakeX}px, ${shakeY}px)`;
 
   return (
     <div className="w-full flex flex-col items-center select-none font-mono">
@@ -1175,11 +1228,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       <div
         ref={arenaRef}
         onClick={handleArenaClick}
-        style={{
-          transform: shakeTransform,
-          transition: screenTrauma > 0 ? 'none' : 'transform 0.15s ease-out',
-        }}
-        className={`w-full max-w-5xl h-[280px] sm:h-[340px] bg-[var(--bg-input)] neo-inset-deep rounded-b-2xl relative overflow-hidden cursor-text ${
+        className={`w-full max-w-5xl h-[280px] sm:h-[340px] bg-[var(--bg-input)] neo-inset-deep rounded-b-2xl relative overflow-hidden cursor-text will-change-transform ${
           colorDrainActive ? 'saturate-[0.15] contrast-[1.4] filter' : ''
         }`}
       >
@@ -1258,32 +1307,14 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           </div>
         )}
 
-        {/* Flash Frame Bloom Overlay */}
-        {flashAlpha > 0 && (
-          <div 
-            className="absolute inset-0 bg-white pointer-events-none z-40 transition-opacity"
-            style={{ opacity: flashAlpha }}
-          />
-        )}
+        {/* Flash Frame Bloom Overlay (Managed via GPU ref for zero React re-render lag) */}
+        <div 
+          ref={flashOverlayRef}
+          className="absolute inset-0 bg-white pointer-events-none z-40 transition-opacity"
+          style={{ opacity: 0, display: 'none' }}
+        />
 
-        {/* Floating Scores & Combo Badges */}
-        {floatingBadges.map((badge) => (
-          <div
-            key={badge.id}
-            className="absolute font-black tracking-wider text-xs sm:text-sm pointer-events-none z-30 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]"
-            style={{
-              left: `${badge.x}px`,
-              top: `${badge.y}px`,
-              color: badge.color,
-              opacity: badge.alpha,
-              transform: `scale(${badge.scale})`,
-            }}
-          >
-            {badge.text}
-          </div>
-        ))}
-
-        {/* Horizontal Moving Words Conveyor */}
+        {/* Horizontal Moving Words Conveyor (GPU translate3d with zero VDOM diff overhead) */}
         <div className="absolute inset-0 pointer-events-none">
           {words.map((word, wIdx) => {
             if (word.status === 'shattered' || word.status === 'escaped') return null;
@@ -1293,12 +1324,15 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
             return (
               <div
                 key={word.id}
-                className={`absolute flex items-center transition-opacity duration-150 ${
+                ref={(el) => {
+                  if (el) wordNodesRef.current.set(word.id, el);
+                  else wordNodesRef.current.delete(word.id);
+                }}
+                className={`absolute top-0 left-0 flex items-center will-change-transform transition-opacity duration-150 ${
                   isActive ? 'opacity-100 z-20' : 'opacity-60 z-10'
                 }`}
                 style={{
-                  left: `${word.x}px`,
-                  top: `${word.y}px`,
+                  transform: `translate3d(${Math.round(word.x)}px, ${word.y}px, 0)`,
                 }}
               >
                 {/* Active Target Reticle Bracket Indicator */}
