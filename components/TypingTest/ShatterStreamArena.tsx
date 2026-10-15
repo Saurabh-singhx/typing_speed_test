@@ -11,7 +11,7 @@ import {
   ShatterTargetMode,
   ShatterStreamDensity
 } from '@/lib/types';
-import { getRandomWords, splitGraphemes } from '@/lib/words';
+import { getRandomWords, splitGraphemes, splitCharacters } from '@/lib/words';
 import { soundFx } from '@/lib/audio';
 import { 
   Zap, 
@@ -36,6 +36,7 @@ interface MovingWord {
   original: string;
   graphemes: string[];
   crackedGraphemes: boolean[];
+  typedLength: number;
   x: number;
   y: number;
   width: number;
@@ -231,6 +232,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         original: w,
         graphemes,
         crackedGraphemes: new Array(graphemes.length).fill(false),
+        typedLength: 0,
         x: spawnCursorX,
         y: isMobile ? 115 : 130, // Centered vertically in arena track
         width: approxWidth,
@@ -546,19 +548,26 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
     if (!currentWord) return;
     if (currentWord.status === 'shattered' || currentWord.status === 'escaped') return;
 
-    // Find next uncracked grapheme
-    const uncrackedIdx = currentWord.crackedGraphemes.findIndex((c) => !c);
-    if (uncrackedIdx === -1) return;
+    const targetChars = splitCharacters(currentWord.original);
+    const typedCount = currentWord.typedLength || 0;
+    if (typedCount >= targetChars.length) return;
 
-    const targetChar = currentWord.graphemes[uncrackedIdx];
-    const isMatch = key.toLowerCase() === targetChar.toLowerCase() || key === targetChar;
+    const targetChar = targetChars[typedCount];
+    const isDandaEquiv = settings.language === 'hi' && (
+      (key === '.' && targetChar === '।') ||
+      (key === '।' && targetChar === '.')
+    );
+    const isMatch = key.toLowerCase() === targetChar.toLowerCase() || key === targetChar || isDandaEquiv;
 
     if (isMatch) {
-      // 1. Success Strike: Shatter this character!
+      // 1. Success Strike: Advance typed character progress
       totalCorrectCharsRef.current += 1;
       const nextCombo = comboStreak + 1;
       setComboStreak(nextCombo);
       setHighestStreak((h) => Math.max(h, nextCombo));
+
+      const nextTyped = typedCount + 1;
+      currentWord.typedLength = nextTyped;
 
       // Calculate instantaneous high-precision live WPM & Accuracy on every single key hit
       const now = Date.now();
@@ -577,21 +586,37 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
       // Forward kinetic pulse when cracking letters (+8px surge)
       surgeVelocityRef.current = Math.min(220, surgeVelocityRef.current + 8);
 
-      // Play satisfying crack audio with progressive character satisfaction
-      soundFx.playShatterCrack(soundProfile, nextCombo >= 20 ? 3 : nextCombo >= 10 ? 2 : 1, uncrackedIdx);
+      // Check which grapheme cluster(s) just completed
+      let charCursor = 0;
+      let newlyCrackedGraphemeIdx = -1;
+      currentWord.graphemes.forEach((g, gIdx) => {
+        charCursor += splitCharacters(g).length;
+        if (nextTyped >= charCursor && !currentWord.crackedGraphemes[gIdx]) {
+          currentWord.crackedGraphemes[gIdx] = true;
+          newlyCrackedGraphemeIdx = gIdx;
+        }
+      });
+
+      const uncrackedGIdx = currentWord.crackedGraphemes.findIndex((c) => !c);
+      const activeGIdx = newlyCrackedGraphemeIdx >= 0 
+        ? newlyCrackedGraphemeIdx 
+        : uncrackedGIdx === -1 
+        ? currentWord.graphemes.length - 1 
+        : uncrackedGIdx;
 
       // Trigger environmental micro-impact
       triggerImpactEffects(false, nextCombo);
 
       // Calculate character's coordinate for shard explosion
       const charWidth = 22;
-      const charX = currentWord.x + uncrackedIdx * charWidth + charWidth / 2;
+      const charX = currentWord.x + activeGIdx * charWidth + charWidth / 2;
       const charY = currentWord.y + 16;
       spawnLetterShards(charX, charY);
 
-      // Update word's cracked state synchronously in memory
-      currentWord.crackedGraphemes[uncrackedIdx] = true;
-      const allCracked = currentWord.crackedGraphemes.every(Boolean);
+      // Play satisfying crack audio with progressive character satisfaction
+      soundFx.playShatterCrack(soundProfile, nextCombo >= 20 ? 3 : nextCombo >= 10 ? 2 : 1, activeGIdx);
+
+      const allCracked = currentWord.crackedGraphemes.every(Boolean) || nextTyped >= targetChars.length;
 
       if (allCracked) {
         // FULL WORD OBLITERATED!
@@ -653,6 +678,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
               original: ew,
               graphemes: eGraphemes,
               crackedGraphemes: new Array(eGraphemes.length).fill(false),
+              typedLength: 0,
               x: nextSpawnX,
               y: 130,
               width: approxW,
@@ -791,6 +817,11 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
         return;
       }
 
+      // Ignore IME virtual composition keys so software keyboard and IME process seamlessly
+      if (e.key === 'Unidentified' || e.keyCode === 229 || e.isComposing) {
+        return;
+      }
+
       if (e.key.length === 1) {
         e.preventDefault();
         handleKeyStrike(e.key);
@@ -912,6 +943,7 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
               original: ew,
               graphemes: eGraphemes,
               crackedGraphemes: new Array(eGraphemes.length).fill(false),
+              typedLength: 0,
               x: nextSpawnX,
               y: 130,
               width: approxW,
@@ -1242,13 +1274,15 @@ export const ShatterStreamArena: React.FC<ShatterStreamArenaProps> = ({
           onChange={(e) => {
             const val = e.target.value;
             if (val.length > 0) {
-              const char = val[val.length - 1];
-              if (char === ' ') {
-                if (!hasStartedRef.current) {
-                  startStream();
+              const chars = splitCharacters(val);
+              for (const char of chars) {
+                if (char === ' ') {
+                  if (!hasStartedRef.current) {
+                    startStream();
+                  }
+                } else {
+                  handleKeyStrike(char);
                 }
-              } else {
-                handleKeyStrike(char);
               }
               e.target.value = '';
             }

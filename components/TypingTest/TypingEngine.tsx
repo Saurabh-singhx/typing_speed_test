@@ -6,7 +6,7 @@ import {
   TestResult, 
   WpmPoint 
 } from '@/lib/types';
-import { getRandomWords, getRandomQuote, splitGraphemes } from '@/lib/words';
+import { getRandomWords, getRandomQuote, splitGraphemes, splitCharacters } from '@/lib/words';
 import { soundFx } from '@/lib/audio';
 import { PacingGhostBar } from './PacingGhostBar';
 import { BossRaidArena } from './BossRaidArena';
@@ -156,7 +156,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     };
   }, [initWordBank]);
 
-  // Position caret element smoothly at active letter
+  // Position caret element smoothly at active letter/syllable
   const updateCaret = useCallback(() => {
     if (!wordsContainerRef.current || !wordsWrapperRef.current || !caretRef.current) return;
     const activeWordElem = wordsContainerRef.current.querySelector(
@@ -167,7 +167,24 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
 
     const wrapperRect = wordsWrapperRef.current.getBoundingClientRect();
     const chars = activeWordElem.querySelectorAll('.char-item');
-    const inputLen = splitGraphemes(currentInput).length;
+    
+    // Find active grapheme element based on typed characters
+    const activeWord = words[currentWordIndex];
+    let activeGraphemeIndex = 0;
+    if (activeWord) {
+      const targetGraphemes = splitGraphemes(activeWord.original);
+      const inputLen = splitCharacters(currentInput).length;
+      let charCount = 0;
+      for (let i = 0; i < targetGraphemes.length; i++) {
+        const gLen = splitCharacters(targetGraphemes[i]).length;
+        if (inputLen < charCount + gLen) {
+          activeGraphemeIndex = i;
+          break;
+        }
+        charCount += gLen;
+        activeGraphemeIndex = i + 1;
+      }
+    }
 
     let targetLeft = 0;
     let targetTop = 0;
@@ -180,8 +197,8 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       targetTop = wordRect.top - wrapperRect.top;
       targetWidth = 10;
       targetHeight = wordRect.height || 28;
-    } else if (inputLen < chars.length) {
-      const charElem = chars[inputLen] as HTMLElement;
+    } else if (activeGraphemeIndex < chars.length) {
+      const charElem = chars[activeGraphemeIndex] as HTMLElement;
       const charRect = charElem.getBoundingClientRect();
       targetLeft = charRect.left - wrapperRect.left;
       targetTop = charRect.top - wrapperRect.top;
@@ -230,7 +247,7 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     if (activeWordElem.offsetTop > 120 && wordsContainerRef.current) {
       wordsContainerRef.current.scrollTop = activeWordElem.offsetTop - 60;
     }
-  }, [currentWordIndex, currentInput, settings.caretStyle]);
+  }, [currentWordIndex, currentInput, settings.caretStyle, words]);
 
   useEffect(() => {
     updateCaret();
@@ -406,17 +423,17 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     }
 
     // Ignore Android / IME virtual keyboard composition keys so handleInputChange processes them seamlessly
-    if (e.key === 'Unidentified' || e.keyCode === 229) {
+    if (e.key === 'Unidentified' || e.keyCode === 229 || e.nativeEvent?.isComposing || (e as unknown as { isComposing?: boolean }).isComposing) {
       return;
     }
 
-    // Single Backspace (grapheme-aware for unicode / Indic / accent letters)
+    // Single Backspace (Unicode character / grapheme-aware)
     if (e.key === 'Backspace') {
       if (currentInput.length > 0) {
-        const graphemes = splitGraphemes(currentInput);
-        graphemes.pop();
-        const nextInput = graphemes.join('');
-        soundFx.playKey('Backspace', Math.max(0, graphemes.length - 1));
+        const inputChars = splitCharacters(currentInput);
+        inputChars.pop();
+        const nextInput = inputChars.join('');
+        soundFx.playKey('Backspace', Math.max(0, inputChars.length - 1));
         setCurrentInput(nextInput);
         if (hiddenInputRef.current) hiddenInputRef.current.value = nextInput;
         updateWordChars(currentWordIndex, nextInput);
@@ -447,15 +464,20 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       const activeWord = words[currentWordIndex];
       if (!activeWord) return;
 
-      const origGraphemes = splitGraphemes(activeWord.original);
-      const inputGraphemes = splitGraphemes(currentInput);
-      const charIndex = inputGraphemes.length; // 0-based character progression within the word
+      const targetChars = splitCharacters(activeWord.original);
+      const inputChars = splitCharacters(currentInput);
+      const charIndex = inputChars.length; // 0-based character progression within the word
 
       // Play ascending satisfactory acoustic feedback (6 progressive tiers per word)
       soundFx.playKey(e.key, charIndex);
 
-      const targetChar = origGraphemes[inputGraphemes.length];
-      const isMatch = e.key === targetChar;
+      const targetChar = targetChars[charIndex];
+      // Support Hindi danda '।' vs dot '.' interchangeability for cross-keyboard layout compatibility
+      const isDandaEquiv = settings.language === 'hi' && (
+        (e.key === '.' && targetChar === '।') ||
+        (e.key === '।' && targetChar === '.')
+      );
+      const isMatch = e.key === targetChar || isDandaEquiv;
 
       if (isMatch) {
         totalCorrectCharsRef.current += 1;
@@ -491,7 +513,8 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         }
       }
 
-      const nextInput = currentInput + e.key;
+      const keyToAppend = isDandaEquiv ? targetChar : e.key;
+      const nextInput = currentInput + keyToAppend;
       setCurrentInput(nextInput);
       if (hiddenInputRef.current) hiddenInputRef.current.value = nextInput;
       updateWordChars(currentWordIndex, nextInput);
@@ -519,22 +542,26 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
       return;
     }
 
-    const oldGraphemes = splitGraphemes(currentInput);
-    const newGraphemes = splitGraphemes(val);
+    const oldChars = splitCharacters(currentInput);
+    const newChars = splitCharacters(val);
 
-    if (newGraphemes.length > oldGraphemes.length) {
-      // New characters were added via virtual keyboard
-      const addedChars = newGraphemes.slice(oldGraphemes.length);
+    if (newChars.length > oldChars.length) {
+      // New characters were added via virtual keyboard / IME composition
+      const addedChars = newChars.slice(oldChars.length);
       const activeWord = words[currentWordIndex];
+      const targetChars = activeWord ? splitCharacters(activeWord.original) : [];
 
       addedChars.forEach((char, idx) => {
-        const charIndex = oldGraphemes.length + idx;
+        const charIndex = oldChars.length + idx;
         soundFx.playKey(char, charIndex);
 
         if (activeWord) {
-          const origGraphemes = splitGraphemes(activeWord.original);
-          const targetChar = origGraphemes[oldGraphemes.length + idx];
-          const isMatch = char === targetChar;
+          const targetChar = targetChars[charIndex];
+          const isDandaEquiv = settings.language === 'hi' && (
+            (char === '.' && targetChar === '।') ||
+            (char === '।' && targetChar === '.')
+          );
+          const isMatch = char === targetChar || isDandaEquiv;
 
           if (isMatch) {
             totalCorrectCharsRef.current += 1;
@@ -568,46 +595,64 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           }
         }
       });
-    } else if (newGraphemes.length < oldGraphemes.length) {
+    } else if (newChars.length < oldChars.length) {
       // Backspace on virtual keyboard
-      soundFx.playKey('Backspace', Math.max(0, newGraphemes.length - 1));
+      soundFx.playKey('Backspace', Math.max(0, newChars.length - 1));
     }
 
     setCurrentInput(val);
     updateWordChars(currentWordIndex, val);
   };
 
-  // Update char statuses in active word with grapheme precision
+  // Update char statuses in active word with grapheme syllable precision
   const updateWordChars = (wordIdx: number, inputVal: string) => {
     setWords((prevWords) => {
       const newWords = [...prevWords];
       const targetWord = newWords[wordIdx];
       if (!targetWord) return prevWords;
 
-      const origGraphemes = splitGraphemes(targetWord.original);
-      const inputGraphemes = splitGraphemes(inputVal);
+      const targetGraphemes = splitGraphemes(targetWord.original);
+      const targetChars = splitCharacters(targetWord.original);
+      const inputChars = splitCharacters(inputVal);
       const chars: CharState[] = [];
 
-      for (let i = 0; i < Math.max(origGraphemes.length, inputGraphemes.length); i++) {
-        if (i < inputGraphemes.length) {
-          if (i < origGraphemes.length) {
-            chars.push({
-              char: origGraphemes[i],
-              status: inputGraphemes[i] === origGraphemes[i] ? 'correct' : 'incorrect',
-            });
-          } else {
-            // Extra characters typed beyond original word length
-            chars.push({
-              char: inputGraphemes[i],
-              status: 'extra',
-            });
-            totalExtraCharsRef.current += 1;
-          }
+      let charCursor = 0;
+      for (let i = 0; i < targetGraphemes.length; i++) {
+        const g = targetGraphemes[i];
+        const gLen = splitCharacters(g).length;
+        const startIdx = charCursor;
+        const endIdx = charCursor + gLen;
+        charCursor = endIdx;
+
+        if (inputChars.length >= endIdx) {
+          const slice = inputChars.slice(startIdx, endIdx).join('');
+          chars.push({
+            char: g,
+            status: slice === g ? 'correct' : 'incorrect',
+          });
+        } else if (inputChars.length > startIdx) {
+          const slice = inputChars.slice(startIdx).join('');
+          chars.push({
+            char: g,
+            status: g.startsWith(slice) ? 'untyped' : 'incorrect',
+          });
         } else {
           chars.push({
-            char: origGraphemes[i],
+            char: g,
             status: 'untyped',
           });
+        }
+      }
+
+      // Handle extra characters typed beyond original word length
+      if (inputChars.length > targetChars.length) {
+        const extraChars = inputChars.slice(targetChars.length);
+        for (const ec of extraChars) {
+          chars.push({
+            char: ec,
+            status: 'extra',
+          });
+          totalExtraCharsRef.current += 1;
         }
       }
 

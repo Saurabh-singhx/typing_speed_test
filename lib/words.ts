@@ -49,6 +49,13 @@ export function splitGraphemes(text: string): string[] {
   return Array.from(text);
 }
 
+/**
+ * Splits text into individual Unicode code points/characters (NFC-normalized for consistent cross-platform keyboard matching).
+ */
+export function splitCharacters(text: string): string[] {
+  return Array.from(text.normalize('NFC'));
+}
+
 // Cadence Buckets for natural typing rhythm
 interface CadenceBuckets {
   short: string[];   // 3-4 characters (quick transition cadence)
@@ -137,7 +144,9 @@ export function getRandomWords(
         numWord = `${Math.floor(Math.random() * 95 + 5)}%`;
       } else {
         // Currency / count
-        numWord = `$${Math.floor(Math.random() * 250 + 5)}`;
+        numWord = language === 'hi'
+          ? `₹${Math.floor(Math.random() * 250 + 5)}`
+          : `$${Math.floor(Math.random() * 250 + 5)}`;
       }
 
       result.push(numWord);
