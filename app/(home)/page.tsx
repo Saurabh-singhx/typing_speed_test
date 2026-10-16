@@ -1,6 +1,11 @@
 import { Metadata } from 'next';
 import { TypingApp } from '@/components/TypingApp';
 import { JsonLd } from '@/components/SEO/JsonLd';
+import { WpmRanksSection } from '@/components/SEO/WpmRanksSection';
+import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
+import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
+import { FaqSection } from '@/components/SEO/FaqSection';
+import { Footer } from '@/components/SEO/Footer';
 import { SITE_CONFIG } from '@/lib/seo-data';
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site';
@@ -53,7 +58,12 @@ export default function Home() {
   return (
     <>
       <JsonLd lang="en" />
-      <TypingApp initialLanguage="en" />
+      <TypingApp initialLanguage="en" footer={<Footer />}>
+        <WpmRanksSection lang="en" />
+        <WpmSavingsCalculator lang="en" />
+        <TypingGuideSection lang="en" />
+        <FaqSection lang="en" />
+      </TypingApp>
     </>
   );
 }

@@ -4,7 +4,47 @@ import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Navbar } from '@/components/Navbar';
 import { TestSettingsBar } from '@/components/TypingTest/TestSettingsBar';
-import { TypingEngine } from '@/components/TypingTest/TypingEngine';
+
+// Lightweight skeletons to eliminate layout shifts (CLS 0.000)
+const ShatterArenaSkeleton = () => (
+  <div className="w-full max-w-5xl mx-auto space-y-2 font-mono animate-pulse" aria-hidden="true">
+    <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-t-2xl neo-extruded text-xs min-h-[46px]">
+      <div className="flex items-center gap-2">
+        <div className="h-6 w-24 rounded-xl neo-inset opacity-60" />
+        <div className="h-6 w-20 rounded-xl neo-inset opacity-60" />
+      </div>
+      <div className="flex items-center gap-2">
+        <div className="h-6 w-16 rounded-xl neo-inset opacity-60" />
+        <div className="h-6 w-8 rounded-xl neo-inset opacity-60" />
+      </div>
+    </div>
+    <div className="w-full max-w-5xl h-[280px] sm:h-[340px] bg-[var(--bg-input)] neo-inset-deep rounded-b-2xl relative overflow-hidden flex flex-col items-center justify-center gap-2">
+      <div className="flex items-center gap-2 text-xs font-mono text-[var(--accent-tactical)]">
+        <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)] animate-ping" />
+        <span className="tracking-widest font-bold">CALIBRATING APM TELEMETRY ARENA...</span>
+      </div>
+    </div>
+  </div>
+);
+
+const TypingEngineSkeleton = () => (
+  <div className="w-full max-w-5xl mx-auto space-y-2.5 sm:space-y-3 font-mono animate-pulse" aria-hidden="true">
+    <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl neo-extruded text-xs min-h-[48px]">
+      <div className="flex items-center gap-2">
+        <div className="h-7 w-20 rounded-xl neo-inset opacity-60" />
+        <div className="h-7 w-24 rounded-xl neo-inset opacity-60" />
+      </div>
+      <div className="h-7 w-16 rounded-xl neo-inset opacity-60" />
+    </div>
+    <div className="w-full h-7 rounded-xl neo-inset opacity-40" />
+    <div className="w-full min-h-[150px] sm:min-h-[180px] max-h-[200px] sm:max-h-[230px] p-4 sm:p-7 rounded-2xl neo-inset-deep border border-[var(--border-subtle)] flex items-center justify-center">
+      <div className="flex items-center gap-2 text-xs font-mono text-[var(--accent-tactical)]">
+        <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)] animate-pulse" />
+        <span className="tracking-widest font-bold">INITIALIZING KEYBOARD INTERFACE...</span>
+      </div>
+    </div>
+  </div>
+);
 
 // Dynamically import results, modals & specialized arenas to keep initial page load bundle lean
 const TestResults = dynamic(
@@ -13,7 +53,17 @@ const TestResults = dynamic(
 );
 const ShatterStreamArena = dynamic(
   () => import('@/components/TypingTest/ShatterStreamArena').then((mod) => mod.ShatterStreamArena),
-  { ssr: false }
+  { 
+    ssr: false,
+    loading: () => <ShatterArenaSkeleton />,
+  }
+);
+const TypingEngine = dynamic(
+  () => import('@/components/TypingTest/TypingEngine').then((mod) => mod.TypingEngine),
+  { 
+    ssr: false,
+    loading: () => <TypingEngineSkeleton />,
+  }
 );
 const AchievementsModal = dynamic(
   () => import('@/components/Dashboard/AchievementsModal').then((mod) => mod.AchievementsModal),
@@ -24,12 +74,7 @@ const StatsModal = dynamic(
   { ssr: false }
 );
 
-import { WpmRanksSection } from '@/components/SEO/WpmRanksSection';
-import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
-import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
-import { FaqSection } from '@/components/SEO/FaqSection';
-import { Footer } from '@/components/SEO/Footer';
-import { getLocalizedContent } from '@/lib/seo-i18n';
+import { getLocalizedHeader } from '@/lib/seo-header';
 import { 
   TestSettings, 
   TestResult, 
@@ -50,9 +95,11 @@ import { soundFx } from '@/lib/audio';
 
 interface TypingAppProps {
   initialLanguage?: LanguageCode;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
-export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
+export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children, footer }) => {
   const [settings, setSettings] = useState<TestSettings>(() => ({
     ...DEFAULT_SETTINGS,
     ...(initialLanguage ? { language: initialLanguage } : {}),
@@ -138,7 +185,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
   };
 
   const currentLang = settings.language || 'en';
-  const localizedContent = getLocalizedContent(currentLang);
+  const localizedHeader = getLocalizedHeader(currentLang);
 
   return (
     <div 
@@ -171,13 +218,13 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
           <header className="w-full text-center space-y-1.5 max-w-3xl mx-auto pt-1 px-1">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full neo-inset text-[10px] sm:text-[11px] font-mono font-bold tracking-wider text-[var(--accent-tactical)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-tactical)] animate-pulse" />
-              <span>{localizedContent.badgeText}</span>
+              <span>{localizedHeader.badgeText}</span>
             </div>
             <h1 className="text-lg sm:text-2xl md:text-3xl font-black font-mono tracking-tight text-[var(--text-main)] px-2">
-              {localizedContent.headline}
+              {localizedHeader.headline}
             </h1>
             <p className="text-[11px] sm:text-sm text-[var(--text-dim)] font-mono max-w-xl mx-auto leading-relaxed px-2">
-              {localizedContent.subheadline}
+              {localizedHeader.subheadline}
             </p>
           </header>
         )}
@@ -191,7 +238,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
         )}
 
         {/* Dynamic Display: Active Engine vs Test Telemetry Results */}
-        <div className="w-full my-auto py-2 sm:py-4">
+        <div className="w-full my-auto py-2 sm:py-4 min-h-[350px] sm:min-h-[420px]">
           {testResult ? (
             <TestResults
               result={testResult}
@@ -220,17 +267,16 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage }) => {
         </div>
 
         {/* Comprehensive Localized SEO & Informational Sections */}
-        <div className="w-full pt-12 border-t border-[var(--border-subtle)] space-y-16">
-          <WpmRanksSection lang={currentLang} />
-          <WpmSavingsCalculator lang={currentLang} />
-          <TypingGuideSection lang={currentLang} />
-          <FaqSection lang={currentLang} />
-        </div>
+        {children && (
+          <div className="w-full pt-12 border-t border-[var(--border-subtle)] space-y-16">
+            {children}
+          </div>
+        )}
 
       </main>
 
       {/* Footer */}
-      <Footer />
+      {footer}
 
       {/* Modals */}
       <AchievementsModal

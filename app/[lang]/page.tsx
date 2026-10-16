@@ -2,6 +2,11 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { TypingApp } from '@/components/TypingApp';
 import { JsonLd } from '@/components/SEO/JsonLd';
+import { WpmRanksSection } from '@/components/SEO/WpmRanksSection';
+import { WpmSavingsCalculator } from '@/components/SEO/WpmSavingsCalculator';
+import { TypingGuideSection } from '@/components/SEO/TypingGuideSection';
+import { FaqSection } from '@/components/SEO/FaqSection';
+import { Footer } from '@/components/SEO/Footer';
 import { isValidLanguage, getLanguageInfo, SUPPORTED_LANGUAGES } from '@/lib/languages';
 import { SITE_CONFIG } from '@/lib/seo-data';
 
@@ -84,7 +89,12 @@ export default async function LocalizedTypingPage({ params }: Props) {
   return (
     <>
       <JsonLd lang={lang} />
-      <TypingApp initialLanguage={lang} />
+      <TypingApp initialLanguage={lang} footer={<Footer />}>
+        <WpmRanksSection lang={lang} />
+        <WpmSavingsCalculator lang={lang} />
+        <TypingGuideSection lang={lang} />
+        <FaqSection lang={lang} />
+      </TypingApp>
     </>
   );
 }

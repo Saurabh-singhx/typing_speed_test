@@ -199,7 +199,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               aria-pressed={isActive}
               className={`px-2.5 sm:px-3 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-lg flex items-center gap-1 sm:gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 isActive
-                  ? 'neo-pill-active font-bold shadow-sm'
+                  ? 'neo-pill-active !text-[var(--accent-tactical)] font-bold shadow-sm'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
@@ -227,7 +227,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               aria-pressed={settings.timeLimit === t}
               className={`px-2 py-1 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.timeLimit === t
-                  ? 'neo-pill-active font-bold'
+                  ? 'neo-pill-active !text-[var(--accent-tactical)] font-bold'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
@@ -246,7 +246,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               aria-pressed={settings.wordCount === w}
               className={`px-2 py-1 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                 settings.wordCount === w
-                  ? 'neo-pill-active font-bold'
+                  ? 'neo-pill-active !text-[var(--accent-tactical)] font-bold'
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
@@ -272,8 +272,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   className={`px-2 py-1 rounded-lg flex items-center gap-1 text-xs transition-all ${
                     active
                       ? opt.id === 'survival'
-                        ? 'neo-pill-active text-red-400 font-bold'
-                        : 'neo-pill-active text-amber-300 font-bold'
+                        ? 'neo-pill-active !text-red-400 font-bold'
+                        : 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -294,7 +294,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={settings.timeLimit === t}
                   className={`px-2 py-1 rounded-lg text-xs transition-all ${
                     settings.timeLimit === t
-                      ? 'neo-pill-active text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -313,7 +313,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={settings.wordCount === w}
                   className={`px-2 py-1 rounded-lg text-xs transition-all ${
                     settings.wordCount === w
-                      ? 'neo-pill-active text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -346,7 +346,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={sp.tooltip}
                   className={`px-1.5 sm:px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -372,7 +372,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={den.tooltip}
                   className={`px-2 py-0.5 rounded-lg transition-all text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -393,7 +393,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={active}
                   className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -418,7 +418,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={`Visual impact effects: ${fx.label}`}
                   className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active text-cyan-300 font-bold'
+                      ? 'neo-pill-active !text-cyan-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -443,7 +443,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           aria-pressed={settings.punctuation}
           className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.punctuation
-              ? 'neo-pill-active font-bold text-[var(--accent-tactical)]'
+              ? 'neo-pill-active font-bold !text-[var(--accent-tactical)]'
               : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
@@ -459,7 +459,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           aria-pressed={settings.numbers}
           className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.numbers
-              ? 'neo-pill-active font-bold text-[var(--accent-tactical)]'
+              ? 'neo-pill-active font-bold !text-[var(--accent-tactical)]'
               : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
@@ -475,7 +475,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           aria-pressed={settings.hardcore}
           className={`px-2 py-1 rounded-lg flex items-center gap-1 transition-all whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
             settings.hardcore
-              ? 'neo-pill-active font-bold text-[var(--accent-danger)] border-[var(--accent-danger)]/50'
+              ? 'neo-pill-active font-bold !text-[var(--accent-danger)] border-[var(--accent-danger)]/50'
               : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
           }`}
         >
@@ -498,7 +498,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
             aria-pressed={settings.caretStyle === c.id}
             className={`px-2.5 py-0.5 min-w-[24px] min-h-[24px] flex items-center justify-center rounded-lg text-[11px] font-mono transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
               settings.caretStyle === c.id
-                ? 'neo-pill-active font-bold shadow-sm'
+                ? 'neo-pill-active !text-[var(--accent-tactical)] font-bold shadow-sm'
                 : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
             }`}
           >
