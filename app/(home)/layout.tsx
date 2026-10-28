@@ -1,12 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Noto_Sans_Devanagari } from 'next/font/google';
+import { Rubik, Geist_Mono, Noto_Sans_Devanagari } from 'next/font/google';
 import '../globals.css';
 import { SITE_CONFIG } from '@/lib/seo-data';
 import { GoogleAnalytics } from '@/components/SEO/GoogleAnalytics';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const rubik = Rubik({
+  variable: '--font-rubik',
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
@@ -76,8 +78,8 @@ export default function HomeLayout({
     <html
       lang="en"
       dir="ltr"
-      data-theme="neomorphism"
-      className={`${geistSans.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
+      data-theme="clarity"
+      className={`${rubik.variable} ${geistMono.variable} ${notoSansDevanagari.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--bg-page)] text-[var(--text-main)] transition-colors">
         <GoogleAnalytics gaId={SITE_CONFIG.gaId} />

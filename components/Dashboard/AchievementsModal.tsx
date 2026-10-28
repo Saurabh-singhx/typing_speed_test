@@ -122,7 +122,7 @@ export const AchievementsModal: React.FC<AchievementsModalProps> = ({
       aria-modal="true"
       aria-labelledby="achievements-modal-title"
     >
-      <div className="w-full max-w-3xl rounded-3xl neo-extruded shadow-2xl overflow-hidden font-mono animate-modal flex flex-col max-h-[90vh]">
+      <div className="w-full max-w-3xl rounded-3xl tw-card shadow-2xl overflow-hidden font-sans animate-modal flex flex-col max-h-[90vh]">
         
         {/* Header */}
         <div className="p-4 sm:p-5 border-b border-[var(--border-subtle)] flex items-center justify-between gap-3 bg-[var(--bg-surface)] shrink-0">

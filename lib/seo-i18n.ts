@@ -32,9 +32,9 @@ export interface LocalizedContent {
 
 export const LOCALIZED_CONTENT: Record<LanguageCode, LocalizedContent> = {
   en: {
-    headline: "Tactical Typing Speed Test & APM Telemetry",
-    subheadline: "Precision mechanical switch acoustics, kinetic shatter stream destruction mode, zero-latency caret telemetry, and pacing ghost racer.",
-    badgeText: "PRO TELEMETRY // 0-LATENCY HUD",
+    headline: "Typing Speed Test",
+    subheadline: "Test how fast and accurate you type with real-time WPM, CPM, and accuracy tracking.",
+    badgeText: "ONLINE TYPING TEST",
     wpmTiersTitle: "Operator Speed Classification Tiers",
     wpmTiersSubtitle: "Global APM distribution and typing velocity benchmark standards.",
     calculatorTitle: "Velocity & Productivity ROI Calculator",
@@ -843,7 +843,7 @@ export function generateLocalizedJsonLd(lang: LanguageCode, baseUrl: string = 'h
         "@id": `${baseUrl}/#website`,
         "url": baseUrl,
         "name": "TypeTrack",
-        "description": "Tactical Typing Speed Test & APM Telemetry Benchmark",
+        "description": "Online Typing Speed Test & WPM Benchmark",
         "inLanguage": lang
       },
       {

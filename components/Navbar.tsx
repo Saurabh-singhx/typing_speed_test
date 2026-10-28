@@ -76,6 +76,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const rank = getRankTitle(userStats.bestWpm);
 
   const themes: { id: GameTheme; name: string; tag: string }[] = [
+    { id: 'clarity', name: 'Clarity Light', tag: 'Flagship Modern 3D' },
     { id: 'neomorphism', name: 'Neomorphism Soft UI', tag: 'Tactile Dual-Shadow' },
     { id: 'tactical', name: 'Tactical Gunmetal', tag: 'Charcoal & Amber' },
     { id: 'obsidian', name: 'Obsidian Stealth', tag: 'OLED Black & Graphite' },
@@ -96,13 +97,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   const targetWpmOptions = [0, 50, 60, 80, 100, 120, 140];
 
   return (
-    <header className="w-full border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]/95 backdrop-blur sticky top-0 z-40 transition-colors">
+    <header className="w-full border-b border-[var(--border-subtle)] bg-[var(--bg-surface)] sticky top-0 z-40 transition-colors shadow-xs">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4 relative">
         
         {/* Brand Logo & Telemetry Status */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <div className="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl neo-inset flex items-center justify-center overflow-hidden p-1 shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl tw-card flex items-center justify-center overflow-hidden p-1 shrink-0">
               <img
                 src="/logo.png"
                 alt="TypeTrack Logo"
@@ -111,36 +112,32 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
-                <span className="font-mono font-black tracking-wider text-sm sm:text-base md:text-lg text-[var(--text-main)] truncate">
-                  TYPE<span className="text-[var(--accent-tactical)]">TRACK</span>
+                <span className="font-extrabold tracking-tight text-base sm:text-lg md:text-xl text-[var(--text-main)] truncate font-sans">
+                  type<span className="text-[var(--accent-tactical)]">track</span>
                 </span>
-                <span className="text-[9px] sm:text-[10px] font-mono tracking-widest px-1.5 py-0.5 rounded-full neo-inset text-[var(--text-dim)] shrink-0 font-bold">
+                <span className="text-[9px] sm:text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-[var(--accent-tactical)]/10 text-[var(--accent-tactical)] border border-[var(--accent-tactical)]/20 shrink-0">
                   v2.0
                 </span>
-              </div>
-              <div className="hidden sm:flex text-[10px] font-mono tracking-widest uppercase text-[var(--text-dim)] items-center gap-1.5">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--accent-success)] shadow-[0_0_8px_var(--accent-success)] animate-pulse" />
-                <span>SYS_READY // APM TELEMETRY</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Center: Operator Rank & XP Bar (Interactive - Tablet/Desktop) */}
-        <div className="hidden md:flex items-center gap-3 px-3.5 py-1.5 rounded-xl neo-extruded-sm">
+        <div className="hidden md:flex items-center gap-3 px-3.5 py-1.5 rounded-xl tw-card">
           <div className="text-right">
-            <div className="text-[11px] font-mono font-bold text-[var(--text-main)] flex items-center justify-end gap-1.5">
-              <span className="text-[var(--accent-tactical)]">LVL {levelInfo.level}</span>
+            <div className="text-[11px] font-sans font-bold text-[var(--text-main)] flex items-center justify-end gap-1.5">
+              <span className="text-[var(--accent-tactical)] font-extrabold">LVL {levelInfo.level}</span>
               <span className="text-[var(--text-faint)]">•</span>
               <span className={rank.color}>{rank.title}</span>
             </div>
-            <div className="text-[9px] font-mono text-[var(--text-dim)]">
+            <div className="text-[10px] text-[var(--text-dim)] font-medium">
               {levelInfo.currentLevelXp} / {levelInfo.nextLevelXp} XP ({levelInfo.progressPercent}%)
             </div>
           </div>
-          <div className="w-24 h-2 neo-inset rounded-full overflow-hidden p-[1px]">
+          <div className="w-24 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden p-[1px]">
             <div 
-              className="h-full bg-gradient-to-r from-[var(--accent-tactical)] to-[var(--accent-target)] shadow-[0_0_8px_rgba(var(--accent-tactical-rgb),0.5)] transition-all duration-300 rounded-full"
+              className="h-full bg-gradient-to-r from-[var(--accent-tactical)] to-[var(--accent-success)] transition-all duration-300 rounded-full"
               style={{ width: `${levelInfo.progressPercent}%` }}
             />
           </div>
@@ -172,11 +169,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Target Pacing Ghost"
               aria-haspopup="true"
               aria-expanded={showPacerMenu}
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+              className="tw-btn-flat px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5"
             >
               <Gauge className="w-3.5 h-3.5 text-[var(--accent-target)]" />
-              <span className="hidden md:inline">Pacer:</span>
-              <span className="font-bold text-[11px] sm:text-xs text-[var(--text-main)]">
+              <span className="hidden md:inline text-[var(--text-dim)]">Pacer:</span>
+              <span className="font-extrabold text-[var(--text-main)]">
                 {targetWpm === 0 ? 'OFF' : `${targetWpm}`}
               </span>
               <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
@@ -186,7 +183,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Target pacing ghost options"
-                className="absolute right-0 mt-2.5 w-52 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
+                className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-1.5rem)] rounded-2xl tw-card p-2 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
                   Target Pacing Ghost
@@ -225,7 +222,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Mechanical Switch Audio"
               aria-haspopup="true"
               aria-expanded={showSoundMenu}
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+              className="tw-btn-flat px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5"
             >
               {soundType === 'off' ? (
                 <VolumeX className="w-3.5 h-3.5 text-[var(--text-faint)]" />
@@ -240,7 +237,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Mechanical switch sound options"
-                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2.5 shadow-2xl z-50 animate-modal"
+                className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl tw-card p-2.5 shadow-2xl z-50 animate-modal"
               >
                 <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Switch Acoustics</span>
@@ -309,7 +306,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Change Theme"
               aria-haspopup="true"
               aria-expanded={showThemeMenu}
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+              className="tw-btn-flat px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5"
             >
               <Palette className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               <span className="hidden md:inline capitalize">{theme}</span>
@@ -320,10 +317,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Color theme options"
-                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
+                className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl tw-card p-2 shadow-2xl z-50 animate-modal"
               >
-                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
-                  Tactile & Gaming Palettes
+                <div className="text-[11px] font-sans uppercase font-bold tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1">
+                  Themes & Palettes
                 </div>
                 {themes.map((t) => (
                   <button
@@ -333,13 +330,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                       onThemeChange(t.id);
                       setShowThemeMenu(false);
                     }}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-mono transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-sans transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                       theme === t.id
                         ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                         : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
                     }`}
                   >
-                    <div>{t.name}</div>
+                    <div className="font-semibold">{t.name}</div>
                     <div className="text-[11px] text-[var(--text-faint)]">{t.tag}</div>
                   </button>
                 ))}
@@ -359,11 +356,11 @@ export const Navbar: React.FC<NavbarProps> = ({
               title="Select Language & Word Bank"
               aria-haspopup="true"
               aria-expanded={showLangMenu}
-              className="tactical-keycap px-2 py-1.5 sm:px-2.5 sm:py-1.5 rounded text-xs font-mono flex items-center gap-1 sm:gap-1.5 text-[var(--text-dim)] hover:text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+              className="tw-btn-flat px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5"
             >
               <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
               <span className="text-xs">{currentLangInfo.flag}</span>
-              <span className="font-bold text-[11px] sm:text-xs text-[var(--text-main)] uppercase">{language}</span>
+              <span className="font-extrabold text-[11px] sm:text-xs text-[var(--text-main)] uppercase">{language}</span>
               <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
             </button>
 
@@ -371,9 +368,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div
                 role="menu"
                 aria-label="Language selection options"
-                className="absolute right-0 mt-2.5 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
+                className="absolute right-0 mt-2 w-56 max-w-[calc(100vw-1.5rem)] rounded-2xl tw-card p-2 shadow-2xl z-50 animate-modal"
               >
-                <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+                <div className="text-[11px] font-sans uppercase font-bold tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
                   <span>Language</span>
                   <span>8 Languages</span>
                 </div>
@@ -386,7 +383,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         onLanguageChange?.(l.code);
                         setShowLangMenu(false);
                       }}
-                      className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
+                      className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-sans flex items-center justify-between transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                         language === l.code
                           ? 'bg-[var(--accent-tactical)]/15 text-[var(--accent-tactical)] font-bold'
                           : 'text-[var(--text-dim)] hover:bg-[var(--bg-input)] hover:text-[var(--text-main)]'
@@ -396,7 +393,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                         <span className="text-sm">{l.flag}</span>
                         <span>{l.nativeName}</span>
                       </div>
-                      <span className="text-[11px] text-[var(--text-faint)] uppercase">{l.code}</span>
+                      <span className="text-[11px] text-[var(--text-faint)] uppercase font-mono">{l.code}</span>
                     </button>
                   ))}
                 </div>
@@ -409,11 +406,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onOpenAchievements}
             title="Tactical Badges & Achievements"
             aria-label="Tactical Badges & Achievements"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] relative"
+            className="tw-btn-flat p-2 rounded-xl relative"
           >
-            <Trophy className="w-4 h-4" />
+            <Trophy className="w-4 h-4 text-amber-500" />
             {userStats.unlockedAchievements.length > 0 && (
-              <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-[var(--accent-tactical)]" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[var(--accent-tactical)]" />
             )}
           </button>
 
@@ -422,9 +419,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             onClick={onOpenStats}
             title="Lifetime Typing Telemetry"
             aria-label="Lifetime Typing Telemetry"
-            className="tactical-keycap p-2 rounded text-[var(--text-dim)] hover:text-[var(--accent-target)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)]"
+            className="tw-btn-flat p-2 rounded-xl"
           >
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="w-4 h-4 text-cyan-500" />
           </button>
 
         </div>

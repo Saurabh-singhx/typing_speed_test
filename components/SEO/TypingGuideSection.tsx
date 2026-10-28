@@ -38,7 +38,7 @@ export const TypingGuideSection: React.FC<TypingGuideSectionProps> = ({ lang = '
   ];
 
   return (
-    <section className="w-full max-w-5xl mx-auto my-12 font-mono" id="typing-guide">
+    <section className="w-full max-w-5xl mx-auto my-12 font-sans" id="typing-guide">
       <div className="space-y-8">
         
         {/* Section Heading */}
@@ -58,9 +58,9 @@ export const TypingGuideSection: React.FC<TypingGuideSectionProps> = ({ lang = '
         {/* Dynamic Protocol Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {content.guideSteps.map((step, idx) => (
-            <div key={idx} className="p-4 rounded-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] space-y-2 flex flex-col justify-between">
+            <div key={idx} className="tw-card tw-card-hover p-5 rounded-2xl space-y-2 flex flex-col justify-between">
               <div>
-                <div className="w-8 h-8 rounded bg-[var(--bg-input)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--accent-tactical)] font-black text-sm mb-2">
+                <div className="w-8 h-8 rounded-xl bg-[var(--bg-page)] border border-[var(--border-subtle)] flex items-center justify-center text-[var(--accent-tactical)] font-black text-sm mb-2">
                   {`0${idx + 1}`}
                 </div>
                 <h3 className="font-bold text-sm text-[var(--text-main)] mb-1">
@@ -70,7 +70,7 @@ export const TypingGuideSection: React.FC<TypingGuideSectionProps> = ({ lang = '
                   {step.desc}
                 </p>
               </div>
-              <div className="pt-2 border-t border-[var(--border-subtle)]/50 text-[11px] text-[var(--accent-tactical)] font-mono">
+              <div className="pt-2 border-t border-[var(--border-subtle)] text-[11px] text-[var(--accent-tactical)] font-semibold">
                 {step.tip}
               </div>
             </div>
@@ -78,7 +78,7 @@ export const TypingGuideSection: React.FC<TypingGuideSectionProps> = ({ lang = '
         </div>
 
         {/* Switch Acoustics Engineering */}
-        <div className="p-6 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+        <div className="tw-card p-6 rounded-2xl">
           <h3 className="text-sm font-bold text-[var(--text-main)] uppercase tracking-wider mb-4 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[var(--accent-tactical)]" />
             <span>Switch Acoustic Signatures & Actuation Ergonomics</span>

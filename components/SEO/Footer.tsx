@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] py-8 sm:py-12 px-4 sm:px-6 font-mono text-xs text-[var(--text-dim)]">
+    <footer className="w-full border-t border-[var(--border-subtle)] bg-[var(--bg-surface)] py-8 sm:py-12 px-4 sm:px-6 font-sans text-xs text-[var(--text-dim)]">
       <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Main Footer Row */}
@@ -12,15 +12,15 @@ export const Footer: React.FC = () => {
           {/* Brand Col */}
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[var(--bg-panel)] border border-[var(--border-strong)] flex items-center justify-center shadow-inner overflow-hidden p-0.5">
+              <div className="w-8 h-8 rounded-xl tw-card flex items-center justify-center shadow-xs overflow-hidden p-0.5">
                 <img
                   src="/logo.png"
                   alt="TypeTrack Logo"
                   className="w-full h-full object-contain rounded"
                 />
               </div>
-              <span className="font-bold text-base text-[var(--text-main)]">
-                TYPE<span className="text-[var(--accent-tactical)]">TRACK</span> {'// TACTICAL APM LAB'}
+              <span className="font-extrabold text-base text-[var(--text-main)]">
+                type<span className="text-[var(--accent-tactical)]">track</span>
               </span>
             </div>
             <p className="text-xs text-[var(--text-dim)] leading-relaxed max-w-md">

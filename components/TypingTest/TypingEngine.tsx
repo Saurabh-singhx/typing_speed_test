@@ -713,18 +713,18 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
     <div
       ref={containerRef}
       onClick={() => hiddenInputRef.current?.focus()}
-      className="w-full max-w-5xl mx-auto space-y-2.5 sm:space-y-3 font-mono cursor-text select-none focus:outline-none"
+      className="w-full max-w-5xl mx-auto space-y-3 font-sans cursor-text select-none focus:outline-none"
     >
-      {/* Live Tactical Telemetry HUD */}
-      <div className="flex items-center justify-between px-3 py-2 sm:px-4 sm:py-2.5 rounded-2xl neo-extruded text-xs">
+      {/* Live Telemetry HUD */}
+      <div className="flex items-center justify-between px-3 py-2.5 sm:px-4 sm:py-3 rounded-2xl tw-card text-xs">
         
         {/* Left Telemetry: Time / Words Remaining */}
         <div className="flex items-center gap-2 sm:gap-3">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset">
-            <span className="text-[9px] sm:text-[10px] uppercase text-[var(--text-dim)] font-semibold">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[var(--bg-page)] border border-[var(--border-subtle)]">
+            <span className="text-[10px] uppercase text-[var(--text-dim)] font-bold tracking-wider">
               {settings.mode === 'time' ? 'TIME' : settings.mode === 'words' ? 'WORDS' : 'CADENCE'}
             </span>
-            <span className="text-sm sm:text-base font-black text-[var(--accent-tactical)]">
+            <span className="text-sm sm:text-base font-extrabold text-[var(--accent-tactical)]">
               {settings.mode === 'time'
                 ? `${timeRemaining}s`
                 : settings.mode === 'words'
@@ -734,20 +734,20 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
           </div>
 
           {/* Live Speed */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset" title={`Raw Speed: ${liveRawWpm} WPM`}>
-            <span className="text-[9px] sm:text-[10px] font-semibold uppercase text-[var(--text-dim)]">WPM</span>
-            <span className="text-sm sm:text-base font-black text-[var(--text-main)]">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[var(--bg-page)] border border-[var(--border-subtle)]" title={`Raw Speed: ${liveRawWpm} WPM`}>
+            <span className="text-[10px] font-bold uppercase text-[var(--text-dim)] tracking-wider">WPM</span>
+            <span className="text-sm sm:text-base font-extrabold text-[var(--text-main)]">
               {liveWpm}
             </span>
-            <span className="hidden sm:inline text-[11px] text-[var(--text-dim)] font-mono">
+            <span className="hidden sm:inline text-xs text-[var(--text-dim)]">
               ({liveRawWpm} raw)
             </span>
           </div>
 
           {/* Live Accuracy */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl neo-inset">
-            <span className="text-[9px] sm:text-[10px] font-semibold uppercase text-[var(--text-dim)]">ACC</span>
-            <span className={`text-sm sm:text-base font-black ${liveAccuracy >= 95 ? 'text-[var(--accent-success)]' : 'text-[var(--accent-tactical)]'}`}>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[var(--bg-page)] border border-[var(--border-subtle)]">
+            <span className="text-[10px] font-bold uppercase text-[var(--text-dim)] tracking-wider">ACC</span>
+            <span className={`text-sm sm:text-base font-extrabold ${liveAccuracy >= 95 ? 'text-[#16a34a]' : 'text-[var(--accent-tactical)]'}`}>
               {liveAccuracy}%
             </span>
           </div>
@@ -756,10 +756,10 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         {/* Right Telemetry: Flow Streak & Multiplier */}
         <div className="flex items-center gap-2 sm:gap-3">
           {comboStreak > 3 && (
-            <div className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-xl neo-inset text-[var(--accent-streak)] font-bold text-xs animate-pulse">
+            <div className="flex items-center gap-1 sm:gap-1.5 px-3 py-1 rounded-xl bg-[var(--bg-page)] border border-amber-500/30 text-amber-500 font-bold text-xs animate-pulse">
               <Flame className="w-3.5 h-3.5" />
               <span>{comboStreak}x</span>
-              <span className="hidden sm:inline text-[11px] text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
+              <span className="hidden sm:inline text-xs text-[var(--text-dim)]">({comboMultiplier}x XP)</span>
             </div>
           )}
 
@@ -771,10 +771,10 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
             }}
             title="Restart Test (Esc or Tab+Enter)"
             aria-label="Restart typing test (Esc or Tab+Enter)"
-            className="tactical-keycap p-1.5 sm:px-3 sm:py-1.5 rounded-xl text-[var(--text-dim)] hover:text-[var(--accent-tactical)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] flex items-center gap-1.5"
+            className="tw-btn-flat px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden md:inline text-xs font-mono font-medium">Restart</span>
+            <span className="hidden md:inline font-bold">Restart</span>
           </button>
         </div>
 
@@ -837,11 +837,11 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
         <div
           ref={wordsContainerRef}
           onClick={() => hiddenInputRef.current?.focus()}
-          className={`relative w-full min-h-[150px] sm:min-h-[180px] max-h-[200px] sm:max-h-[230px] p-4 sm:p-7 rounded-2xl neo-inset-deep border transition-all duration-200 overflow-hidden leading-relaxed text-lg sm:text-2xl cursor-text ${
-            settings.language === 'hi' ? 'font-hindi' : ''
+          className={`relative w-full min-h-[160px] sm:min-h-[190px] max-h-[220px] sm:max-h-[250px] p-5 sm:p-8 rounded-2xl tw-card transition-all duration-200 overflow-hidden leading-relaxed text-lg sm:text-2xl cursor-text ${
+            settings.language === 'hi' ? 'font-hindi' : 'font-sans'
           } ${
             isInputFocused
-              ? 'border-[var(--accent-tactical)]/70 ring-2 ring-[var(--accent-tactical)]/20 shadow-[0_0_24px_rgba(var(--accent-tactical-rgb),0.12)]'
+              ? 'border-[var(--accent-tactical)] ring-2 ring-[var(--accent-tactical)]/20 shadow-md'
               : 'border-[var(--border-subtle)] hover:border-[var(--border-strong)]'
           }`}
         >
@@ -890,20 +890,20 @@ export const TypingEngine: React.FC<TypingEngineProps> = ({
                       ? 'opacity-100 font-semibold'
                       : wordIdx < currentWordIndex
                       ? 'opacity-50'
-                      : 'opacity-70'
+                      : 'opacity-90'
                   }`}
                 >
                   {w.chars.map((c, charIdx) => {
-                    let charColor = 'text-[var(--text-faint)]'; // Untyped
+                    let charColor = 'text-[var(--text-dim)]'; // Untyped - clearly visible with 8.5:1 contrast
                     let bgStyle = '';
 
                     if (c.status === 'correct') {
-                      charColor = 'text-[var(--text-main)]';
+                      charColor = 'text-[var(--text-main)] font-semibold';
                     } else if (c.status === 'incorrect') {
-                      charColor = 'text-[var(--accent-danger)] underline decoration-[var(--accent-danger)] decoration-2';
+                      charColor = 'text-[var(--accent-danger)] underline decoration-[var(--accent-danger)] decoration-2 font-bold';
                       bgStyle = 'bg-[var(--accent-danger)]/15';
                     } else if (c.status === 'extra') {
-                      charColor = 'text-[var(--accent-danger)]';
+                      charColor = 'text-[var(--accent-danger)] font-bold';
                       bgStyle = 'bg-[var(--accent-danger)]/20 px-0.5 rounded';
                     }
 

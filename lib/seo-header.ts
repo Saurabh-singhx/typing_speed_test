@@ -8,44 +8,44 @@ export interface LocalizedHeader {
 
 export const HEADER_BY_LANG: Record<LanguageCode, LocalizedHeader> = {
   en: {
-    headline: "Tactical Typing Speed Test & APM Telemetry",
-    subheadline: "Precision mechanical switch acoustics, kinetic shatter stream destruction mode, zero-latency caret telemetry, and pacing ghost racer.",
-    badgeText: "PRO TELEMETRY // 0-LATENCY HUD",
+    headline: "Typing Speed Test",
+    subheadline: "Test how fast and accurate you type with real-time WPM, CPM, and accuracy tracking.",
+    badgeText: "ONLINE TYPING TEST",
   },
   es: {
-    headline: "Test de Mecanografía Táctico y Medidor de Velocidad PPM",
-    subheadline: "Acústica de switches mecánicos, modo cinético Shatter Stream, telemetría sin latencia y drone pacer fantasma.",
-    badgeText: "TELEMETRÍA PROFESIONAL // LATENCIA CERO",
+    headline: "Test de Velocidad de Mecanografía",
+    subheadline: "Pon a prueba tu velocidad y precisión al escribir con métricas en tiempo real.",
+    badgeText: "TEST DE MECANOGRAFÍA ONLINE",
   },
   de: {
-    headline: "Taktischer 10-Finger-Tipptest & APM Benchmark",
-    subheadline: "Echte mechanische Switch-Akustik, latenzfreie Cursor-Telemetrie, Pacing-Ghost-Racer und Boss-Raid-Modus.",
-    badgeText: "PROFI-TELEMETRIE // 0-LATENZ-HUD",
+    headline: "Tipptest – Schreibgeschwindigkeit Testen",
+    subheadline: "Teste deine Schreibgeschwindigkeit und Genauigkeit mit Echtzeit-WPM.",
+    badgeText: "ONLINE TIPPTEST",
   },
   fr: {
-    headline: "Test de Vitesse de Frappe et Dactylographie Tactique",
-    subheadline: "Sons authentiques de switches mécaniques, télémétrie zéro latence, drone lièvre et mode combat de boss.",
-    badgeText: "TÉLÉMÉTRIE PRO // LATENCE ZÉRO",
+    headline: "Test de Vitesse de Frappe",
+    subheadline: "Testez votre vitesse de frappe et votre précision avec des statistiques en direct.",
+    badgeText: "TEST DE FRAPPE EN LIGNE",
   },
   pt: {
-    headline: "Teste de Digitação Tático e Medidor de Velocidade PPM",
-    subheadline: "Sons de switches mecânicos reais, telemetria com latência zero, pacing ghost piloto e modo boss raid.",
-    badgeText: "TELEMETRIA PRO // LATÊNCIA ZERO",
+    headline: "Teste de Velocidade de Digitação",
+    subheadline: "Teste sua velocidade e precisão de digitação com métricas em tempo real.",
+    badgeText: "TESTE DE DIGITAÇÃO ONLINE",
   },
   ru: {
-    headline: "Тактический Тест Слепой Печати и Бенчмарк APM",
-    subheadline: "Акустика механических клавиш, нулевая задержка каретки, дрон-пейсер и боевой режим рейда на босса.",
-    badgeText: "ПРО-ТЕЛЕМЕТРИЯ // НУЛЕВАЯ ЗАДЕРЖКА",
+    headline: "Тест Скорости Печати",
+    subheadline: "Проверьте свою скорость и точность слепой печати в реальном времени.",
+    badgeText: "ОНЛАЙН ТЕСТ ПЕЧАТИ",
   },
   hi: {
-    headline: "हिंदी टाइपिंग स्पीड टेस्ट // सरकारी परीक्षा व APM टेलीमेट्री",
-    subheadline: "SSC, CPCT, High Court व अन्य सरकारी परीक्षाओं के लिए मंगल फॉन्ट, इनस्क्रिप्ट और रेमिंगटन लेआउट अभ्यास।",
-    badgeText: "सरकारी परीक्षा विशेष // मंगल व इनस्क्रिप्ट",
+    headline: "हिंदी टाइपिंग स्पीड टेस्ट",
+    subheadline: "सरकारी परीक्षा, मंगल फॉन्ट व इनस्क्रिप्ट लेआउट के लिए टाइपिंग गति जांचें।",
+    badgeText: "हिंदी टाइपिंग टेस्ट",
   },
   it: {
-    headline: "Test Tattico di Battitura e Benchmark Velocità Tastiera",
-    subheadline: "Acustica autentica degli switch meccanici, telemetria a latenza zero, drone pacer e modalità boss raid.",
-    badgeText: "TELEMETRIA PRO // ZERO LATENZA",
+    headline: "Test di Velocità di Battitura",
+    subheadline: "Metti alla prova la velocità e la precisione della tua digitazione in tempo reale.",
+    badgeText: "TEST DI BATTITURA ONLINE",
   },
 };
 

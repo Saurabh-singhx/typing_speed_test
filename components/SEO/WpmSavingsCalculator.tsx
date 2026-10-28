@@ -29,8 +29,8 @@ export const WpmSavingsCalculator: React.FC<WpmSavingsCalculatorProps> = ({ lang
   const speedBoostPercent = Math.round(((targetWpm - currentWpm) / Math.max(1, currentWpm)) * 100);
 
   return (
-    <section className="w-full max-w-5xl mx-auto my-8 sm:my-12 font-mono" id="wpm-calculator">
-      <div className="p-4 sm:p-6 rounded-xl bg-[var(--bg-panel)] border border-[var(--border-strong)] shadow-xl">
+    <section className="w-full max-w-5xl mx-auto my-8 sm:my-12 font-sans" id="wpm-calculator">
+      <div className="tw-card p-5 sm:p-7 rounded-2xl">
         
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--border-subtle)] mb-6">

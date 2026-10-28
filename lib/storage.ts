@@ -12,8 +12,8 @@ const LEGACY_HISTORY_KEY = 'keyops_tactical_history_v1';
 
 export const DEFAULT_SETTINGS: TestSettings = {
   language: 'en',
-  mode: 'shatter',
-  timeLimit: 30,
+  mode: 'time',
+  timeLimit: 60,
   wordCount: 25,
   punctuation: false,
   numbers: false,
@@ -22,7 +22,7 @@ export const DEFAULT_SETTINGS: TestSettings = {
   soundType: 'thock',
   soundVolume: 0.5,
   caretStyle: 'line',
-  theme: 'neomorphism',
+  theme: 'clarity',
   shatterSpeed: 'normal',
   shatterFxIntensity: 'full',
   shatterSoundProfile: 'crystal',
@@ -509,17 +509,13 @@ export function loadSettings(): TestSettings {
     const data = localStorage.getItem(SETTINGS_KEY) || localStorage.getItem(LEGACY_SETTINGS_KEY);
     if (!data) return DEFAULT_SETTINGS;
     const parsed = JSON.parse(data);
-    // Smoothly upgrade previous default 'tactical' theme to 'neomorphism'
-    if (parsed.theme === 'tactical' && !localStorage.getItem('typetrack_theme_migrated_neo_v1')) {
-      parsed.theme = 'neomorphism';
-      localStorage.setItem('typetrack_theme_migrated_neo_v1', 'true');
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, ...parsed, theme: 'neomorphism' }));
-    }
-    // Smoothly upgrade default mode to 'shatter'
-    if (!localStorage.getItem('typetrack_mode_migrated_shatter_v1')) {
-      parsed.mode = 'shatter';
-      localStorage.setItem('typetrack_mode_migrated_shatter_v1', 'true');
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, ...parsed, mode: 'shatter' }));
+    // Smoothly upgrade previous default themes or 'typewizz' to 'clarity'
+    if (parsed.theme === 'typewizz' || !localStorage.getItem('typetrack_theme_migrated_clarity_v1')) {
+      parsed.theme = 'clarity';
+      parsed.mode = parsed.mode || 'time';
+      parsed.timeLimit = parsed.timeLimit || 60;
+      localStorage.setItem('typetrack_theme_migrated_clarity_v1', 'true');
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ ...DEFAULT_SETTINGS, ...parsed, theme: 'clarity' }));
     }
     return { ...DEFAULT_SETTINGS, ...parsed };
   } catch {

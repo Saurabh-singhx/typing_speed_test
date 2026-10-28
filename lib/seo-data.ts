@@ -149,7 +149,7 @@ export const JSON_LD_DATA = {
       "@id": "https://typetrack.saurabhx.site/#website",
       "url": "https://typetrack.saurabhx.site",
       "name": "TypeTrack",
-      "description": "Tactical Typing Speed Test & APM Telemetry Benchmark",
+      "description": "Online Typing Speed Test & WPM Benchmark",
       "inLanguage": "en-US"
     },
     {

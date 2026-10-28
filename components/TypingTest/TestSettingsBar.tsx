@@ -94,7 +94,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
   ];
 
   return (
-    <div className={`w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-2xl neo-extruded text-xs font-mono transition-opacity ${
+    <div className={`w-full flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 p-2 sm:p-2.5 rounded-2xl tw-card text-xs font-sans transition-opacity ${
       disabled ? 'opacity-40 pointer-events-none' : 'opacity-100'
     }`}>
       
@@ -114,11 +114,11 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           aria-label={`Select language. Currently ${currentLang}`}
           aria-haspopup="true"
           aria-expanded={showLangMenu}
-          className="px-2.5 sm:px-3 py-1.5 rounded-xl flex items-center gap-1.5 neo-btn text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] transition-colors whitespace-nowrap"
+          className="px-2.5 sm:px-3 py-1.5 rounded-xl flex items-center gap-1.5 tw-btn-flat text-[var(--text-main)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] transition-colors whitespace-nowrap"
         >
           <Globe className="w-3.5 h-3.5 text-[var(--accent-tactical)]" />
           <span className="text-xs">{currentLangInfo.flag}</span>
-          <span className="font-bold text-[var(--accent-tactical)] uppercase text-[11px] sm:text-xs">{currentLang}</span>
+          <span className="font-extrabold text-[var(--accent-tactical)] uppercase text-[11px] sm:text-xs">{currentLang}</span>
           <ChevronDown className="w-3 h-3 text-[var(--text-faint)]" />
         </button>
 
@@ -126,9 +126,9 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           <div
             role="menu"
             aria-label="Language selection"
-            className="absolute left-0 mt-2 w-52 max-w-[calc(100vw-2.5rem)] rounded-2xl neo-extruded p-2 shadow-2xl z-50 animate-modal"
+            className="absolute left-0 mt-2 w-52 max-w-[calc(100vw-2.5rem)] rounded-2xl tw-card p-2 shadow-2xl z-50 animate-modal"
           >
-            <div className="text-[11px] font-mono uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
+            <div className="text-[11px] font-sans font-bold uppercase tracking-wider text-[var(--text-dim)] px-2 py-1 border-b border-[var(--border-subtle)] mb-1 flex items-center justify-between">
               <span>Language Bank</span>
               <span>8 Localized</span>
             </div>
@@ -173,18 +173,18 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                 onClick={() => onUpdateSettings({ mode: m.id })}
                 aria-pressed={isActive}
                 title="Shatter Stream: Kinetic destruction typing mode"
-                className={`relative px-3 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-xl flex items-center gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 ${
+                className={`relative px-3 py-1.5 min-h-[36px] sm:min-h-[32px] rounded-xl flex items-center gap-1.5 transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${
                   isActive
-                    ? 'bg-gradient-to-r from-amber-500/25 via-amber-400/20 to-orange-500/25 text-amber-200 font-extrabold border border-amber-400/80 shadow-[0_0_18px_rgba(245,158,11,0.45)] ring-1 ring-amber-400/50 scale-[1.02]'
-                    : 'text-amber-400/90 hover:text-amber-300 hover:bg-amber-500/10 border border-amber-500/20 hover:border-amber-400/40 font-semibold'
+                    ? 'bg-amber-500/20 text-amber-800 dark:text-amber-200 font-extrabold border border-amber-500/80 shadow-sm ring-1 ring-amber-500/40 scale-[1.02]'
+                    : 'text-amber-700 dark:text-amber-300 hover:bg-amber-500/10 border border-amber-500/30 font-semibold'
                 }`}
               >
-                <Zap className={`w-3.5 h-3.5 ${isActive ? 'text-amber-400 fill-amber-400 animate-pulse drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'text-amber-400'}`} />
+                <Zap className={`w-3.5 h-3.5 ${isActive ? 'text-amber-600 dark:text-amber-400 fill-amber-500 animate-pulse' : 'text-amber-600 dark:text-amber-400'}`} />
                 <span>{m.label}</span>
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-black tracking-wider uppercase transition-all ${
                   isActive 
-                    ? 'bg-amber-400/30 text-amber-200 border border-amber-400/60 shadow-[0_0_8px_rgba(245,158,11,0.3)]' 
-                    : 'hidden sm:inline-block bg-amber-500/15 text-amber-300/90 border border-amber-500/30'
+                    ? 'bg-amber-500/30 text-amber-900 dark:text-amber-100 border border-amber-500/60' 
+                    : 'hidden sm:inline-block bg-amber-500/15 text-amber-800 dark:text-amber-300 border border-amber-500/30'
                 }`}>
                   {isActive ? 'KINETIC' : 'HOT'}
                 </span>
@@ -206,7 +206,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
               {m.icon}
               <span>{m.label}</span>
               {m.id === 'boss' && (
-                <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded-md bg-red-950/70 text-red-300 border border-red-500/40 font-bold tracking-wider">
+                <span className="hidden sm:inline-block text-[10px] px-1.5 py-0.5 rounded-md bg-rose-500/15 text-rose-700 dark:text-rose-300 border border-rose-500/40 font-bold tracking-wider">
                   COMBAT
                 </span>
               )}
@@ -272,8 +272,8 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   className={`px-2 py-1 rounded-lg flex items-center gap-1 text-xs transition-all ${
                     active
                       ? opt.id === 'survival'
-                        ? 'neo-pill-active !text-red-400 font-bold'
-                        : 'neo-pill-active !text-amber-300 font-bold'
+                        ? 'neo-pill-active !text-red-700 dark:!text-red-400 font-bold'
+                        : 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -294,7 +294,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={settings.timeLimit === t}
                   className={`px-2 py-1 rounded-lg text-xs transition-all ${
                     settings.timeLimit === t
-                      ? 'neo-pill-active !text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -313,7 +313,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={settings.wordCount === w}
                   className={`px-2 py-1 rounded-lg text-xs transition-all ${
                     settings.wordCount === w
-                      ? 'neo-pill-active !text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -324,7 +324,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           )}
 
           {settings.shatterTargetMode === 'survival' && (
-            <div className="flex items-center gap-1.5 neo-inset px-2.5 py-1 rounded-xl shrink-0 text-xs text-red-300 font-semibold">
+            <div className="flex items-center gap-1.5 neo-inset px-2.5 py-1 rounded-xl shrink-0 text-xs text-red-700 dark:text-red-300 font-bold">
               <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse mr-0.5" />
               <span>5 Lives • Endless Waves</span>
             </div>
@@ -346,7 +346,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={sp.tooltip}
                   className={`px-1.5 sm:px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active !text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -359,7 +359,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           {/* Stream Density Flow */}
           <div className="hidden lg:flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
             <span className="text-[10px] text-[var(--text-dim)] uppercase px-1 font-bold flex items-center gap-0.5">
-              <Layers className="w-3 h-3 text-amber-400" />
+              <Layers className="w-3 h-3 text-amber-500" />
               <span>Flow:</span>
             </span>
             {shatterDensityOptions.map((den) => {
@@ -372,7 +372,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={den.tooltip}
                   className={`px-2 py-0.5 rounded-lg transition-all text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active !text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -393,7 +393,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   aria-pressed={active}
                   className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active !text-amber-300 font-bold'
+                      ? 'neo-pill-active !text-amber-700 dark:!text-amber-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
@@ -406,7 +406,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
           {/* VFX Toggle */}
           <div className="flex items-center gap-1 neo-inset p-1 rounded-xl shrink-0">
             <span className="text-[10px] text-[var(--text-dim)] uppercase px-1 font-bold flex items-center gap-0.5">
-              <Sparkles className="w-3 h-3 text-cyan-400" />
+              <Sparkles className="w-3 h-3 text-cyan-500" />
             </span>
             {fxOptions.map((fx) => {
               const active = (settings.shatterFxIntensity || 'full') === fx.id;
@@ -418,7 +418,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   title={`Visual impact effects: ${fx.label}`}
                   className={`px-2 py-0.5 rounded-lg transition-all whitespace-nowrap text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-tactical)] ${
                     active
-                      ? 'neo-pill-active !text-cyan-300 font-bold'
+                      ? 'neo-pill-active !text-cyan-700 dark:!text-cyan-300 font-bold'
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >

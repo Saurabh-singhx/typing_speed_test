@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { TestResult, Achievement } from '@/lib/types';
 import { UserStats, getRankTitle, getRankByLevel } from '@/lib/storage';
+import { CertificateMedal } from './CertificateMedal';
 
 interface TestResultsProps {
   result: TestResult;
@@ -39,6 +40,24 @@ export const TestResults: React.FC<TestResultsProps> = ({
 
   const isPersonalBest = result.wpm >= userStats.bestWpm && userStats.bestWpm > 0;
   const rank = getRankTitle(result.wpm);
+
+  const certTier: 'gold' | 'silver' | 'bronze' | 'locked' =
+    result.wpm >= 70 && result.accuracy >= 98
+      ? 'gold'
+      : result.wpm >= 50 && result.accuracy >= 96
+      ? 'silver'
+      : result.wpm >= 40 && result.accuracy >= 94
+      ? 'bronze'
+      : 'locked';
+
+  const certTitle =
+    certTier === 'gold'
+      ? 'Gold Certificate'
+      : certTier === 'silver'
+      ? 'Silver Certificate'
+      : certTier === 'bronze'
+      ? 'Bronze Certificate'
+      : rank.title;
 
   // Trigger celebration confetti for achievements, high WPM, or level promotions
   useEffect(() => {
@@ -675,8 +694,55 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
         </div>
       )}
 
-      {/* Main Tactical Stats Panel */}
-      <div className="neo-extruded rounded-3xl p-5 sm:p-8 relative overflow-hidden">
+      {/* Clarity 3 Metric Tiles Row */}
+      <div id="metric-tiles" className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        {/* Metric 1: Certificate */}
+        <div className="tw-card tw-card-flat p-4 sm:p-5 flex items-center gap-4">
+          <CertificateMedal tier={certTier} size={50} />
+          <div className="min-w-0">
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-main)] truncate">
+              {certTitle}
+            </h3>
+            <span className="text-[11px] font-bold text-[var(--text-faint)] uppercase tracking-wider">
+              Certificate
+            </span>
+          </div>
+        </div>
+
+        {/* Metric 2: Speed (CPM & WPM) */}
+        <div className="tw-card tw-card-flat p-4 sm:p-5 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-[var(--accent-tactical)] flex items-center justify-center shrink-0">
+            <Zap className="w-6 h-6" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-main)] truncate">
+              {result.wpm * 5} <span className="text-xs font-bold text-[var(--text-faint)]">CPM</span>{' '}
+              <span className="text-sm font-semibold text-[var(--text-dim)]">({result.wpm} WPM)</span>
+            </h3>
+            <span className="text-[11px] font-bold text-[var(--text-faint)] uppercase tracking-wider">
+              Speed
+            </span>
+          </div>
+        </div>
+
+        {/* Metric 3: Accuracy */}
+        <div className="tw-card tw-card-flat p-4 sm:p-5 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-[#16a34a] flex items-center justify-center shrink-0">
+            <Target className="w-6 h-6" />
+          </div>
+          <div className="min-w-0">
+            <h3 className="text-xl sm:text-2xl font-black text-[var(--text-main)] truncate">
+              {result.accuracy} %
+            </h3>
+            <span className="text-[11px] font-bold text-[var(--text-faint)] uppercase tracking-wider">
+              Accuracy
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Stats Scorecard Panel */}
+      <div className="tw-card rounded-3xl p-5 sm:p-8 relative overflow-hidden">
         
         {/* Scorecard Header Bar with Aligned Top-Right Telemetry */}
         <div className="flex flex-wrap items-center justify-between gap-2.5 pb-4 mb-5 border-b border-[var(--border-subtle)] text-xs">
@@ -889,50 +955,50 @@ Benchmark your typing speed at: https://typetrack.saurabhx.site`;
       </div>
 
       {/* Action Controls Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
         
-        {/* Next Mission / Restart CTA */}
+        {/* Next Test / Restart CTA */}
         <button
           onClick={onRestart}
-          className="neo-btn w-full sm:w-auto px-8 py-3.5 min-h-[48px] rounded-2xl text-base font-black font-mono text-white bg-gradient-to-r from-indigo-500 via-indigo-600 to-indigo-500 hover:from-indigo-400 hover:to-indigo-500 active:scale-95 flex items-center justify-center gap-3 shadow-[0_4px_24px_rgba(99,102,241,0.5),0_0_12px_rgba(99,102,241,0.3)] hover:shadow-[0_6px_28px_rgba(99,102,241,0.7)] transition-all cursor-pointer ring-1 ring-white/20"
+          className="tw-btn-success w-full sm:w-auto px-8 py-3.5 min-h-[48px] text-base font-extrabold"
         >
           <RotateCcw className="w-5 h-5 text-white shrink-0" />
-          <span className="text-white tracking-wider font-black">START AGAIN</span>
-          <span className="hidden sm:inline-flex items-center gap-1 text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-black/40 text-white/95 border border-white/25 shadow-inner">
-            <kbd className="bg-transparent border-0 text-white font-black shadow-none p-0">Enter</kbd> or <kbd className="bg-transparent border-0 text-white font-black shadow-none p-0">Tab</kbd>
+          <span>START AGAIN</span>
+          <span className="hidden sm:inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-lg bg-black/20 text-white/95">
+            Enter or Esc
           </span>
         </button>
 
         {/* Share & Download Buttons */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           
           <button
             onClick={handleCopyScorecard}
-            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono text-[var(--text-main)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            className="tw-btn-primary flex-1 sm:flex-initial px-5 py-3 min-h-[44px] text-xs font-bold"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copied ? 'COPIED!' : 'COPY CARD'}</span>
+            {copied ? <Check className="w-4 h-4 text-white" /> : <Copy className="w-4 h-4" />}
+            <span>{copied ? 'COPIED!' : 'COPY RESULTS'}</span>
           </button>
 
           <button
             onClick={handleDownloadScorecard}
             disabled={isExporting}
-            className="neo-btn flex-1 sm:flex-initial px-4 py-2.5 min-h-[44px] rounded-xl text-xs font-mono text-[var(--accent-target)] hover:bg-[var(--bg-panel)] flex items-center justify-center gap-1.5 transition-all cursor-pointer disabled:opacity-60"
+            className="tw-btn-flat flex-1 sm:flex-initial px-5 py-3 min-h-[44px] text-xs font-bold disabled:opacity-60"
           >
             {exported ? (
               <>
-                <Check className="w-3.5 h-3.5 text-[var(--accent-success)]" />
+                <Check className="w-4 h-4 text-[#16a34a]" />
                 <span>SAVED!</span>
               </>
             ) : isExporting ? (
               <>
-                <div className="w-3.5 h-3.5 rounded-full border-2 border-[var(--accent-target)] border-t-transparent animate-spin" />
+                <div className="w-4 h-4 rounded-full border-2 border-[var(--accent-target)] border-t-transparent animate-spin" />
                 <span>EXPORTING...</span>
               </>
             ) : (
               <>
-                <Download className="w-3.5 h-3.5" />
-                <span>EXPORT PNG</span>
+                <Download className="w-4 h-4" />
+                <span>EXPORT CARD</span>
               </>
             )}
           </button>

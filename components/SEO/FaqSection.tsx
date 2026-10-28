@@ -20,7 +20,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ lang = 'en' }) => {
   };
 
   return (
-    <section className="w-full max-w-5xl mx-auto my-12 font-mono" id="faq">
+    <section className="w-full max-w-5xl mx-auto my-12 font-sans" id="faq">
       
       {/* Header */}
       <div className="pb-3 border-b border-[var(--border-subtle)] mb-6">
@@ -44,7 +44,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ lang = 'en' }) => {
           return (
             <div
               key={idx}
-              className="rounded-lg bg-[var(--bg-panel)] border border-[var(--border-subtle)] overflow-hidden transition-all"
+              className="tw-card rounded-2xl overflow-hidden transition-all"
             >
               <button
                 onClick={() => toggleIndex(idx)}

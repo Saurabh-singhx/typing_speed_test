@@ -34,16 +34,16 @@ export const WpmRanksSection: React.FC<WpmRanksSectionProps> = ({ lang = 'en' })
         {content.ranks.map((tier, idx) => (
           <div
             key={idx}
-            className={`p-4 rounded-xl border ${tier.color} transition-all hover:border-[var(--accent-tactical)]/50`}
+            className="tw-card tw-card-hover p-4 sm:p-5 rounded-2xl"
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/40 border border-current">
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-[var(--bg-page)] border border-[var(--border-subtle)] text-[var(--text-dim)]">
                 {tier.tag}
               </span>
-              <span className="text-xs font-bold opacity-80">{tier.percentile}</span>
+              <span className="text-xs font-bold text-[var(--accent-tactical)]">{tier.percentile}</span>
             </div>
 
-            <div className="text-lg font-black tracking-wide text-white mb-0.5">
+            <div className="text-lg font-black tracking-wide text-[var(--text-main)] mb-0.5">
               {tier.tier}
             </div>
 

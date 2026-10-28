@@ -1,8 +1,41 @@
 @import "tailwindcss";
 
 :root,
+[data-theme="clarity"],
+[data-theme="typewizz"] {
+  /* Clarity Clean High-Contrast Design System */
+  --bg-page: #f8f9fa;
+  --bg-surface: #ffffff;
+  --bg-panel: #ffffff;
+  --bg-input: #f8f9fa;
+  
+  --border-subtle: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --border-active: #5911f0;
+  
+  --text-main: #0f172a; /* Slate 900 - 16.2:1 contrast */
+  --text-dim: #334155;  /* Slate 700 - 8.5:1 contrast */
+  --text-faint: #64748b; /* Slate 500 - 4.6:1 contrast (WCAG AA) */
+  
+  --accent-tactical: #5911f0; /* Crisp Vivid Purple */
+  --accent-tactical-rgb: 89, 17, 240;
+  --accent-target: #0284c7;
+  --accent-success: #16a34a; /* Crisp Emerald Green (high contrast) */
+  --accent-danger: #dc2626;
+  --accent-streak: #d97706;
+  
+  --keycap-bg: #ffffff;
+  --keycap-border: #e2e8f0;
+  --keycap-shadow: rgba(0, 0, 0, 0.05);
+
+  --neo-shadow-dark: #e2e8f0;
+  --neo-shadow-light: #ffffff;
+  --neo-shadow-inset-dark: #edf2f7;
+  --neo-shadow-inset-light: #ffffff;
+}
+
 [data-theme="neomorphism"] {
-  /* Neomorphism Soft UI Slate (Primary Default) */
+  /* Neomorphism Soft UI Slate */
   --bg-page: #191c24;
   --bg-surface: #1e222d;
   --bg-panel: #232836;
@@ -16,18 +49,17 @@
   --text-dim: #cbd5e1;
   --text-faint: #94a3b8;
   
-  --accent-tactical: #818cf8; /* High-contrast Electric Indigo (WCAG AA Compliant: 5.0+:1) */
+  --accent-tactical: #818cf8;
   --accent-tactical-rgb: 129, 140, 248;
-  --accent-target: #38bdf8; /* Cyan Glow */
-  --accent-success: #10b981; /* Mint Emerald */
-  --accent-danger: #fb7185; /* Neon Rose (WCAG AA Compliant) */
-  --accent-streak: #f59e0b; /* Amber Kinetic */
+  --accent-target: #38bdf8;
+  --accent-success: #10b981;
+  --accent-danger: #fb7185;
+  --accent-streak: #f59e0b;
   
   --keycap-bg: #232836;
   --keycap-border: rgba(255, 255, 255, 0.08);
   --keycap-shadow: rgba(0, 0, 0, 0.5);
 
-  /* Neomorphic Dual Shadow Variables */
   --neo-shadow-dark: #11141c;
   --neo-shadow-light: #2d3345;
   --neo-shadow-inset-dark: #12141a;
@@ -196,7 +228,7 @@ html, body {
 body {
   background-color: var(--bg-page);
   color: var(--text-main);
-  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-rubik), var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.25s ease, color 0.25s ease;
   -webkit-tap-highlight-color: transparent;
 }
@@ -240,6 +272,150 @@ a,
 input,
 select {
   touch-action: manipulation;
+}
+
+/* ========================================================
+   CLARITY DESIGN SYSTEM (Crisp 3D Buttons & Flat Cards)
+   ======================================================== */
+.tw-btn-success {
+  background-color: #16a34a;
+  color: #ffffff !important;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 4px 0 0 #15803d;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.tw-btn-success:hover {
+  background-color: #15803d;
+  box-shadow: 0 4px 0 0 #166534;
+  transform: translateY(-1px);
+}
+.tw-btn-success:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #166534;
+}
+
+.tw-btn-primary {
+  background-color: #5911f0;
+  color: #ffffff !important;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 4px 0 0 #430cb8;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.tw-btn-primary:hover {
+  background-color: #500eda;
+  box-shadow: 0 4px 0 0 #390a9b;
+  transform: translateY(-1px);
+}
+.tw-btn-primary:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 0 #390a9b;
+}
+
+.tw-btn-flat {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
+  border: 2px solid var(--border-subtle);
+  border-radius: 12px;
+  font-weight: 700;
+  transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.tw-btn-flat:hover {
+  background-color: var(--bg-page);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+.tw-btn-flat:active {
+  transform: translateY(1px);
+}
+
+.tw-card {
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-subtle);
+  border-radius: 16px;
+  box-shadow: 0 2px 0 var(--border-subtle);
+}
+
+.tw-card-flat {
+  background-color: var(--bg-surface);
+  border: 2px solid var(--border-subtle);
+  border-radius: 16px;
+}
+
+.tw-card-hover {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.tw-card-hover:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+.tw-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
+.tw-sidebar-item:hover {
+  background-color: var(--bg-page);
+  color: var(--text-main);
+}
+.tw-sidebar-item-active {
+  background-color: #5911f0 !important;
+  color: #ffffff !important;
+  font-weight: 800;
+  box-shadow: 0 4px 0 0 #430cb8;
+  border-color: transparent;
+}
+
+.tw-jumbotron {
+  padding: 36px 16px 24px;
+  text-align: center;
+}
+.tw-jumbotron h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+@media (min-width: 640px) {
+  .tw-jumbotron h1 {
+    font-size: 2.75rem;
+  }
+}
+.tw-jumbotron p {
+  font-size: 1.125rem;
+  color: var(--text-dim);
+  margin: 0;
 }
 
 /* Neomorphism & Tactical Keycap Button Effect */

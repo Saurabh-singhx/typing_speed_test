@@ -25,7 +25,7 @@ export type ShatterSoundProfile = 'crystal' | 'stone' | 'laser' | 'glass';
 export type ShatterTargetMode = 'time' | 'words' | 'survival';
 export type ShatterStreamDensity = 'relaxed' | 'normal' | 'rush';
 
-export type GameTheme = 'neomorphism' | 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha';
+export type GameTheme = 'clarity' | 'neomorphism' | 'tactical' | 'obsidian' | 'cyberdeck' | 'arctic' | 'mecha' | 'typewizz';
 
 export interface TestSettings {
   language: LanguageCode;
