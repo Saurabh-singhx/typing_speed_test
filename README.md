@@ -1,6 +1,6 @@
 # TypeTrack // Tactical Typing Speed Test & APM Benchmark
 
-> **Pro-Grade Tactical Typing Lab** — Zero Distracting Neon Glow, 100% Mechanical Precision.
+> **Pro-Grade Tactical Typing Lab** — 100% Mechanical Precision.
 
 TypeTrack is a high-performance typing speed test and keyboard benchmark engineered for competitive esports gamers, software developers, and mechanical keyboard enthusiasts. It combines the distraction-free responsiveness of Monkeytype with gamified features inspired by TypeRacer and Nitro Type, wrapped in a tactical military/mech HUD aesthetic.
 
