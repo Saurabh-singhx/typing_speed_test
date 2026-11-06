@@ -1,0 +1,43 @@
+# TypeTrack // Tactical Typing Speed Test & APM Benchmark
+
+> TypeTrack is a high-performance tactical typing speed test and keyboard benchmark featuring real-time WPM/APM telemetry, synthesized mechanical switch acoustics, pacing ghost racers, kinetic shatter stream destruction mode, and multi-language typing support.
+
+TypeTrack is engineered for typists, software engineers, esports competitors, and mechanical keyboard enthusiasts who demand millisecond precision, zero visual clutter, and engaging training modes. The platform calculates normalized Words Per Minute (WPM) based on the standardized 5-keystroke formula, monitors Actions Per Minute (APM), provides live accuracy gauges, and features an integrated Pacing Ghost drone to train cadence and rhythm.
+
+All core typing tests are client-side accelerated with zero input latency, fully responsive across desktop and mobile devices, and support tactile switch audio simulation (Linear Thock, Clicky Blue, Topre) generated in real-time via the Web Audio API.
+
+## Core Features & Game Modes
+
+- [TypeTrack Home Benchmark](https://typetrack.saurabhx.site/): Zero-latency tactical typing test with configurable test durations (15s, 30s, 60s, 120s), word sets (10, 25, 50, 100), punctuation, and numbers.
+- [Shatter Stream Kinetic Mode](https://typetrack.saurabhx.site/): Kinetic horizontal projectile typing arena where keystrokes shatter words into canvas polygon shards with procedural impact acoustics and dynamic APM velocity scaling.
+- [Boss Raid Defense Mode](https://typetrack.saurabhx.site/): Combat typing survival mode requiring typists to sustain high-accuracy burst typing to deplete enemy shields and defeat bosses.
+- [Pacing Ghost Drone Racer](https://typetrack.saurabhx.site/): Visual pacing drone that races alongside your cursor in real-time, matching target speeds (60, 80, 100, 120 WPM) or your Personal Best.
+- [WPM Savings & ROI Calculator](https://typetrack.saurabhx.site/#calculator): Interactive productivity calculator determining yearly working hours saved by increasing typing speed from baseline to target speeds.
+- [Typing Operational Codex & Guide](https://typetrack.saurabhx.site/#typing-guide): Tactical touch typing training protocol, home-row anchor mechanics, switch ergonomics, and error recovery strategies.
+- [Frequently Asked Questions](https://typetrack.saurabhx.site/#faq): Detailed answers covering WPM calculation formulas, mechanical switches, tier ranks, and competitive typing benchmarks.
+
+## Localized Typing Tests
+
+TypeTrack provides localized dictionary pools and keyboard layouts across 8 global languages:
+
+- [English Typing Test](https://typetrack.saurabhx.site/): Standard English QWERTY vocabulary and benchmark tests.
+- [Spanish Typing Test](https://typetrack.saurabhx.site/es): Prueba de mecanografía táctica y test de velocidad de escritura online (QWERTY ES).
+- [German Typing Test](https://typetrack.saurabhx.site/de): Professioneller 10-Finger-Tastatur-Tipptest und Anschläge-pro-Minute-Messung (QWERTZ).
+- [French Typing Test](https://typetrack.saurabhx.site/fr): Test de dactylographie tactique et test de vitesse de frappe MPM / WPM (AZERTY).
+- [Portuguese Typing Test](https://typetrack.saurabhx.site/pt): Teste tático de velocidade de digitação e simulador de teclado online (ABNT2).
+- [Russian Typing Test](https://typetrack.saurabhx.site/ru): Тактический тест скорости слепой печати и тренажер клавиатуры онлайн (ЙЦУКЕН).
+- [Hindi Typing Test](https://typetrack.saurabhx.site/hi): हिंदी टाइपिंग स्पीड टेस्ट, मंगल फॉन्ट, इनस्क्रिप्ट और रेमिंगटन लेआउट अभ्यास।
+- [Italian Typing Test](https://typetrack.saurabhx.site/it): Test di battitura tattico e calcolo parole al minuto (QWERTY IT).
+
+## Technical Specifications & Audio Engine
+
+- **Acoustic Synthesis**: Procedural Web Audio API sound synthesis reproducing authentic mechanical keypresses without heavy external audio files. Supported profiles include Linear Thock (smooth 45g actuation), Clicky Blue (crisp 55g snap), Topre (damped electro-capacitive thock), and Arcade retro blips.
+- **WPM Formula**: Standard WPM = (Total Correct Keystrokes / 5) / (Time in Minutes). Net WPM penalizes uncorrected errors.
+- **Accuracy Metric**: Accuracy (%) = (Correct Keystrokes / Total Keystrokes Pressed) * 100.
+- **Rank Tiers**: Cadet Trainee (<40 WPM), Field Scout (40-59 WPM), Tactical Specialist (60-79 WPM), Cyber Vanguard (80-99 WPM), Esports Operative (100-119 WPM), Apex Grandmaster (120+ WPM).
+
+## Machine-Readable Resources
+
+- [Full LLM Context (llms-full.txt)](https://typetrack.saurabhx.site/llms-full.txt): Comprehensive uncompressed textual specification, complete training guide, and FAQ for LLM context injection.
+- [XML Sitemap](https://typetrack.saurabhx.site/sitemap.xml): Complete index of canonical and localized language routes with hreflang annotations.
+- [Robots Policy](https://typetrack.saurabhx.site/robots.txt): Machine crawler access rules and sitemap reference.

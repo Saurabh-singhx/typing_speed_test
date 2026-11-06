@@ -1,0 +1,124 @@
+# TypeTrack // Complete Tactical Typing Specification & Knowledge Base
+
+> TypeTrack is a high-performance tactical typing speed test and keyboard benchmark featuring real-time WPM/APM telemetry, synthesized mechanical switch acoustics, pacing ghost racers, kinetic shatter stream destruction mode, and multi-language typing support.
+
+## 1. Overview & Architecture
+
+TypeTrack (https://typetrack.saurabhx.site) is engineered for typists, software engineers, esports competitors, and mechanical keyboard enthusiasts who demand millisecond precision, zero visual clutter, and engaging training modes. The web application runs entirely client-side using React and Next.js, with zero input latency, fully responsive rendering across desktop and mobile devices, and local telemetry tracking.
+
+Key architectural features:
+- Standardized WPM and raw WPM calculations using 5-keystroke normalization.
+- Live caret tracking with multiple visual styles (line, block, underline, box).
+- Procedural audio synthesis using the Web Audio API for zero-latency mechanical keyboard feedback.
+- Kinetic canvas rendering for particle/polygon effects in Shatter Stream mode.
+- Local storage persistence for user benchmarks, achievements, streaks, and historical telemetry without requiring mandatory account creation.
+
+## 2. Core Game Modes
+
+### Standard Benchmark Mode
+The flagship typing benchmark offering customizable parameters:
+- Duration: 15s, 30s, 60s, 120s time limits.
+- Word Sets: 10, 25, 50, 100 word quotas.
+- Modifiers: Numbers toggle, Punctuation toggle, Sudden Death hardcore mode (1 mistake causes instant failure).
+
+### Pacing Ghost Racer
+An esports HUD tracker that visualizes a virtual pacing drone traveling alongside the cursor in real-time. Typists can pace against:
+- Target WPM Benchmarks: 60 WPM, 80 WPM, 100 WPM, 120 WPM.
+- Personal Best (PB): Visualizes your previous fastest run.
+
+### Shatter Stream Kinetic Mode
+A dynamic arcade typing arena where words move horizontally across the screen at configurable speeds:
+- Keystroke Impact: Every correct keystroke triggers procedural acoustic crack synthesis and shatters letters into 2D polygon shards.
+- APM Scaling: The stream accelerates proportionally with your typing speed.
+- Sound Profiles: Crystal, Stone, Laser, and Glass procedural acoustic feedback.
+
+### Boss Raid Defense Mode
+Combat typing survival game where typists defend a tactical station against boss enemies:
+- Burst typing damage depletes enemy shields and health pools before attack timers expire.
+- Accuracy multipliers reward clean, consistent keystrokes with critical hits.
+
+## 3. Keyboard Switch Acoustics & Synthesis
+
+TypeTrack utilizes real-time procedural frequency modulation and noise convolution via the Web Audio API, avoiding large audio asset downloads:
+- Linear (Red / Black / Yellow): Smooth, unbroken travel with zero tactile bump. Produces a deep acoustic "thock" / low-frequency clack on bottom-out. Actuation force: 45g - 60g, 2.0mm pre-travel.
+- Tactile (Brown / Clear / Panda): Subtle mechanical bump at the actuation point providing physical confirmation without loud clatter. Actuation force: 50g - 67g, 2.0mm pre-travel.
+- Clicky (Blue / Green / White): Crisp tactile resistance followed by a distinctive auditory mechanical click snap. Actuation force: 55g - 65g, 2.2mm pre-travel.
+- Electro-Capacitive (Topre): Cushioned rubber dome over a capacitive conical spring, delivering smooth tactile descent and a pillowy, damped "thock-thock" pop. Actuation force: 35g - 55g, 4.0mm total travel.
+
+## 4. Normalized WPM & Accuracy Formulas
+
+- Standard WPM: WPM = (Total Correct Keystrokes / 5) / (Time in Minutes)
+- Raw WPM: Raw WPM = (Total Keystrokes Pressed / 5) / (Time in Minutes)
+- Net WPM: Net WPM = WPM - (Uncorrected Errors / Time in Minutes)
+- Accuracy: Accuracy (%) = (Correct Keystrokes / Total Keystrokes Pressed) * 100
+- Actions Per Minute (APM): APM = Total Keystrokes / Time in Minutes (equivalent to Raw WPM * 5)
+
+## 5. WPM Rank Tiers & Global Percentiles
+
+1. Cadet Trainee (< 40 WPM)
+   - Percentile: Bottom 35% of computer users.
+   - Profile: Hunt-and-peck typists relying primarily on visual confirmation of keys. Recommended stage for home-row touch typing drills.
+2. Field Scout (40 - 59 WPM)
+   - Percentile: Average (Top 65%).
+   - Profile: Functional typist with moderate muscle memory and occasional backspacing. Typical office typing baseline.
+3. Tactical Specialist (60 - 79 WPM)
+   - Percentile: Proficient (Top 25%).
+   - Profile: Fluid touch typist who does not look at the keyboard. Capable of sustained output during coding and professional writing.
+4. Cyber Vanguard (80 - 99 WPM)
+   - Percentile: Advanced (Top 5%).
+   - Profile: High velocity, excellent finger independence, capable of instant keystroke recovery and n-gram burst typing.
+5. Esports Operative (100 - 119 WPM)
+   - Percentile: Elite (Top 1%).
+   - Profile: Century Club competitive typist. Deep subconscious muscle memory with minimal cognitive latency between thought and actuation.
+6. Apex Grandmaster (120+ WPM)
+   - Percentile: Legendary (< 0.1%).
+   - Profile: The pinnacle of typing proficiency. Capable of matching or exceeding real-time speech and dictation speeds.
+
+## 6. Tactical Training Protocol
+
+- Protocol 01: Home Row Anchor Discipline
+  Place index fingers on the tactile homing nubs of F and J keys. Anchor left hand on A-S-D-F and right hand on J-K-L-;. Maintain relaxed wrists slightly elevated or resting on an ergonomic pad.
+- Protocol 02: 98%+ Accuracy Threshold
+  Speed naturally emerges from effortless accuracy. Recovering from an uncorrected typo requires 5-10 corrective keystrokes, drastically collapsing net WPM. Slow down until accuracy consistently exceeds 98%.
+- Protocol 03: Pacing Ghost Cadence Training
+  Set the Pacing Ghost racer 10 WPM above your current comfortable average. Track the ghost's rhythmic motion to develop steady burst cadences rather than erratic acceleration.
+- Protocol 04: Sudden Death Precision Conditioning
+  Engage Sudden Death mode (1 typo = instant restart) once per practice session. This trains mental composure and eliminates compulsive backspace reliance.
+
+## 7. Productivity & Time Savings Matrix
+
+Typing speed increases directly translate into recovered work hours:
+- Moving from 40 WPM to 60 WPM (2 hours of daily typing): Saves ~40 minutes per day, recovering ~173 working hours (~21.6 full work days) annually.
+- Moving from 40 WPM to 80 WPM: Halves active typing time, recovering ~260 hours (~32.5 work days) annually.
+- Moving from 60 WPM to 100 WPM: Recovers ~104 hours (~13 work days) annually.
+
+## 8. Supported Languages & Layouts
+
+- English (en): https://typetrack.saurabhx.site/ (QWERTY layout)
+- Spanish (es): https://typetrack.saurabhx.site/es (QWERTY ES layout)
+- German (de): https://typetrack.saurabhx.site/de (QWERTZ layout)
+- French (fr): https://typetrack.saurabhx.site/fr (AZERTY layout)
+- Portuguese (pt): https://typetrack.saurabhx.site/pt (ABNT2 / QWERTY layout)
+- Russian (ru): https://typetrack.saurabhx.site/ru (ЙЦУКЕН layout)
+- Hindi (hi): https://typetrack.saurabhx.site/hi (InScript / Remington / Mangal layouts)
+- Italian (it): https://typetrack.saurabhx.site/it (QWERTY IT layout)
+
+## 9. Frequently Asked Questions
+
+Q: What is an average typing speed, and what is considered fast?
+A: The worldwide average typing speed is approximately 40 words per minute (WPM) with an accuracy rate of around 92%. Speeds between 60 to 75 WPM are considered above average and typical for professional typists, programmers, and writers. Speeds above 90 to 100 WPM represent the top 1% of computer keyboard users.
+
+Q: How is Words Per Minute (WPM) officially calculated?
+A: Standardized WPM uses the industry definition of a "word" as exactly 5 keystrokes (including letters, spaces, and punctuation). Formula: WPM = (Total Correct Keystrokes / 5) / (Time in Minutes).
+
+Q: How does TypeTrack compare to Monkeytype, 10FastFingers, and TypeRacer?
+A: TypeTrack combines the zero-latency, distraction-free design of Monkeytype with competitive racing dynamics like TypeRacer, while adding a tactical HUD aesthetic, procedural Web Audio switch acoustics, real-time Ghost Pacing, and interactive combat modes (Shatter Stream & Boss Raid).
+
+Q: Do mechanical keyboards actually improve your typing speed?
+A: Yes. Mechanical switches feature distinct tactile feedback and consistent actuation points (typically 1.5mm to 2.0mm) before bottoming out. This tactile confirmation accelerates muscle memory development, reduces finger fatigue, and allows lighter keypress registration.
+
+Q: What are the keyboard shortcuts on TypeTrack?
+A:
+- Tab + Enter: Quick test restart.
+- Esc: Pause test or cancel current run.
+- Quick switch sound toggle: Available directly from the settings bar.

@@ -49,6 +49,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         'it': `${baseUrl}/it`,
         'x-default': baseUrl,
       },
+      types: {
+        'text/markdown': `${baseUrl}/llms.txt`,
+      },
     },
     openGraph: {
       type: 'website',
