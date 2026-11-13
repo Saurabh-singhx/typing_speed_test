@@ -54,7 +54,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
     { id: 'boss', label: 'Boss Raid', icon: <Swords className="w-3.5 h-3.5 text-[var(--accent-danger)]" />, badge: 'COMBAT' },
   ];
 
-  const timeOptions: TimeOption[] = [15, 30, 60, 120];
+  const timeOptions: TimeOption[] = [15, 30, 60, 120, 180, 300];
   const wordOptions: WordOption[] = [10, 25, 50, 100];
   const shatterSpeedOptions: { id: ShatterSpeed; label: string; tooltip: string }[] = [
     { id: 'chill', label: '0.5x', tooltip: 'Warmup & Flow' },
@@ -231,7 +231,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                   : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
               }`}
             >
-              {t}s
+              {t >= 180 ? `${t / 60}m` : `${t}s`}
             </button>
           ))}
         </div>
@@ -298,7 +298,7 @@ export const TestSettingsBar: React.FC<TestSettingsBarProps> = ({
                       : 'text-[var(--text-dim)] hover:text-[var(--text-main)] hover:bg-[var(--bg-panel)]/50'
                   }`}
                 >
-                  {t}s
+                  {t >= 180 ? `${t / 60}m` : `${t}s`}
                 </button>
               ))}
             </div>

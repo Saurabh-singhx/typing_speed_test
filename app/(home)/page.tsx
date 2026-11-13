@@ -11,7 +11,7 @@ import { SITE_CONFIG } from '@/lib/seo-data';
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site';
 
 export const metadata: Metadata = {
-  title: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
+  title: 'Typing Test - Free Typing Speed Test (WPM Test)',
   description: SITE_CONFIG.description,
   keywords: SITE_CONFIG.keywords,
   alternates: {
@@ -36,21 +36,21 @@ export const metadata: Metadata = {
     locale: 'en_US',
     alternateLocale: ['es_ES', 'de_DE', 'fr_FR', 'pt_BR', 'ru_RU', 'hi_IN', 'it_IT'],
     url: baseUrl,
-    title: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
+    title: 'Typing Test - Free Typing Speed Test (WPM Test) | TypeTrack',
     description: SITE_CONFIG.description,
-    siteName: 'TypeTrack Tactical Typing',
+    siteName: 'TypeTrack Free Typing Test',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'TypeTrack Tactical Typing Speed Test',
+        alt: 'TypeTrack Free Typing Speed Test',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'TypeTrack // Tactical Typing Speed Test',
+    title: 'Typing Test - Free Typing Speed Test (WPM Test)',
     description: SITE_CONFIG.description,
     creator: SITE_CONFIG.creator,
     images: ['/og-image.png'],

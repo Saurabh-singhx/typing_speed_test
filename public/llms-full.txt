@@ -37,6 +37,16 @@ Combat typing survival game where typists defend a tactical station against boss
 - Burst typing damage depletes enemy shields and health pools before attack timers expire.
 - Accuracy multipliers reward clean, consistent keystrokes with critical hits.
 
+## 2.5. Dedicated Test Modes & URLs
+
+- 1-Minute Typing Test: https://typetrack.saurabhx.site/1-minute-typing-test (Universal 60-second WPM and accuracy benchmark)
+- 3-Minute Typing Test: https://typetrack.saurabhx.site/3-minute-typing-test (180-second stamina and consistency test)
+- 5-Minute Typing Test: https://typetrack.saurabhx.site/5-minute-typing-test (Official job and civil service assessment test)
+- Typing Test with Certificate: https://typetrack.saurabhx.site/typing-test-with-certificate (Verified Bronze, Silver, Gold, Platinum certifications)
+- WPM Test & Calculator: https://typetrack.saurabhx.site/wpm-test (Words per minute and CPM conversion formula)
+- Touch Typing Practice: https://typetrack.saurabhx.site/typing-practice (10-finger home-row ASDF JKL; training)
+- Arcade Typing Games: https://typetrack.saurabhx.site/typing-games (Kinetic Shatter Stream and Boss Raid survival)
+
 ## 3. Keyboard Switch Acoustics & Synthesis
 
 TypeTrack utilizes real-time procedural frequency modulation and noise convolution via the Web Audio API, avoiding large audio asset downloads:

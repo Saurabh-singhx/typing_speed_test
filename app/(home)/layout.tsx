@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: 'TypeTrack // Tactical Typing Speed Test & APM Benchmark',
+    default: 'Typing Test - Free Typing Speed Test (WPM Test) | TypeTrack',
     template: '%s | TypeTrack',
   },
   description: SITE_CONFIG.description,

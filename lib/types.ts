@@ -14,7 +14,7 @@ export interface LanguageInfo {
 }
 
 export type TestMode = 'time' | 'words' | 'quote' | 'boss' | 'shatter';
-export type TimeOption = 15 | 30 | 60 | 120;
+export type TimeOption = 15 | 30 | 60 | 120 | 180 | 300;
 export type WordOption = 10 | 25 | 50 | 100;
 export type CaretStyle = 'line' | 'block' | 'underline' | 'box';
 export type SoundType = 'crescendo' | 'thock' | 'clicky' | 'topre' | 'arcade' | 'off';

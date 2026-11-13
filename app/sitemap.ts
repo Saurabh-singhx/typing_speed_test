@@ -27,6 +27,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   };
 
+  // High-intent search landing pages
+  const landingPages: { path: string; priority: number }[] = [
+    { path: '/1-minute-typing-test', priority: 0.95 },
+    { path: '/typing-test-with-certificate', priority: 0.95 },
+    { path: '/wpm-test', priority: 0.9 },
+    { path: '/3-minute-typing-test', priority: 0.9 },
+    { path: '/5-minute-typing-test', priority: 0.9 },
+    { path: '/typing-practice', priority: 0.9 },
+    { path: '/typing-games', priority: 0.9 },
+  ];
+
+  const landingEntries: MetadataRoute.Sitemap = landingPages.map((lp) => ({
+    url: `${baseUrl}${lp.path}`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: lp.priority,
+  }));
+
   // Dedicated entries for each localized language route
   const localizedEntries: MetadataRoute.Sitemap = SUPPORTED_LANGUAGES.filter(
     (lang) => lang.code !== 'en'
@@ -34,11 +52,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${baseUrl}/${lang.code}`,
     lastModified: currentDate,
     changeFrequency: 'daily',
-    priority: 0.9,
+    priority: 0.85,
     alternates: {
       languages: hreflangMap,
     },
   }));
 
-  return [rootEntry, ...localizedEntries];
+  return [rootEntry, ...landingEntries, ...localizedEntries];
 }

@@ -1,31 +1,47 @@
 export const SITE_CONFIG = {
-  name: 'TypeTrack // Tactical Typing Speed Test',
+  name: 'Typing Test // Free Typing Speed Test & WPM Benchmark',
   shortName: 'TypeTrack',
-  description: 'Pro-grade tactical typing speed test with authentic mechanical switch acoustics, zero-latency caret telemetry, kinetic shatter stream destruction mode, pacing ghost racer, and combat boss raid mode.',
+  description: 'Test your typing speed with our free online typing test. Measure Words Per Minute (WPM) and CPM, take 1-minute, 3-minute, or 5-minute tests, earn verifiable certificates, and practice touch typing with authentic mechanical switch acoustics.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://typetrack.saurabhx.site',
   ogImage: '/og-image.png',
   creator: '@saurabh_singh',
   gaId: process.env.NEXT_PUBLIC_GA_ID || 'G-4YJX979HKX',
   keywords: [
-    'typetrack',
+    'typing test',
     'typing speed test',
-    'tactical typing test',
     'wpm test',
     'words per minute test',
+    'free typing test',
+    '1 minute typing test',
+    '3 minute typing test',
+    '5 minute typing test',
+    'typing test with certificate',
+    'free typing certificate',
     'keyboard speed test',
-    'mechanical keyboard typing test',
-    'shatter stream typing',
-    'kinetic typing speed test',
-    'crack sound typing test',
-    'satisfying typing test',
-    'breaking text typing test',
-    'monkeytype alternative',
+    'keyboard test',
+    'touch typing test',
     'touch typing practice',
-    'gaming typing test',
-    'typeracer alternative',
+    'cpm test',
+    'characters per minute test',
+    'typing practice',
+    'typing practice online',
+    'typing games',
+    'test typing speed',
+    'check typing speed',
+    'fast typing test',
+    'typing speed calculator',
     'wpm calculator',
-    'competitive typing game',
-    'mechanical switch sounds typing'
+    'words per minute calculator',
+    'typing test for beginners',
+    'typing test for jobs',
+    'data entry typing test',
+    'monkeytype alternative',
+    'typeracer alternative',
+    '10fastfingers alternative',
+    'mechanical keyboard typing test',
+    'tactical typing test',
+    'shatter stream typing',
+    'kinetic typing speed test'
   ]
 };
 
@@ -36,7 +52,23 @@ export const FAQ_ITEMS = [
   },
   {
     question: "How is Words Per Minute (WPM) officially calculated?",
-    answer: "Standardized WPM is calculated using the standard definition of a 'word' as exactly 5 keystrokes (including letters, spaces, and punctuation). The formula is: WPM = (Total Correct Keystrokes / 5) / (Time in Minutes). 'Raw WPM' measures all keystrokes typed regardless of mistakes, while 'Net WPM' penalizes uncorrected errors."
+    answer: "Standardized WPM is calculated using the international definition of a 'word' as exactly 5 keystrokes (including letters, spaces, and punctuation). The formula is: WPM = (Total Correct Keystrokes / 5) / (Time in Minutes). 'Raw WPM' measures all keystrokes typed regardless of mistakes, while 'Net WPM' penalizes uncorrected errors."
+  },
+  {
+    question: "Can I get a free typing speed certificate for my resume or job application?",
+    answer: "Yes! TypeTrack awards free instant typing certificates across Bronze (40+ WPM / 94%+ accuracy), Silver (50+ WPM / 96%+ accuracy), Gold (70+ WPM / 98%+ accuracy), and Platinum (100+ WPM / 99%+ accuracy) tiers. Your certificate validates your WPM, CPM, and accuracy percentage for job applications, resumes, LinkedIn, and civil service prerequisites."
+  },
+  {
+    question: "What is the difference between WPM and CPM (Characters Per Minute)?",
+    answer: "WPM measures Words Per Minute, while CPM measures Characters Per Minute. Because standard typing assessments treat 1 word as 5 characters (including spaces), WPM is simply CPM divided by 5 (CPM / 5 = WPM). For instance, typing 300 CPM equals 60 WPM, and 500 CPM equals 100 WPM."
+  },
+  {
+    question: "What is a 1-minute typing test and why is 60 seconds the standard?",
+    answer: "A 1-minute typing test (60 seconds) is the most popular duration for measuring rapid burst typing velocity and reflex speed. It provides an immediate, reliable assessment of keyboard cadence and accuracy without inducing physical fatigue."
+  },
+  {
+    question: "What typing speed do employers require for data entry and office jobs?",
+    answer: "Most administrative, customer support, and general office roles require 45 to 60 WPM with at least 95% accuracy. High-volume data entry, transcription, and legal secretary positions typically demand 65 to 85+ WPM with 98%+ accuracy."
   },
   {
     question: "How does TypeTrack compare to Monkeytype, 10FastFingers, and TypeRacer?",

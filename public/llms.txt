@@ -6,11 +6,18 @@ TypeTrack is engineered for typists, software engineers, esports competitors, an
 
 All core typing tests are client-side accelerated with zero input latency, fully responsive across desktop and mobile devices, and support tactile switch audio simulation (Linear Thock, Clicky Blue, Topre) generated in real-time via the Web Audio API.
 
-## Core Features & Game Modes
+## Core Features & Dedicated Testing Modes
 
-- [TypeTrack Home Benchmark](https://typetrack.saurabhx.site/): Zero-latency tactical typing test with configurable test durations (15s, 30s, 60s, 120s), word sets (10, 25, 50, 100), punctuation, and numbers.
-- [Shatter Stream Kinetic Mode](https://typetrack.saurabhx.site/): Kinetic horizontal projectile typing arena where keystrokes shatter words into canvas polygon shards with procedural impact acoustics and dynamic APM velocity scaling.
-- [Boss Raid Defense Mode](https://typetrack.saurabhx.site/): Combat typing survival mode requiring typists to sustain high-accuracy burst typing to deplete enemy shields and defeat bosses.
+- [TypeTrack Home Benchmark](https://typetrack.saurabhx.site/): Zero-latency tactical typing test with configurable test durations (15s, 30s, 60s, 120s, 180s, 300s), word sets (10, 25, 50, 100), punctuation, and numbers.
+- [1 Minute Typing Test](https://typetrack.saurabhx.site/1-minute-typing-test): Standard 60-second typing speed test for quick-twitch WPM, CPM, and accuracy benchmarking.
+- [3 Minute Typing Test](https://typetrack.saurabhx.site/3-minute-typing-test): 180-second stamina test to evaluate sustained typing cadence and consistency without fatigue.
+- [5 Minute Typing Test](https://typetrack.saurabhx.site/5-minute-typing-test): Official assessment duration used for civil service examinations, court reporting, and corporate data entry hiring.
+- [Typing Test with Certificate](https://typetrack.saurabhx.site/typing-test-with-certificate): Free official typing speed certificates across Bronze (40+ WPM), Silver (50+ WPM), Gold (70+ WPM), and Platinum (100+ WPM) tiers for CVs and job applications.
+- [WPM Test & CPM Calculator](https://typetrack.saurabhx.site/wpm-test): Words Per Minute telemetry calculator breaking down Gross WPM, Net WPM, and CPM conversion.
+- [Touch Typing Practice](https://typetrack.saurabhx.site/typing-practice): 10-finger home row training academy (ASDF JKL;) building subconscious muscle memory.
+- [Arcade Typing Games](https://typetrack.saurabhx.site/typing-games): Play kinetic Shatter Stream particle arena and combat Boss Raid mode to train Actions Per Minute (APM).
+- [Shatter Stream Kinetic Mode](https://typetrack.saurabhx.site/typing-games): Kinetic horizontal projectile typing arena where keystrokes shatter words into canvas polygon shards with procedural impact acoustics and dynamic APM velocity scaling.
+- [Boss Raid Defense Mode](https://typetrack.saurabhx.site/typing-games): Combat typing survival mode requiring typists to sustain high-accuracy burst typing to deplete enemy shields and defeat bosses.
 - [Pacing Ghost Drone Racer](https://typetrack.saurabhx.site/): Visual pacing drone that races alongside your cursor in real-time, matching target speeds (60, 80, 100, 120 WPM) or your Personal Best.
 - [WPM Savings & ROI Calculator](https://typetrack.saurabhx.site/#calculator): Interactive productivity calculator determining yearly working hours saved by increasing typing speed from baseline to target speeds.
 - [Typing Operational Codex & Guide](https://typetrack.saurabhx.site/#typing-guide): Tactical touch typing training protocol, home-row anchor mechanics, switch ergonomics, and error recovery strategies.

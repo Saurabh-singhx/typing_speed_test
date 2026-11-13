@@ -105,6 +105,64 @@ export const Footer: React.FC = () => {
 
         </div>
 
+        {/* Featured Typing Tests & Benchmarks (High-Intent SEO Links) */}
+        <div className="pt-6 border-t border-[var(--border-subtle)] space-y-2.5">
+          <div className="text-[10px] uppercase font-bold text-[var(--accent-tactical)] tracking-wider">
+            Featured Speed Tests & Certification Modes
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 text-xs">
+            <Link 
+              href="/1-minute-typing-test" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">1 Minute Test</span>
+              <span className="text-[10px] text-[var(--text-faint)]">60s WPM check</span>
+            </Link>
+            <Link 
+              href="/3-minute-typing-test" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">3 Minute Test</span>
+              <span className="text-[10px] text-[var(--text-faint)]">Stamina & pacing</span>
+            </Link>
+            <Link 
+              href="/5-minute-typing-test" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">5 Minute Test</span>
+              <span className="text-[10px] text-[var(--text-faint)]">Job & exam assessment</span>
+            </Link>
+            <Link 
+              href="/typing-test-with-certificate" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">Free Certificate</span>
+              <span className="text-[10px] text-[var(--text-faint)]">Verified WPM badges</span>
+            </Link>
+            <Link 
+              href="/wpm-test" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">WPM Test</span>
+              <span className="text-[10px] text-[var(--text-faint)]">Words per minute formula</span>
+            </Link>
+            <Link 
+              href="/typing-practice" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">Typing Practice</span>
+              <span className="text-[10px] text-[var(--text-faint)]">10-finger touch training</span>
+            </Link>
+            <Link 
+              href="/typing-games" 
+              className="p-2 rounded-lg bg-[var(--bg-panel)]/50 hover:bg-[var(--bg-panel)] text-[var(--text-dim)] hover:text-[var(--accent-tactical)] transition-colors border border-[var(--border-subtle)] flex flex-col gap-0.5"
+            >
+              <span className="font-bold text-[var(--text-main)]">Typing Games</span>
+              <span className="text-[10px] text-[var(--text-faint)]">Kinetic Shatter & Boss</span>
+            </Link>
+          </div>
+        </div>
+
         {/* International Language Editions (SEO Crawlability & Hreflang) */}
         <div className="pt-6 border-t border-[var(--border-subtle)] space-y-2.5">
           <div className="text-[10px] uppercase font-bold text-[var(--accent-tactical)] tracking-wider">

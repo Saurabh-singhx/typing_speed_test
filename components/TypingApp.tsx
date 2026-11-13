@@ -93,7 +93,10 @@ import {
   GameTheme, 
   SoundType, 
   Achievement,
-  LanguageCode 
+  LanguageCode,
+  TestMode,
+  TimeOption,
+  WordOption 
 } from '@/lib/types';
 import { 
   DEFAULT_SETTINGS, 
@@ -110,14 +113,33 @@ import { soundFx } from '@/lib/audio';
 
 interface TypingAppProps {
   initialLanguage?: LanguageCode;
+  initialMode?: TestMode;
+  initialTimeLimit?: TimeOption;
+  initialWordCount?: WordOption;
+  initialTab?: 'test' | 'results' | 'certificates';
+  pageTitle?: string;
+  pageSubtitle?: string;
   children?: React.ReactNode;
   footer?: React.ReactNode;
 }
 
-export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children, footer }) => {
+export const TypingApp: React.FC<TypingAppProps> = ({ 
+  initialLanguage, 
+  initialMode,
+  initialTimeLimit,
+  initialWordCount,
+  initialTab,
+  pageTitle,
+  pageSubtitle,
+  children, 
+  footer 
+}) => {
   const [settings, setSettings] = useState<TestSettings>(() => ({
     ...DEFAULT_SETTINGS,
     ...(initialLanguage ? { language: initialLanguage } : {}),
+    ...(initialMode ? { mode: initialMode } : {}),
+    ...(initialTimeLimit ? { timeLimit: initialTimeLimit } : {}),
+    ...(initialWordCount ? { wordCount: initialWordCount } : {}),
   }));
   const [userStats, setUserStats] = useState(INITIAL_STATS);
   const [testResult, setTestResult] = useState<TestResult | null>(null);
@@ -125,7 +147,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children,
   const [levelUpData, setLevelUpData] = useState<{ leveledUp: boolean; oldLevel: number; newLevel: number } | null>(null);
   const [showAchievementsModal, setShowAchievementsModal] = useState(false);
   const [showStatsModal, setShowStatsModal] = useState(false);
-  const [activeTab, setActiveTab] = useState<'test' | 'results' | 'certificates'>('test');
+  const [activeTab, setActiveTab] = useState<'test' | 'results' | 'certificates'>(initialTab || 'test');
 
   // Fetch latest test from history if not currently in an active result
   const latestHistoryResult = useMemo(() => {
@@ -137,7 +159,10 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children,
 
   const modeTimeLabel = useMemo(() => {
     if (settings.mode === 'time') {
-      return settings.timeLimit === 60 ? '1 minute' : `${settings.timeLimit} seconds`;
+      if (settings.timeLimit === 60) return '1 minute';
+      if (settings.timeLimit === 180) return '3 minutes';
+      if (settings.timeLimit === 300) return '5 minutes';
+      return `${settings.timeLimit} seconds`;
     }
     if (settings.mode === 'words') {
       return `${settings.wordCount} words`;
@@ -172,6 +197,9 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children,
     const mergedSettings: TestSettings = {
       ...savedSettings,
       language: activeLanguage,
+      ...(initialMode ? { mode: initialMode } : {}),
+      ...(initialTimeLimit ? { timeLimit: initialTimeLimit } : {}),
+      ...(initialWordCount ? { wordCount: initialWordCount } : {}),
     };
 
     setSettings(mergedSettings);
@@ -186,7 +214,7 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children,
     // Configure sound synthesizer
     soundFx.setSoundType(mergedSettings.soundType);
     soundFx.setVolume(mergedSettings.soundVolume);
-  }, [initialLanguage]);
+  }, [initialLanguage, initialMode, initialTimeLimit, initialWordCount]);
 
   // Update Settings Handler
   const handleUpdateSettings = (newPartial: Partial<TestSettings>) => {
@@ -360,11 +388,11 @@ export const TypingApp: React.FC<TypingAppProps> = ({ initialLanguage, children,
                   </div>
                   <div className="min-w-0">
                     <h1 className="text-lg sm:text-xl font-extrabold text-[var(--text-main)] truncate m-0 leading-tight">
-                      Typing Speed Test
+                      {pageTitle || 'Typing Speed Test'}
                     </h1>
                     <p className="text-xs sm:text-sm text-[var(--text-dim)] m-0 flex items-center gap-1.5 font-medium mt-0.5">
                       <Clock className="w-3.5 h-3.5 text-[var(--text-faint)] shrink-0" />
-                      <span>{modeTimeLabel}</span>
+                      <span>{pageSubtitle || modeTimeLabel}</span>
                     </p>
                   </div>
                 </div>
